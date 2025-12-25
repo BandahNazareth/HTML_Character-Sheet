@@ -3,10 +3,10 @@ export function grundchansFörFärdighet(färdighet, rollperson) {
     rollperson.grundegenskaper[färdighet.grundegenskap].värde;
 
   let grundchans = 0;
-  if (värde > 0 && värde <= 6) grundchans = 3;
-  else if (värde <= 9) grundchans = 4;
-  else if (värde <= 13) grundchans = 5;
-  else if (värde <= 16) grundchans = 6;
+  if (värde > 0 && värde <= 5) grundchans = 3;
+  else if (värde <= 8) grundchans = 4;
+  else if (värde <= 12) grundchans = 5;
+  else if (värde <= 15) grundchans = 6;
   else grundchans = 7;
 
  // const tränad =
