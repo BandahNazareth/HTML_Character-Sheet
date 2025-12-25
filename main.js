@@ -348,37 +348,41 @@ const instrumentBody = document.getElementById("instrument-rows");
 instrumentBody.innerHTML = "";
 
 // 3 slots
-for (let slot = 0; slot <3; slot ++){
-const tr = document.createElement("tr");
+for (let slot = 0; slot < 3; slot++) {
+  const tr = document.createElement("tr");
 
-// Selector
-const selectTd = document.createElement("td");
-const select = document.createElement("select");
+  // Selector
+  const selectTd = document.createElement("td");
+  const select = document.createElement("select");
 
-select.innerHTML = Object.entries(instrument)
-  .map(([id, i]) => `<option value="${id}">${i.name}</option>`)
-  .join("");
+  select.innerHTML = Object.entries(instrument)
+    .map(([id, i]) => `<option value="${id}">${i.name}</option>`)
+    .join("");
 
-select.value = rollperson.instrument ?? "";
-selectTd.appendChild(select);
+  // 🔑 SLOT-SPECIFIC VALUE
+  select.value = rollperson.instrument[slot] ?? "";
 
-// Effekt
-const effektTd = document.createElement("td");
+  selectTd.appendChild(select);
 
-function updateInstrumentRow() {
-  const data = instrument[select.value];
-  effektTd.textContent = data?.effekt ?? "-";
-}
+  // Effekt
+  const effektTd = document.createElement("td");
 
-select.addEventListener("change", () => {
-  rollperson.instrument = select.value;
+  function updateInstrumentRow() {
+    const data = instrument[select.value];
+    effektTd.textContent = data?.effekt ?? "-";
+  }
+
+  select.addEventListener("change", () => {
+    rollperson.instrument[slot] =
+      select.value === "" ? null : select.value;
+
+    updateInstrumentRow();
+  });
+
   updateInstrumentRow();
-});
 
-updateInstrumentRow();
-
-tr.append(selectTd, effektTd);
-instrumentBody.appendChild(tr);
+  tr.append(selectTd, effektTd);
+  instrumentBody.appendChild(tr);
 }
 
 // ── Släktesförmågor ─────────────────────────
