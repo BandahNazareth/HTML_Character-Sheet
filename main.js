@@ -27,7 +27,19 @@ setTheme("main");
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  initPersistence();   // 🔑 load + autosave hook
+  initPersistence(); //Load-Autosave hook
+ 
+  // ── Schema migration: instrument → array ─────────────
+if (!Array.isArray(rollperson.instrument)) {
+  const oldValue = rollperson.instrument;
+
+  rollperson.instrument = [null, null, null];
+
+  // Preserve old single value if it was meaningful
+  if (oldValue && oldValue !== "inget") {
+    rollperson.instrument[0] = oldValue;
+  }
+}
 
 function renderSkillList({
   derivedList,
