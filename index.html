@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Drakar & Demoner – Rollformulär</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="editor/editor.css" />
+</head>
+
+<body>
+    <!--TOP MENU ROW-->
+  <button
+    id="open-editor"
+    class="editor-button editor"
+    data-tooltip="Redigera rollperson"
+    aria-label="Redigera rollperson">
+  </button>
+
+  <button
+    id="open-improvements"
+    class="editor-button improvements"
+    data-tooltip="Förbättringar"
+    aria-label="Förbättringar">
+  </button>
+    <!-- SHARED MODAL OVERLAY -->
+  <div id="modal-overlay" class="hidden">
+
+    <!-- EDITOR MODAL -->
+    <div class="editor-modal modal" data-modal="editor">
+      <header>
+        <h2>Karaktärsinställningar</h2>
+        <button class="modal-close">✕</button>
+      </header>
+
+      <div id="editor-content"></div>
+
+      <footer>
+        <button id="save-editor">Spara</button>
+      </footer>
+    </div>
+
+    <!-- IMPROVEMENTS MODAL -->
+  <div class="editor-modal modal" data-modal="improvements">
+    <header>
+      <h2>Förbättringar</h2>
+      <button class="modal-close">✕</button>
+    </header>
+
+    <div id="improvements-content">
+      <!-- populated by JS -->
+    </div>
+
+    <footer>
+      <button id="add-spelmote">➕ Lägg till spelmöte</button>
+    </footer>
+  </div>
+
+  </div>
+
+    
+    <section id ="character-header">
+      <ul id="character-details-left"></ul>
+      <div class="banner-visual">
+        <img
+      src="./art/DoD_Logo_short.svg"
+      alt="Drakar och Demoner"
+      class="dod-logo">  
+      <div id="avatar-wrapper">
+    <div id="avatar-frame">
+      <img id="avatar-image" alt="Karaktärsporträtt" />
+      <img
+        id="avatar-border"
+        src="./art/avatar_border.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </div>
+  </div>  
+      <img src="./art/nameBanner.svg" alt="Rustning">
+      <div id="namn" class="namn-overlay"></div>
+      </div>
+      <ul id="character-details-right"></ul>
+    </section>
+    <!-- GRUNDEGENSKAPER -->
+    <section id="grundegenskaper"></section>
+
+    <section id="instrument-area">
+    <!-- INSTRUMENT -->
+    <section id="instrument">
+      <section class="floating-section floating-section--narrow-header">
+        <div class="section-header">
+          <span class="ornament left"></span>
+          <h2>INSTRUMENT</h2>
+          <span class="ornament right"></span>
+        </div>
+
+        <div class="section-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Effekt</th>
+              </tr>
+            </thead>
+            <tbody id="instrument-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLÄKTESFÖRMÅGOR -->
+    <section id="slaktesformagor">
+      <section class="floating-section floating-section--narrow-header">
+        <div class="section-header">
+          <span class="ornament left"></span>
+          <h2>SLÄKTESFÖRMÅGOR</h2>
+          <span class="ornament right"></span>
+        </div>
+
+        <div class="section-box">
+          <div id="slaktesformagor-list"></div>
+        </div>
+      </section>
+    </section>
+    </section>
+
+    <section id="hjälteförmågor"
+          class="floating-section floating-section--narrow-header">
+    <div class="section-header">
+      <span class="ornament left"></span>
+      <h2>HJÄLTEFÖRMÅGOR</h2>
+      <span class="ornament right"></span>
+    </div>
+
+    <div class="section-box">
+      <div id="hjalteformagor-list"></div>
+    </div>
+  </section>
+
+    <section id="färdigheter_vapenfärdigheter">
+
+    <section class="floating-section">
+      <div class="section-header">
+        <span class="ornament left"></span>
+        <h2>FÄRDIGHETER</h2>
+        <span class="ornament right"></span>
+      </div>
+
+      <div id="färdigheter" class="section-box"></div>
+    </section>
+
+    <div class="vf-column">
+    <section class="floating-section">
+      <div class="section-header">
+        <span class="ornament left"></span>
+        <h2>VAPENFÄRDIGHETER</h2>
+        <span class="ornament right"></span>
+      </div>
+
+      
+      <div id="vapenfärdigheter" class="section-box"></div>
+        </section>
+        <section class="floating-section">
+        <div class="section-header">
+          <span class="ornament left"></span>
+          <h2>ÖVRIGT</h2>
+          <span class="ornament right"></span>
+        </div>
+
+        <div class="section-box">
+          <div id="förflyttning"></div>
+          <div id="skadebonus"></div>
+        </div>
+      </section>
+      </div>
+
+    <section id="resurser" class="resurser">
+        
+      <div class="resurs viljepoang">
+        <div class="section-header">
+          <span class="ornament left"></span>
+          <h2>VILJEPOÄNG</h2>
+          <span class="ornament right"></span>
+        </div>
+        <div class="resurs-divider"></div>
+      <div class="resurs-body">
+        <div class="resurs-controls">
+          <button class="resurs-plus">+</button>
+          <button class="resurs-minus">−</button>
+        </div>
+
+        <div class="resurs-value">
+          <span id="vp-current">0</span>/<span id="vp-max">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="resurs kroppspoang">
+      <div class="section-header">
+          <span class="ornament left"></span>
+          <h2>KROPPSPOÄNG</h2>
+          <span class="ornament right"></span>
+        </div>
+        <div class="resurs-divider"></div>
+      <div class="resurs-body">
+        <div class="resurs-controls">
+          <button class="resurs-plus">+</button>
+          <button class="resurs-minus">−</button>
+        </div>
+
+        <div class="resurs-value">
+          <span id="kp-current">0</span>/<span id="kp-max">0</span>
+        </div>
+      </div>
+    </div>
+    </section>
+
+  </section>
+    
+    <section class="vapen-lista">
+      <section class="floating-section floating-section--narrow-header">
+      <div class="section-header">
+        <span class="ornament left"></span>
+        <h2>VAPEN</h2>
+        <span class="ornament right"></span>
+      </div>
+      
+      <div class="section-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Vapen</th>
+            <th>Grepp</th>
+            <th>STY</th>
+            <th>Räckvidd</th>
+            <th>Skada</th>
+            <th>Brytvärde</th>
+            <th>Egenskaper</th>
+            <th>Anteckningar</th>
+          </tr>
+        </thead>
+      <tbody id="vapen-rows"></tbody>
+    </table>
+    </div>
+    </section>
+    </section>
+
+    <!--Försvarssektion begins-->
+  <div class="defense-sections">
+    <!-- Rustning-->
+    
+    <section id="rustning">
+
+    <div class="rustning-visual">
+      <img src="./art/rustning.svg" alt="Rustning">
+      <div id="rustning-bv" class="bv-overlay"></div>
+      <select id="rustning-select"></select>
+    </div>
+
+    <div class="rustning-nackdelar">
+      <h4>NACKDEL PÅ:</h4>
+      <label>
+        <input type="checkbox" id="nackdel-smyga" disabled>
+        Smyga
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="nackdel-undvika" disabled>
+        Undvika
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="nackdel-hoppa" disabled>
+        Hoppa & Klättra
+      </label>
+      </div>
+
+      <div id="rustning-nackdel-text" class="nackdel-text"></div>
+    </section>
+    
+    <!--Hjälm-->
+    <section id="hjälm">
+
+    <!-- Helmet visual -->
+    <div class="hjälm-visual">
+      <img src="./art/hjalm.svg" alt="Hjälm">
+      <div id="hjälm-bv" class="bv-overlay">0</div>
+      <select id="hjälm-select"></select>
+    </div>
+    
+    <!-- Helmet disadvantages -->
+    <div class="hjälm-nackdelar">
+      <h4>NACKDEL PÅ:</h4>
+      <label>
+        <input type="checkbox" id="hjälm-upptackafara" disabled>
+        Upptäcka fara
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="hjälm-avstandsattacker" disabled>
+        Avståndsattacker
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="hjälm-finnadoldating" disabled>
+        Finna dolda ting
+      </label>
+    </div>
+
+    <!-- Flavor text -->
+    <div id="hjälm-nackdel-text" class="nackdel-text"></div>
+  </section>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="editor/editor.js"></script>
+  </div>
+    <!--Försvarssektion ends-->
+
+</body>
+</html>

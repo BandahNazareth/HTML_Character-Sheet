@@ -1,0 +1,810 @@
+html[data-theme="main"] {
+/* ── Base theme ───────────────────────── */
+  --bg: #f1e9d9;
+  --sheet: #aca28f;
+  --text: #221b22;
+  --muted: #555;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #caa676;
+  --accent-dark: #50310c;
+  --accent-warning: #be2f1ce8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #2f5f8f;
+  --kp-bg: #8f2f1f;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --button-bg: #f5f2eb;
+  --button-text: #111;
+}
+
+:root {
+  --header-height: 2.2rem;
+  --header-border: 2px;
+}
+body {
+  background: var(--sheet);
+  margin: 0;
+}
+
+/* ── Centered character sheet ─────────────── */
+
+#sheet-wrapper {
+  max-width: 65rem;
+  margin-left: 2rem; 
+  margin-right: auto; 
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+html, body, .editor-modal {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+@font-face {
+  font-family: "Flareserif 821 BT";
+  src: url("./fonts/flareserif-821-bt.ttf") format("truetype");
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Flareserif 821 BT", serif;
+  margin: 2rem;
+  size: 11pt;
+  color: var(--accent-dark);
+  background-color: var(--bg);
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+/*-- HEADERS --*/
+h1, h2, h3, h4, h5 {
+  border-bottom: 1px solid #ccc;
+  color: var(--accent-dark);
+  font-weight: normal;
+  font-variant-caps: all-caps;
+}
+
+.rustning-nackdelar h4,
+.hjälm-nackdelar h4 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+/* ── Avatar ───────────────────────────── */
+
+#avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+#avatar-frame {
+  position: relative;
+  width: 256px;
+  height: 256px;
+}
+
+#avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* 🔑 crop, not stretch */
+  object-position: center;
+  border-radius: 4px;       /* optional, subtle */
+  display: none;            /* hidden until image exists */
+}
+
+#avatar-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ── Editor avatar ───────────────────────── */
+
+.editor-avatar {
+  width: 150px;
+  height: 150px;
+  border: 2px dashed var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* crop, do NOT stretch */
+}
+
+.editor-avatar.drag-over {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-warning);
+}
+
+.editor-help {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
+/*-- Karaktärsinfo--*/
+#character-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 2rem;
+  width: 65rem;
+  align-items: end;
+}
+
+#character-header h1 {
+  margin: 0;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+}
+.namn-overlay {
+  position: absolute;
+  top: 92%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 1.6rem;
+  white-space: nowrap;
+  text-align:center;
+
+  pointer-events: none;
+}
+
+.banner-visual {
+  position: relative;
+  width:420px;
+  justify-self: center;
+}
+.banner-visual img:not(.dod-logo){
+  width: 100%;
+  display: block;
+}
+
+.dod-logo {
+  width: 300px;
+  margin-bottom: 0.8rem;
+  display: block;
+  justify-self: center;
+}
+
+#character-details-left,
+#character-details-right {
+  list-style: none;
+  font-size: 11pt;
+  padding: 0.70rem;
+  margin: 0;
+  text-align: left;
+}
+
+#character-details-left li{
+  text-align: left;
+}
+
+#character-details-right li {
+  text-align: left;
+}
+
+/* ── Grundegenskaper UI ───────────────────── */
+
+#grundegenskaper {
+  background: var(--bg);
+  border: 3px solid var(--accent-light);
+  width: 50rem;
+  padding: 1rem;
+  align-items: start;
+}
+.grund-box {
+  display: inline-block;
+  padding: 1.25rem;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0rem;
+}
+
+.adjektiv {
+  margin-left: 0.5rem;
+  font-style: italic;
+  color: #b00;
+}
+
+.grund-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2rem;
+  justify-items: center;
+  margin-top: 1rem;
+}
+
+.grund-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grund-circle {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--bg) 50%,var(--accent-dark));
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.grund-code {
+  font-size: 16pt;
+  font-weight: normal;
+  letter-spacing: 0.01rem;
+}
+
+.grund-value {
+  font-size: 16pt;
+  line-height: 1;
+}
+
+.grund-checkbox input {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--accent-light);
+  transform: rotate(45deg);
+  margin: 1rem 0;
+  cursor: pointer;
+}
+.grund-checkbox input{
+  background: var(--bg);
+}
+.grund-checkbox input:checked {
+  background: var(--accent-dark)
+}
+
+.grund-adjektiv {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05rem;
+  color: #444;
+}
+
+.grund-adjektiv.pressad {
+  color: var(--accent-warning);
+  font-weight: bold;
+}
+
+/* ===== NARROW LEFT-ALIGNED HEADERS ===== */
+
+.floating-section--narrow-header {
+  padding-top: calc(var(--header-height) - var(--header-border));
+}
+
+.floating-section--narrow-header .section-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.floating-section--narrow-header .section-header h2 {
+  width: 12rem;
+  height: var(--header-height);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* ← horizontal centering */
+
+  margin: 0;
+  padding: 0 1rem;
+
+  text-align: center;
+  font-variant-caps: all-small-caps;
+
+  background: var(--bg);
+  border: var(--header-border) solid var(--accent-light);
+  box-sizing: border-box;
+}
+
+.floating-section--narrow-header .ornament {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%) rotate(45deg);
+
+  border: 2px solid var(--accent-light);
+  background: var(--accent-dark);
+}
+
+.floating-section--narrow-header .ornament.left {
+  left: -7px;
+}
+
+.floating-section--narrow-header .ornament.right {
+  right: -7px;
+}
+
+/* ── Unified section header ───────────────── */
+.floating-section {
+  position: relative;
+  margin-top: var(--header-height);
+}
+
+.floating-section .section-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.floating-section .section-box {
+  border: 2px solid var(--accent-light);
+  padding: 1.5rem 1rem 1rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  padding: 0.15rem;
+  border: 2px solid var(--accent-light);
+  background: var(--bg);
+  font-size: 18pt;
+  text-align: center;
+  letter-spacing: 0em;
+  font-variant-caps: all-small-caps;
+}
+
+.resurs .section-header {
+  position: relative;
+  width: 100%;
+  height: var(--header-height);
+  pointer-events: none;
+  transform: none;
+}
+
+.resurs .section-header .ornament {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%) rotate(45deg);
+
+  border: 2px solid var(--accent-light);
+  background: var(--accent-dark);
+}
+
+.resurs .section-header .ornament.left {
+  left: -8px;   /* half diamond + border */
+}
+
+.resurs .section-header .ornament.right {
+  right: -8px;
+}
+
+/* Header floats on top */
+.floating-section:not(.floating-section--narrow-header) .section-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+/* ── Narrow, left-aligned floating headers ───────────────── */
+
+/* Header itself becomes the 25rem box */
+
+.floating-section--narrow-header .section-box {
+  padding-top: 1.2rem;
+}
+
+
+/* Ornaments are anchored to header box */
+.floating-section--narrow-header .ornament {
+  position: absolute;
+  top: 50%;
+
+  width: 12px;
+  height: 12px;
+
+  border: 2px solid var(--accent-light);
+  background: var(--accent-dark);
+
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.floating-section--narrow-header .ornament.left {
+  left: -7px;
+}
+
+.floating-section--narrow-header .ornament.right {
+  right: -7px;
+}
+
+/* Ornaments */
+.floating-section .ornament {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--accent-light);
+  background: var(--accent-dark);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.floating-section .ornament.left {
+  left: -7px; /* half diamond + border */
+}
+
+.floating-section .ornament.right {
+  right: -7px;
+}
+
+.plain-header {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.plain-header h2 {
+  border: none;
+  font-size: 16pt;
+  letter-spacing: 0.08em;
+  font-variant-caps: all-small-caps;
+}
+/* Instrument */
+#instrument {
+  width: 100%;
+}
+
+#instrument-area {
+  width: 65rem;
+  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+#slaktesformagor .section-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.slaktes-formaga {
+  padding: 0.5rem;
+}
+
+.slaktes-formaga-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slaktes-formaga-text {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/*-Hjälteförmågor-*/
+
+#hjälteförmågor {
+  width: 65rem;
+  align-items: start;
+}
+
+#hjalteformagor-list {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: start;
+  
+}
+
+.hjalte-row {
+  padding: 0.5rem;
+}
+
+.hjalte-text {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* ÖVRIGT box layout */
+#förflyttning,
+#skadebonus {
+  margin-bottom: 0.75rem;
+}
+
+#skadebonus div {
+  opacity: 0.85;
+}
+
+.vf-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Resurser (VP / KP) ───────────────────── */
+
+  .resurser {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    padding-top: calc(var(--header-height) /2 - 2px);
+  }
+
+  .resurs {
+  position: relative;
+  width: 200px;
+  padding-top: 0;
+  border: 2px solid var(--accent-light);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  color: var(--accent-light);
+  margin-top: 0;
+}
+
+  .resurs .section-header h2 {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18pt;
+  font-variant-caps: all-small-caps;
+
+  background: var(--bg);
+  color: var(--accent-dark);
+
+  border: none;
+  padding: 0;
+}
+.resurs-divider {
+  height: 2px;
+  background: var(--accent-light);
+}
+
+
+  /* ── Section header: resource variant ───── */
+
+  .section-header--resource h2 {
+  font-size: 11pt;
+  padding: 0;
+  letter-spacing: 0.08em;
+}
+
+  .section-header--resource h2 {
+    font-size: 16pt;          /* smaller */
+    padding: 0.25rem 0;
+    letter-spacing: 0.08em;
+  }
+
+  .resurs-body {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    gap: 1rem;
+    margin: 0;
+    border: none;
+  }
+
+  /* Value */
+  .resurs-value {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  /* Controls */
+  .resurs-controls {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resurs-controls button {
+    width: 28px;
+    height: 24px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    background: #f5f2eb;
+    color: #111;
+  }
+
+  .resurs-controls button:active {
+    transform: translateY(1px);
+  }
+
+  /* Colors */
+  .viljepoang {
+    border-radius: 0;
+    background: none;
+  }
+
+  .kroppspoang {
+    border-radius: 0;
+    background: none;
+  }
+
+  .viljepoang .resurs-body {
+  background: var(--vp-bg);
+  }
+
+  .kroppspoang .resurs-body {
+    background: var(--kp-bg);
+  }
+/* färdigheter */
+
+#färdigheter_vapenfärdigheter {
+  width: 65rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+}
+#färdigheter,
+#vapenfärdigheter {
+  font-size: 11pt;
+  line-height: 1;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.50rem;
+  text-align: center;
+  border: none;
+
+}
+
+.adjektiv {
+  font-style: italic;
+  color: var(--accent-warning);
+}
+textarea[readonly] {
+  background: transparent;
+  border: none;
+}
+
+textarea:not([readonly]) {
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.färd-checkbox input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--accent-light);
+  transform: rotate(45deg);
+  margin: 0.25rem;
+  cursor: pointer;
+}
+.färd-checkbox input{
+  background: var(--bg);
+}
+.färd-checkbox input:checked {
+  background: var(--accent-dark)
+}
+.tränad-label {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  font-variant-caps: all-small-caps;
+  color: var(--accent-dark);
+  opacity: 0.85;
+}
+/*--vapen--*/
+.vapen-lista {
+   width: 65rem;
+  align-items: start;
+}
+/*--rustning--*/
+.rustning-visual {
+  position: relative;
+  width: 200px;
+  margin: 1rem 0;
+}
+
+.rustning-visual img {
+  width: 100%;
+  display: block;
+}
+
+.bv-overlay {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 2.5rem;
+  font-weight: normal;
+  color: #111;
+
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+
+  pointer-events: none;
+}
+.nackdel-text {
+  margin-top: 0.5rem;
+  margin-bottom: 0rem;
+  font-style: italic;
+  color: #555;
+}
+.hjälm-visual {
+  position: relative;
+  width: 200px; /* match helmet SVG */
+  margin: 1rem 0;
+}
+
+.hjälm-visual img {
+  width: 100%;
+  display: block;
+}
+.defense-sections {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2rem;
+}
+@media (max-width: 1024px) {
+  .defense-sections {
+    grid-template-columns: 1fr;
+  }
+}
+/* ── Styled dropdowns ───────────────────── */
+
+select {
+  font-family: "Flareserif 821 BT", serif;
+  font-size: 11pt;
+
+  color: var(--accent-dark);
+  background-color: var(--bg);
+
+  border: 2px solid var(--accent-light);
+  border-radius: 0;
+
+  padding: 0.35rem 2rem 0.35rem 0.5rem;
+  line-height: 1.2;
+
+  cursor: pointer;
+  position: relative;
+}
