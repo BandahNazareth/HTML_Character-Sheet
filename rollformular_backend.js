@@ -125,27 +125,27 @@ export function computeDerived(rollperson) {
 //ROLLPERSON
 export const rollperson ={
   avatar: null,
-  namn: "Kalax Argenbjärt",
+  namn: "Fyll i namn...",
   släkte: "människa",
   yrke: "bard",
   ålder: "medelålders",
-  svaghet: "högfärdig",
-  språk: "Jori, Nagurgiska",
+  svaghet: "Fyll i svaghet...",
+  språk: "Fyll i språk...",
   socialt_stånd: {
     namn: "adel",
-    text:"Högadel från Aidne"
+    text:"Specificera socialt stånd..."
   },
-  utseende: "Storslagen frisyr",
-  minnessak: "Brev från en gammal vän eller släkting",
+  utseende: "Fyll i utseende...",
+  minnessak: "Fyll i minnessak...",
 
 //GRUNDEGENSKAPER
   grundegenskaper: {
-    styrka: { värde: 14, pressad: false },
-    fysik: { värde: 12, pressad: false },
-    smidighet: { värde: 13, pressad: false },
-    intelligens: { värde: 14, pressad: false },
-    psyke: { värde: 11, pressad: false },
-    karisma: { värde: 16, pressad: false },
+    styrka: { värde: 10, pressad: false },
+    fysik: { värde: 10, pressad: false },
+    smidighet: { värde: 10, pressad: false },
+    intelligens: { värde: 10, pressad: false },
+    psyke: { värde: 10, pressad: false },
+    karisma: { värde: 10, pressad: false },
   },
 
   // RESURSER (current values)
@@ -193,10 +193,7 @@ rustning: "inget",
 //HJÄLM (som används)
 hjälm: "inget",
 //HJÄLTEFÖRMÅGOR
-  hjälteförmågor: {
-    tonkonst: 1,
-    sändebud: 1
-  }
+  hjälteförmågor: {}
   
 };
 const derived = computeDerived(rollperson);
