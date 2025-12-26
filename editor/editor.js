@@ -8,7 +8,8 @@ import { yrken } from "../data/listor/data_yrken.js";
 import { ålder as ålderData } from "../data/listor/data_alder.js";
 import { socialt_stånd as socialtStandData } from "../data/listor/socialt_stand.js";
 import { getMaxTrainedFärdigheter } from "../rules/MaxTranadeFardigheter.js";
-import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, spelmöten } from "../rollformular_backend.js";
+import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, getSpelmöten } from "../rollformular_backend.js";
+
 
 async function exportCharacter() {
   const payload = {
@@ -221,43 +222,41 @@ function renderImprovements() {
   impContent.innerHTML = "";
 
   if (!currentDraft) return;
+    const spelmöten = currentDraft.spelmöten ?? [];
     const latestSM = spelmöten[spelmöten.length - 1];
   /* ── Spelmöten timeline ───────────────────── */
   const smSection = document.createElement("section");
   smSection.innerHTML = `<h3>Spelmöten</h3>`;
 
-  if (spelmöten.length === 0) {
-    smSection.innerHTML += `<em>Inga spelmöten ännu</em>`;
+  if (getSpelmöten(currentDraft).length === 0) {
+  smSection.innerHTML += `<em>Inga spelmöten ännu</em>`;
   } else {
     const list = document.createElement("div");
     list.style.display = "flex";
     list.style.flexWrap = "wrap";
     list.style.gap = "0.5rem";
 
-    spelmöten.forEach(sm => {
+    getSpelmöten(currentDraft).forEach(sm => {
       const chip = document.createElement("span");
       chip.className = "spelmote-chip";
       chip.textContent = sm;
       chip.title = "Klicka för att ta bort spelmöte";
 
       chip.addEventListener("click", () => {
-        const confirmed = confirm(
-          `Ta bort ${sm}?\n\nDetta tar bort alla förbättringar från detta spelmöte.`
-        );
-        if (!confirmed) return;
+      const confirmed = confirm(
+        `Ta bort ${sm}?\n\nDetta tar bort alla förbättringar från detta spelmöte.`
+      );
+      if (!confirmed) return;
 
-        // 1️⃣ Remove spelmöte from backend + rollperson
-        removeSpelmöte(sm);
+      // ✅ Remove spelmöte from draft ONLY
+      removeSpelmöte(currentDraft, sm);
 
-        // 2️⃣ Sync currentDraft with updated rollperson
-        currentDraft = structuredClone(rollperson);
+      // ✅ Re-render from updated draft
+      renderImprovements();
 
-        // 3️⃣ Re-render overlay
-        renderImprovements();
-
-        // 4️⃣ Update main sheet immediately
-        window.dispatchEvent(new Event("character-updated"));
-      });
+      // (optional but fine)
+      window.dispatchEvent(new Event("character-updated"));
+    });
 
       list.appendChild(chip);
     });
@@ -318,36 +317,24 @@ function renderImprovements() {
       chip.textContent = sm;
 
       chip.addEventListener("click", () => {
-  const target =
-    title === "Färdigheter"
-      ? rollperson.färdigheter
-      : rollperson.vapenfärdigheter;
+        const target =
+          title === "Färdigheter"
+            ? currentDraft.färdigheter
+            : currentDraft.vapenfärdigheter;
 
-  // 1️⃣ Remove from REAL character
-  removeImprovement(target, id, sm);
+        removeImprovement(target, id, sm);
 
-  // 2️⃣ Remove from draft
-  entry.förbättringar = entry.förbättringar.filter(x => x !== sm);
+        const entry = target[id];
+        if ((entry.förbättringar?.length ?? 0) === 0) {
+          entry.förbättrad = false;
+          entry.harFörbättrats = false;
+        }
 
-  // 3️⃣ Recalculate FV
-  const derived = computeDerived(rollperson);
-  const derivedEntry =
-    derived.färdigheter.find(f => f.id === id) ||
-    derived.vapenfärdigheter.find(v => v.id === id);
+        renderImprovements();
+      });
 
-  const improvements = entry.förbättringar.length;
-  const baseFV = (derivedEntry?.grundchans ?? 0) - improvements;
-
-  // 4️⃣ Unlock if below cap
-  if (baseFV + improvements < 18) {
-    entry.förbättrad = true;
-  }
-
-  renderImprovements();
+  row.appendChild(chip);
 });
-
-      row.appendChild(chip);
-    });
 
     // + SM button (only if spelmöten exist and not already added)
     if (isMaxed) {
@@ -367,17 +354,16 @@ function renderImprovements() {
 
       addChip.addEventListener("click", () => {
   // 🔑 Apply improvement to REAL character
-  addImprovement(
-    title === "Färdigheter"
-      ? rollperson.färdigheter
-      : rollperson.vapenfärdigheter,
-    id,
-    latestSM
-  );
+  const target =
+  title === "Färdigheter"
+    ? currentDraft.färdigheter
+    : currentDraft.vapenfärdigheter;
 
-      // Keep draft in sync for this session
-      entry.förbättringar.push(latestSM);
-      entry.harFörbättrats = true;
+  addImprovement(target, id, latestSM);
+
+  // Update draft entry
+  entry.förbättringar.push(latestSM);
+  entry.harFörbättrats = true;
 
       renderImprovements();
     });
@@ -451,7 +437,7 @@ syncEligibility(rollperson.vapenfärdigheter, currentDraft.vapenfärdigheter);
   }
 
   addSMBtn.onclick = () => {
-  addSpelmöte();
+  addSpelmöte(currentDraft);
 
   function resetEligibility(group) {
     Object.values(group).forEach(entry => {

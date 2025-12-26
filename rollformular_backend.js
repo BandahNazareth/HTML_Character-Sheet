@@ -10,7 +10,6 @@ import { färdigheter } from "./data/karaktärsdata/fardigheter.js";
 import { vapenfärdigheter } from "./data/karaktärsdata/vapenfardigheter.js";
 import { släkten } from "./data/listor/data_slakten.js";
 import { ålder as ålderData } from "./data/listor/data_alder.js";
-import { socialt_stånd as socialtStandData } from "./data/listor/socialt_stand.js";
 
 // Default skill states
 
@@ -20,23 +19,16 @@ const DEFAULT_SKILL_STATE = {
   förbättringar: []
 };
 
-function normalizeSkill(definition, characterState = {}) {
-  return {
-    ...definition,
-    ...DEFAULT_SKILL_STATE,
-    ...characterState
-  };
-}
 
 // DERIVED VALUES (function)
-export function computeDerived(rollperson) {
+export function computeDerived(character) {
   // ── Derived grundegenskaper (Ålder applied) ──
   const derivedGrundegenskaper = {};
 
-  for (const key of Object.keys(rollperson.grundegenskaper)) {
-    const base = rollperson.grundegenskaper[key].värde;
+  for (const key of Object.keys(character.grundegenskaper)) {
+    const base = character.grundegenskaper[key].värde;
     const mod =
-      ålderData[rollperson.ålder]?.grundegenskaper?.[key] ?? 0;
+      ålderData[character.ålder]?.grundegenskaper?.[key] ?? 0;
 
     derivedGrundegenskaper[key] = {
       base,
@@ -46,7 +38,7 @@ export function computeDerived(rollperson) {
   }
 
   // ── Släkte → grundförflyttning ──────────────
-  const släkteDef = släkten[rollperson.släkte];
+  const släkteDef = släkten[character.släkte];
   const grundförflyttning = släkteDef.grundförflyttning;
 
   // ── Förflyttning ────────────────────────────
@@ -61,13 +53,13 @@ export function computeDerived(rollperson) {
   const skadebonusSmidighet = skadebonusFrånVärde(smidighetVärde);
 
   // ── Resurser ────────────────────────────────
-  const viljepoäng = computeViljepoäng(rollperson);
-  const kroppspoäng = computeKroppspoäng(rollperson);
+  const viljepoäng = computeViljepoäng(character);
+  const kroppspoäng = computeKroppspoäng(character);
 
   // ── Färdigheter ─────────────────────────────
   const derivedFärdigheter = färdigheter.map(def => {
   const state =
-    rollperson.färdigheter[def.id] ??
+    character.färdigheter[def.id] ??
     DEFAULT_SKILL_STATE;
 
   const förbättringar = state.förbättringar ?? [];
@@ -81,7 +73,7 @@ export function computeDerived(rollperson) {
     grundchans:
       grundchansFörFärdighet(
         { ...def, ...state },
-        rollperson
+        character
       ) + förbättringBonus
   };
 });
@@ -89,7 +81,7 @@ export function computeDerived(rollperson) {
   // ── Vapenfärdigheter ────────────────────────
   const derivedVapenfärdigheter = vapenfärdigheter.map(def => {
   const state =
-    rollperson.vapenfärdigheter[def.id] ??
+    character.vapenfärdigheter[def.id] ??
     DEFAULT_SKILL_STATE;
 
   const förbättringar = state.förbättringar ?? [];
@@ -103,7 +95,7 @@ export function computeDerived(rollperson) {
     grundchans:
       grundchansFörFärdighet(
         { ...def, ...state },
-        rollperson
+        character
       ) + förbättringBonus
   };
 });
@@ -156,6 +148,8 @@ export const rollperson ={
     current: 0
   },
 
+//SPELMÖTEN
+spelmöten: [],
 //FÄRDIGHETER
   färdigheter: Object.fromEntries(
   färdigheter.map(f => [
@@ -199,34 +193,40 @@ hjälm: "inget",
 const derived = computeDerived(rollperson);
 console.log(derived.färdigheter);
 
-export function validateResources(rollperson, derived) {
+export function validateResources(character, derived) {
   // --- Kroppspoäng ---
-  if (rollperson.kroppspoäng.current == null) {
-    rollperson.kroppspoäng.current = derived.kroppspoäng.max;
+  if (character.kroppspoäng.current == null) {
+    character.kroppspoäng.current = derived.kroppspoäng.max;
   }
 
-  rollperson.kroppspoäng.current = Math.max(
+  character.kroppspoäng.current = Math.max(
     0,
-    Math.min(rollperson.kroppspoäng.current, derived.kroppspoäng.max)
+    Math.min(character.kroppspoäng.current, derived.kroppspoäng.max)
   );
 
   // --- Viljepoäng ---
-  if (rollperson.viljepoäng.current == null) {
-    rollperson.viljepoäng.current = derived.viljepoäng.max;
+  if (character.viljepoäng.current == null) {
+    character.viljepoäng.current = derived.viljepoäng.max;
   }
 
-  rollperson.viljepoäng.current = Math.max(
+  character.viljepoäng.current = Math.max(
     0,
-    Math.min(rollperson.viljepoäng.current, derived.viljepoäng.max)
+    Math.min(character.viljepoäng.current, derived.viljepoäng.max)
   );
 }
 
-// ── Spelmöten (global campaign timeline) ─────────────
-export const spelmöten = [];
-export function addSpelmöte() {
-  const nextNr = spelmöten.length + 1;
+// ── Spelmöten (stored on character) ─────────────────────
+
+export function getSpelmöten(character) {
+  character.spelmöten ??= [];
+  return character.spelmöten;
+}
+
+export function addSpelmöte(character) {
+  character.spelmöten ??= [];
+  const nextNr = character.spelmöten.length + 1;
   const sm = `SM${nextNr}`;
-  spelmöten.push(sm);
+  character.spelmöten.push(sm);
   return sm;
 }
 
@@ -255,27 +255,20 @@ export function removeImprovement(stateObj, id, spelmöte) {
 export function getImprovementBonus(entry) {
   return entry?.förbättringar?.length ?? 0;
 }
-// ── Remove entire spelmöte (undo helper) ─────────────────────
-export function removeSpelmöte(spelmöte) {
-  // 1. Remove from global spelmöten list
-  const index = spelmöten.indexOf(spelmöte);
-  if (index !== -1) {
-    spelmöten.splice(index, 1);
-  }
+export function removeSpelmöte(character, spelmöte) {
+  // 1. Remove from spelmöten list
+  character.spelmöten =
+    (character.spelmöten ?? []).filter(sm => sm !== spelmöte);
 
   // 2. Remove from all färdigheter
-  Object.values(rollperson.färdigheter).forEach(entry => {
-    if (!entry.förbättringar) return;
-
+  Object.values(character.färdigheter).forEach(entry => {
     entry.förbättringar =
-      entry.förbättringar.filter(sm => sm !== spelmöte);
+      (entry.förbättringar ?? []).filter(sm => sm !== spelmöte);
   });
 
   // 3. Remove from all vapenfärdigheter
-  Object.values(rollperson.vapenfärdigheter).forEach(entry => {
-    if (!entry.förbättringar) return;
-
+  Object.values(character.vapenfärdigheter).forEach(entry => {
     entry.förbättringar =
-      entry.förbättringar.filter(sm => sm !== spelmöte);
+      (entry.förbättringar ?? []).filter(sm => sm !== spelmöte);
   });
 }

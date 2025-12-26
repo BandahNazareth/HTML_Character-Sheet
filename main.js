@@ -1,5 +1,6 @@
 // ── COMPUTEDERIVED import ──────────────────────────────────
-import { rollperson, computeDerived, validateResources, spelmöten } from "./rollformular_backend.js";
+import { rollperson, computeDerived, validateResources }from "./rollformular_backend.js";
+
 
 // SAVING imports
 import { initPersistence } from "./persistence.js";
@@ -30,10 +31,10 @@ window.addEventListener("DOMContentLoaded", () => {
   initPersistence(); //Load-Autosave hook
  
   // ── Schema migration: instrument → array ─────────────
-if (!Array.isArray(rollperson.instrument)) {
-  const oldValue = rollperson.instrument;
+  if (!Array.isArray(rollperson.instrument)) {
+    const oldValue = rollperson.instrument;
 
-  rollperson.instrument = [null, null, null];
+    rollperson.instrument = [null, null, null];
 
   // Preserve old single value if it was meaningful
   if (oldValue && oldValue !== "inget") {
