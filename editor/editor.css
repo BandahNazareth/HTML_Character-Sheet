@@ -1,48 +1,31 @@
-html[data-theme="dark"] {
-  /* ── Darkmode theme ───────────────────────── */
-  --bg: #2b2b2b;
-  --sheet: #2b2b2b;
-  --text: #e4e4e4;
-  --muted: #bbbbbb;
-  --border-soft: #ccc;
-
-  /* ── Section backgrounds ─────────────── */
-  --bg-grund: #f3e4d1;
-  --bg-resurser: #e4cfb4;
-  --bg-box: #f5f2eb;
-
-  /* ── Accent colors ───────────────────── */
-  --accent-light: #000000;
-  --accent-dark: #7c7c7c;
-  --accent-warning: #be2f1ce8;
-
-  /* ── Resource colors ─────────────────── */
-  --vp-bg: #2f5f8f;
-  --kp-bg: #8f2f1f;
-
-  /* ── Skill sections ──────────────────── */
-  --skills-bg: #faf6f0;
-
-  /* ── UI elements ─────────────────────── */
-  --button-bg: #f5f2eb;
-  --button-text: #111;
-}
-
 body {
-  font-family: "Flareserif 821 BT", serif;
   margin: 2rem;
-  size: 11pt;
-
 }
-h3,h4{
- color: var(--accent-dark)
+
+#editor-root h3,
+#editor-root h4 {
+  color: var(--accent-dark);
+}
+#editor-root {
+  font-family: "Flareserif 821 BT", serif;
+  font-size: 11pt;
+}
+
+#editor-root table,
+#editor-root th,
+#editor-root td,
+#editor-root label,
+#editor-root span,
+#editor-root strong,
+#editor-root div {
+  color: var(--text);
 }
 
 /* ── Shared modal overlay ───────────────────────── */
 #modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.6);
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +96,7 @@ h3,h4{
 }
 
 
-.editor-modal {
+#editor-root .editor-modal {
   background: var(--bg);
   width: 90%;
   max-width: 1000px;
@@ -123,19 +106,19 @@ h3,h4{
   padding: 1rem;
 }
 
-.editor-modal header,
-.editor-modal footer {
+#editor-root .editor-modal header,
+#editor-root .editor-modal footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.editor-table {
+#editor-root .editor-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.editor-table th,
-.editor-table td {
+#editor-root .editor-table th,
+#editor-root .editor-table td {
   vertical-align: middle;
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--bg);
@@ -145,13 +128,14 @@ h3,h4{
   line-height: 1.3;
 }
 
-.editor-table input[type="number"] {
+#editor-root .editor-table input[type="number"] {
   width: 4rem;
 }
 #editor-content section {
   margin-bottom: 2rem;
 }
-.editor-resurser {
+#editor-root .editor-resurser {
+  color: var(--accent-dark);
   display: flex;
   gap: 2rem;
   margin-bottom: 1rem;
@@ -159,8 +143,6 @@ h3,h4{
 
 .editor-resurs {
   padding: 0.5rem 1rem;
-  border-radius: 6px;
-  background: var(--bg);
 }
 .editor-resurser {
   display: flex;
@@ -171,7 +153,6 @@ h3,h4{
 .editor-resurs {
   background: var(--bg);
   padding: 0.75rem 1rem;
-  border-radius: 6px;
   min-width: 180px;
 }
 
@@ -184,14 +165,13 @@ h3,h4{
 .editor-resurs-controls button {
   width: 28px;
   height: 28px;
-  background-color: var(--text);
-  border-radius: 0;
-  border-style: none;
+  background-color: var(--bg);
+  border-color: 3px solid var(--accent-dark);
 }
 /* ── Modal form fields (editor + improvements) ───────────── */
-.editor-modal input,
-.editor-modal select,
-.editor-modal textarea {
+#editor-root .editor-modal input,
+#editor-root .editor-modal select,
+#editor-root .editor-modal textarea {
   font-family: "Flareserif 821 BT", serif;
   font-size: 11pt;
 
@@ -237,9 +217,9 @@ h3,h4{
 }
 
 /* Focus state */
-.editor-modal input:focus,
-.editor-modal select:focus,
-.editor-modal textarea:focus {
+#editor-root .editor-modal input:focus,
+#editor-root .editor-modal select:focus,
+#editor-root .editor-modal textarea:focus {
   outline: none;
   border-color: #d1c4f5;
   box-shadow: 0 0 0 1px rgba(209,196,245,0.4);
@@ -254,7 +234,7 @@ h3,h4{
 
 /* Checkboxes */
 
-.editor-modal input[type="checkbox"] {
+#editor-root .editor-modal input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
 
@@ -274,7 +254,7 @@ h3,h4{
   cursor: pointer;
 }
 
-.editor-modal input[type="checkbox"]::before {
+#editor-root .editor-modal input[type="checkbox"]::before {
   content: "";
   width: 8px;
   height: 8px;
@@ -283,11 +263,11 @@ h3,h4{
   transition: transform 0.12s ease-in-out;
 }
 
-.editor-modal input[type="checkbox"]:checked {
+#editor-root .editor-modal input[type="checkbox"]:checked {
   background: var(--accent-dark);
 }
 
-.editor-modal input[type="checkbox"]:checked::before {
+#editor-root .editor-modal input[type="checkbox"]:checked::before {
   transform: translate(-50%,-50%) scale(1);
 }
 
@@ -371,7 +351,7 @@ h3,h4{
   transform: translateY(1px);
 }
 /* Förbättringar */
-.improvement-chip {
+#editor-root .improvement-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -383,7 +363,7 @@ h3,h4{
   cursor: pointer;
 }
 
-.improvement-chip::before {
+#editor-root .improvement-chip::before {
   content: "";
   width: 8px;
   height: 8px;
@@ -391,13 +371,13 @@ h3,h4{
   transform: rotate(45deg);
 }
 
-.spelmote-chip {
+#editor-root .spelmote-chip {
   padding: 0.25rem 0.6rem;
   border: 2px solid var(--accent-dark);
   background: var(--bg);
   font-size: 0.75rem;
 }
-.improvement-row {
+#editor-root .improvement-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
@@ -405,7 +385,7 @@ h3,h4{
   margin-bottom: 0.4rem;
 }
 
-.improvement-chip {
+#editor-root .improvement-chip {
   padding: 0.2rem 0.5rem;
   border-radius: 999px;
   background: #444;
@@ -414,7 +394,7 @@ h3,h4{
   font-size: 0.85rem;
 }
 
-.add-improvement {
+#editor-root .add-improvement {
   border: 1px dashed #888;
   background: transparent;
   color: #ccc;

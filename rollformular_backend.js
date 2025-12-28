@@ -117,6 +117,7 @@ export function computeDerived(character) {
 //ROLLPERSON
 export const rollperson ={
   avatar: null,
+  theme: "main",
   namn: "Fyll i namn...",
   släkte: "människa",
   yrke: "bard",

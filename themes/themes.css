@@ -1,0 +1,143 @@
+
+html[data-theme="main"] {
+  --bg: #f1e9d9;
+  --sheet: #aca28f;
+  --text: #221b22;
+  --muted: #555;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #caa676;
+  --accent-dark: #50310c;
+  --accent-warning: #be2f1ce8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #2f5f8f;
+  --kp-bg: #8f2f1f;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --avatar-border: #ca1313;
+  --logo-color: #ca1313;
+}
+html[data-theme="dark"] {
+  --bg: #2b2b2b;
+  --sheet: #2b2b2b;
+  --text: #e4e4e4;
+  --muted: #bbbbbb;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #000000;
+  --accent-dark: #7c7c7c;
+  --accent-warning: #be2f1ce8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #2f5f8f;
+  --kp-bg: #8f2f1f;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --avatar-border: #ca1313;
+  --logo-color: #221b22;
+}
+
+html[data-theme="pink-dragon"] {
+  --bg: #e7c3ce;
+  --sheet: #ffb6cc;
+  --text: #493042;
+  --muted: #7a4959;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #cf6fb7;
+  --accent-dark: #803f77;
+  --accent-warning: #98d467e8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #642f8f;
+  --kp-bg: #8f1f4a;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --avatar-border: #ad317a;
+  --logo-color: #221b22;
+}
+html[data-theme="blue-steel"] {
+  --bg: #cfcfcf;
+  --sheet: #a7a7a7;
+  --text: #2d275f;
+  --muted: #494c7a;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #57a7aa;
+  --accent-dark: #4b3f80;
+  --accent-warning: #d4c467e8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #3d2f8f;
+  --kp-bg: #861f8f;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --avatar-border: #317bad;
+  --logo-color: #221b22;
+}
+
+#editor-root {
+  --bg: #2b2b2b;
+  --sheet: #2b2b2b;
+  --text: #e4e4e4;
+  --muted: #bbbbbb;
+  --border-soft: #ccc;
+
+  /* ── Section backgrounds ─────────────── */
+  --bg-grund: #f3e4d1;
+  --bg-resurser: #e4cfb4;
+  --bg-box: #f5f2eb;
+
+  /* ── Accent colors ───────────────────── */
+  --accent-light: #000000;
+  --accent-dark: #7c7c7c;
+  --accent-warning: #be2f1ce8;
+
+  /* ── Resource colors ─────────────────── */
+  --vp-bg: #2f5f8f;
+  --kp-bg: #8f2f1f;
+
+  /* ── Skill sections ──────────────────── */
+  --skills-bg: #faf6f0;
+
+  /* ── UI elements ─────────────────────── */
+  --avatar-border: #0c0c0c;
+  --logo-color: #221b22;
+}

@@ -5,12 +5,12 @@
   <title>Drakar & Demoner – Rollformulär</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="editor/editor.css" />
+  <link rel="stylesheet" href="themes/themes.css" />
 </head>
 
 <body>
     <!--TOP MENU ROW-->
-  <button
-    id="open-editor"
+  <button id="open-editor"
     class="editor-button editor"
     data-tooltip="Redigera rollperson"
     aria-label="Redigera rollperson">
@@ -22,40 +22,42 @@
     data-tooltip="Förbättringar"
     aria-label="Förbättringar">
   </button>
-    <!-- SHARED MODAL OVERLAY -->
-  <div id="modal-overlay" class="hidden">
+  <!-- SHARED MODAL OVERLAY -->
+    <div id="editor-root">
+    <div id="modal-overlay" class="hidden">
 
-    <!-- EDITOR MODAL -->
-    <div class="editor-modal modal" data-modal="editor">
-      <header>
-        <h2>Karaktärsinställningar</h2>
-        <button class="modal-close">✕</button>
-      </header>
+        <!-- EDITOR MODAL -->
+        <div class="editor-modal modal" data-modal="editor">
+          <header>
+            <h2>Karaktärsinställningar</h2>
+            <button class="modal-close ui-button">✕</button>
+          </header>
 
-      <div id="editor-content"></div>
+          <div id="editor-content"></div>
 
-      <footer>
-        <button id="save-editor">Spara</button>
-      </footer>
+          <footer>
+            <button id="save-editor">Spara</button>
+          </footer>
+        </div>
+
+        <!-- IMPROVEMENTS MODAL -->
+        <div class="editor-modal modal" data-modal="improvements">
+          <header>
+            <h2>Förbättringar</h2>
+            <button class="modal-close">✕</button>
+          </header>
+
+          <div id="improvements-content">
+            <!-- populated by JS -->
+          </div>
+
+          <footer>
+            <button id="add-spelmote">➕ Lägg till spelmöte</button>
+          </footer>
+        </div>
+
+      </div>
     </div>
-
-    <!-- IMPROVEMENTS MODAL -->
-  <div class="editor-modal modal" data-modal="improvements">
-    <header>
-      <h2>Förbättringar</h2>
-      <button class="modal-close">✕</button>
-    </header>
-
-    <div id="improvements-content">
-      <!-- populated by JS -->
-    </div>
-
-    <footer>
-      <button id="add-spelmote">➕ Lägg till spelmöte</button>
-    </footer>
-  </div>
-
-  </div>
 
     
     <section id ="character-header">
@@ -68,12 +70,21 @@
       <div id="avatar-wrapper">
     <div id="avatar-frame">
       <img id="avatar-image" alt="Karaktärsporträtt" />
-      <img
-        id="avatar-border"
-        src="./art/avatar_border.svg"
-        alt=""
+      <svg id="avatar-border"
+        viewBox="0 0 256 256"
         aria-hidden="true"
+      >
+      <rect
+        x="2"
+        y="2"
+        width="252"
+        height="252"
+        fill="none"
+        stroke="var(--avatar-border)"
+        stroke-width="4"
       />
+</svg>
+
     </div>
   </div>  
       <img src="./art/nameBanner.svg" alt="Rustning">
@@ -81,6 +92,7 @@
       </div>
       <ul id="character-details-right"></ul>
     </section>
+
     <!-- GRUNDEGENSKAPER -->
     <section id="grundegenskaper"></section>
 
@@ -185,7 +197,7 @@
         <div class="resurs-divider"></div>
       <div class="resurs-body">
         <div class="resurs-controls">
-          <button class="resurs-plus">+</button>
+          <button class="resurs-plus ui-button">+</button>
           <button class="resurs-minus">−</button>
         </div>
 

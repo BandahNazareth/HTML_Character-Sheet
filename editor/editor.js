@@ -169,7 +169,6 @@ const Modal = (() => {
       ?.classList.add("active");
 
     document.body.style.overflow = "hidden";
-    setTheme("dark");
     isOpen = true;
   }
 
@@ -189,7 +188,6 @@ const Modal = (() => {
   );
 
   document.body.style.overflow = "";
-  setTheme("main");
   isOpen = false;
 }
 
@@ -381,13 +379,11 @@ function renderImprovements() {
   renderList("Vapenfärdigheter", currentDraft.vapenfärdigheter);
 }
 //Color mode
-function setTheme(mode) {
-  document.documentElement.setAttribute("data-theme", mode);
-}
 window.addEventListener("DOMContentLoaded", () => {
   
   const openBtn = document.getElementById("open-editor");
   const saveBtn = document.getElementById("save-editor");
+  saveBtn.classList.add("ui-button", "ui-button--primary");
   const content = document.getElementById("editor-content");
   let draft = null;
 
@@ -548,14 +544,16 @@ const saveSection = document.createElement("section");
 saveSection.innerHTML = `<h3>Spara / Ladda</h3>`;
 
 const exportBtn = document.createElement("button");
-exportBtn.textContent = "📤 Exportera karaktär (JSON)";
+exportBtn.textContent = "Exportera karaktär (JSON)";
+exportBtn.className = "ui-button";
 
 exportBtn.addEventListener("click", () => {
   exportCharacter();
 });
 
 const importBtn = document.createElement("button");
-importBtn.textContent = "📥 Importera karaktär (JSON)";
+importBtn.textContent = "Importera karaktär (JSON)";
+importBtn.className = "ui-button";
 
 const importInput = document.createElement("input");
 importInput.type = "file";
@@ -587,7 +585,29 @@ importInput.addEventListener("change", () => {
 saveSection.append(exportBtn, importBtn, importInput);
 content.appendChild(saveSection);
 
-      // ── Avatar / Porträtt ─────────────────────────
+// ── Theme selection ─────────────────────────
+const themeSection = document.createElement("section");
+themeSection.innerHTML = `<h3>Färgtema</h3>`;
+
+const themeSelect = document.createElement("select");
+
+themeSelect.innerHTML = `
+  <option value="main">Standard</option>
+  <option value="dark">Mörk pergament</option>
+  <option value="pink-dragon">Pink dragon</option>
+  <option value="blue-steel">Blue steel</option>
+`;
+
+themeSelect.value = draft.theme ?? "main";
+
+themeSelect.addEventListener("change", () => {
+  draft.theme = themeSelect.value;
+});
+
+themeSection.appendChild(themeSelect);
+content.appendChild(themeSection); 
+     
+// ── Avatar / Porträtt ─────────────────────────
 const avatarSection = document.createElement("section");
 avatarSection.innerHTML = `<h3>Porträtt</h3>`;
 
@@ -639,6 +659,7 @@ avatarWrapper.addEventListener("drop", e => {
 const changeBtn = document.createElement("button");
 changeBtn.type = "button";
 changeBtn.textContent = "Ändra porträtt";
+changeBtn.className = "ui-button";
 
 const fileInput = document.createElement("input");
 fileInput.type = "file";
@@ -1145,7 +1166,7 @@ for (const [id, count] of Object.entries(draft.hjälteförmågor)) {
     <td class="hjälte-text">${data.text}</td>
     <td>
       ${stackControls}
-      <button class="remove-hjälte">✕</button>
+      <button class="remove-hjälte ui-button">✕</button>
     </td>
   `;
 
@@ -1181,8 +1202,8 @@ for (const [id, count] of Object.entries(draft.hjälteförmågor)) {
 hjälteSection.appendChild(hjälteTable);
 
 const addBtn = document.createElement("button");
-addBtn.textContent = "➕ Lägg till hjälteförmåga";
-addBtn.className = "add-hjälte";
+addBtn.textContent = "+ Lägg till hjälteförmåga";
+addBtn.className = "ui-button";
 
 addBtn.addEventListener("click", () => {
   renderAddHjälteUI(hjälteSection);

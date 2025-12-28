@@ -1,32 +1,4 @@
-html[data-theme="main"] {
-/* ── Base theme ───────────────────────── */
-  --bg: #f1e9d9;
-  --sheet: #aca28f;
-  --text: #221b22;
-  --muted: #555;
-  --border-soft: #ccc;
 
-  /* ── Section backgrounds ─────────────── */
-  --bg-grund: #f3e4d1;
-  --bg-resurser: #e4cfb4;
-  --bg-box: #f5f2eb;
-
-  /* ── Accent colors ───────────────────── */
-  --accent-light: #caa676;
-  --accent-dark: #50310c;
-  --accent-warning: #be2f1ce8;
-
-  /* ── Resource colors ─────────────────── */
-  --vp-bg: #2f5f8f;
-  --kp-bg: #8f2f1f;
-
-  /* ── Skill sections ──────────────────── */
-  --skills-bg: #faf6f0;
-
-  /* ── UI elements ─────────────────────── */
-  --button-bg: #f5f2eb;
-  --button-text: #111;
-}
 
 :root {
   --header-height: 2.2rem;
@@ -143,7 +115,11 @@ h1, h2, h3, h4, h5 {
   opacity: 0.7;
   margin-top: 0.25rem;
 }
-
+/*Name banner*/
+.name-banner {
+  width: 420px;
+  display: block;
+}
 /*-- Karaktärsinfo--*/
 #character-header {
   display: grid;
@@ -177,6 +153,8 @@ h1, h2, h3, h4, h5 {
   width:420px;
   justify-self: center;
 }
+
+
 .banner-visual img:not(.dod-logo){
   width: 100%;
   display: block;
@@ -205,7 +183,10 @@ h1, h2, h3, h4, h5 {
 #character-details-right li {
   text-align: left;
 }
-
+.dod-logo {
+  width: 300px;
+  display: block;
+}
 /* ── Grundegenskaper UI ───────────────────── */
 
 #grundegenskaper {
@@ -807,4 +788,72 @@ select {
 
   cursor: pointer;
   position: relative;
+}
+
+/* ─────────────────────────────────────────────
+   Unified Button Styles
+   ───────────────────────────────────────────── */
+
+.ui-button {
+  font-family: "Flareserif 821 BT", serif;
+  font-size: 14pt;
+
+  background: var(--bg);
+  color: var(--accent-dark);
+
+  border: 2px solid var(--accent-dark);
+  border-radius: 0;
+
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+
+  font-variant-caps: all-small-caps;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.05s ease;
+}
+
+.ui-button:hover {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+
+.ui-button:active {
+  transform: translateY(1px);
+}
+
+.ui-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Button variants ───────────────────────── */
+
+.ui-button--primary {
+  background: var(--bg);
+  color: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.ui-button--primary:hover {
+  background: var(--accent-dark);
+  color: var(--accent-dark);
+}
+
+.ui-button--danger {
+  border-color: var(--accent-warning);
+  color: var(--accent-warning);
+}
+
+.ui-button--danger:hover {
+  background: var(--accent-warning);
+  color: #fff;
+}
+
+.ui-button--small {
+  font-size: 10pt;
+  padding: 0.2rem 0.5rem;
 }

@@ -21,10 +21,13 @@ import { hjälmar } from "./data/listor/data_hjalmar.js";
 import { instrument } from "./data/listor/data_instrument.js";
 
 //Color mode
-function setTheme(mode) {
-  document.documentElement.setAttribute("data-theme", mode);
+function setTheme(themeName) {
+  document.documentElement.setAttribute("data-theme", themeName);
 }
-setTheme("main");
+function applyCharacterTheme() {
+  setTheme(rollperson.theme || "main");
+}
+applyCharacterTheme();
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -40,6 +43,15 @@ window.addEventListener("DOMContentLoaded", () => {
   if (oldValue && oldValue !== "inget") {
     rollperson.instrument[0] = oldValue;
   }
+}
+applyCharacterTheme();
+
+function wrapAsFardCheckbox(input) {
+  const label = document.createElement("label");
+  label.className = "färd-checkbox";
+
+  input.parentNode.insertBefore(label, input);
+  label.appendChild(input);
 }
 
 function renderSkillList({
@@ -561,8 +573,11 @@ const rustningSelect = document.getElementById("rustning-select");
 const bvEl = document.getElementById("rustning-bv");
 
 const cbSmyga = document.getElementById("nackdel-smyga");
+wrapAsFardCheckbox(cbSmyga);
 const cbUndvika = document.getElementById("nackdel-undvika");
+wrapAsFardCheckbox(cbUndvika);
 const cbHoppa = document.getElementById("nackdel-hoppa");
+wrapAsFardCheckbox(cbHoppa);
 
 const nackdelTextEl = document.getElementById("rustning-nackdel-text");
 
@@ -601,8 +616,11 @@ const hjälmSelect = document.getElementById("hjälm-select");
 const hjälmBVEl = document.getElementById("hjälm-bv");
 
 const cbUpptäckaFara = document.getElementById("hjälm-upptackafara");
+wrapAsFardCheckbox(cbUpptäckaFara);
 const cbAvstånd = document.getElementById("hjälm-avstandsattacker");
+wrapAsFardCheckbox(cbAvstånd);
 const cbFinnaDolda = document.getElementById("hjälm-finnadoldating");
+wrapAsFardCheckbox(cbFinnaDolda);
 
 const hjälmNackdelTextEl = document.getElementById("hjälm-nackdel-text");
 
@@ -641,6 +659,7 @@ render();
 
 // Re-render when editor saves
 window.addEventListener("character-updated", () => {
+  applyCharacterTheme();
   render();
 });
 
