@@ -1,4 +1,5 @@
 export const hjälteförmågor = {
+  //GRUNDBOKEN
   ingen: {
     name: "-",
     text: `-`,
@@ -273,21 +274,6 @@ export const hjälteförmågor = {
     kostnad: "1 VP",
     källa: "dod"
   },
-  sändebud: {
-    name: "Sändebud",
-    text: `Du är utvald av en högre makt – en gud eller högre demon, ande eller elementar – som talesperson och företrädare på Altor.
-    Du bestämmer tillsammans med spelledaren vad din högre makt har för natur. Skriv därefter ner några ledord som beskriver din
-    högre makt.När du talar i enlighet med din makts ledord fylls du av gudomlig karisma, och för 2 VP får du fördel på slag mot Övertala.
-    Din högre makt kan ge dig ett tecken genom att tala direkt till dig. Se reglerna för
-    Spådom. Detta är en överväldigande upp-levelse, och du får två tillstånd. Det kostar dessutom 3 VP.
-    Din makt kan kräva att du utför en handling å dennes vägnar. Exakt vad är upp till spelledaren – det kan röra sig om allt
-    från ett enkelt offer, till ett episkt äventyr i maktens namn. Om du vägrar eller avstår kan du inte längre återhämta VP högre än
-    halva din PSY tills du återgår till att följa beskyddarens vilja eller utför en motsvarande botgöring. Du får gratis fördel på
-    alla slag mot Övertala som syftar till att uppfylla ditt uppdrag. Detta kostar inga VP.`,
-    krav: "-",
-    kostnad: "Varierar",
-    källa: "kopparhavet"
-  },
   tjuvhugg: {
     name: "Tjuvhugg",
     text: `Du kan aktivera denna förmåga när du i närstrid angriper en fiende som befinner sig inom 2 meter från en annan rollperson. Angreppet räknas så dom en smygattack, vilket innebär att angreppet inte kan duckas eller pareras, du får en fördel på slaget och antalet tärningar för skadan ökar med ett. Förmågan kan enbart användas med ett smidigt vapen. Att aktivera förmågan räknas inte som en handling.`,
@@ -331,4 +317,447 @@ export const hjälteförmågor = {
     kostnad: "3 VP",
     källa: "dod"
   },
+  //KOPPARHAVET
+  andel: {
+  name: "Andel",
+  text: `Du har en andel i en handelsrutt, karavan eller sjöfartslinje.
+Andelen har ett värde som börjar på 1.
+
+» Begära passage med en karavan.
+» Försöka höja din andels värde. Slå ett slag för Köpslå, om du lyckas höjs
+värdet med ett, om du misslyckas sänks det med ett. Vid ett demonslag förlorar
+du halva din andel, vid ett drakslag dubbleras din andel.
+» Andelen ger fördel på ett slag i utmaningen för handelskontakter i en hamn,
+karavanseraj eller marknad som ligger längs handelsrutten. Se sida 66.
+» Begära ut din andel. Kräver ett lyckat slag för Köpslå. Inkassera valfri summa
+ur andelen, och sänk andelens värde med lika mycket. Om andelens värde når noll
+kan du stryka förmågan.`,
+  krav: "-",
+  kostnad: "-",
+  källa: "kopparhavet"
+},
+
+  asket: {
+    name: "Asket",
+    text: `Du är prästvigd åt Shamash. Detta innebär ett liv av återhållsamhet och självrannsakan.
+För att kunna dra nytta av din förmåga måste du klä dig enkelt och du kan endast under
+korta och exceptionella tillfällen bära eller äga fler än 4 föremål.
+Du är van vid att fasta, och kan återvinna VP även om du lider av hunger (se sida 54 i Regelboken).
+Om du klär dig i trasor slipper du nackdel på slag för KAR. Detta kostar inga VP,
+och för 2 VP får du istället fördel på KAR när SL finner det rimligt.`,
+    krav: "-",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  banzikan_ekens_teknik: {
+    name: "Banzikan: Ekens teknik",
+    text: `Du följer krigarläran Banzikan och har lärt dig ekens tillstånd – att avgränsa sin röta
+gentemot kärnan. Du kan bota tillståndet Krasslig för 2 VP. Du kan även sänka värdet
+på gift och sjukdomar du utsätts för med 1 VP/steg, upp till max 3 VP.`,
+    krav: "-",
+    kostnad: "Varierar",
+    källa: "kopparhavet"
+  },
+
+  banzikan_froets_teknik: {
+    name: "Banzikan: Fröets teknik",
+    text: `Du följer krigarläran Banzikan och har lärt dig fröets tillstånd – att samla sitt väsen
+i en sluten kammare. Om du har noll KP kan du övertala dig själv att kämpa på utan
+nackdel på ditt PSY-slag.`,
+    krav: "-",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  banzikan_gyllene_snittet: {
+    name: "Banzikan: Gyllene snittet",
+    text: `Du måste använda tekniken innan du slår för en attack med ett svärd.
+Om attacken träffar gör den maximal skada, och om den dödar din motståndare faller denne
+i två delar där proportionerna mellan den mindre delen och den större delen är samma som
+mellan den större delen och den ursprungliga kroppen.
+Återställ omedelbart 2T6 VP av ren tillfredsställelse.`,
+    krav: "Ekens teknik, Fröets teknik, Stenens teknik",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+
+  banzikan_sann_sinnesnarvaro: {
+    name: "Banzikan: Sann sinnesnärvaro",
+    text: `Du kan pressa ett slag utan att ta ett tillstånd.`,
+    krav: "Ekens teknik, Fröets teknik, Stenens teknik",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+  banzikan_stenens_teknik: {
+    name: "Banzikan: Stenens teknik",
+    text: `Du följer krigarläran Banzikan och har lärt dig stenens tillstånd – att vila oberörd på
+strömmens botten. Du kan bota tillståndet Rädd för 2 VP. Därefter är du stålsatt mot
+rädsla och lyckas automatiskt med PSY-slag mot skräck under en kvarts tid.`,
+    krav: "-",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  dromedarkarist: {
+    name: "Dromedarkårist",
+    text: `Du tillhör Efaros Dromedarkår, och har svurit stordrottning Neferak evig trohet. Se sida
+82 i Ereb Altor: Hjältar från Kopparhavet för mera information om kåren.
+Om du väljer Dromedarkårist från spelstart börjar du spel med en stridstränad kamel,
+och är van vid att röra dig långa sträckor genom öken och karg vildmark.
+Du kan utföra en ilmarsch utan att bli Utmattad så länge du reser på kamel- eller
+dromedarrygg (se Regelboken sida 101).
+För 1 VP får du även fördel på att parera attacker uppe på din kamel på grund av dess
+långa ben. Var du än rör dig i Efaro tas du emot av befolkningen och erbjuds gratis mat
+och husrum.`,
+    krav: "Rida 12",
+    kostnad: "1 VP",
+    källa: "kopparhavet"
+  },
+
+  fjaderfaktning: {
+    name: "Fäktkonst: Fjäderfäktning",
+    text: `Denna stridsform uppfanns ursprungligen av ankduellanter i Arkipelagen. Fäktaren
+använder sina uppspärrade vingfjädrar för att dölja sina rörelser, och utför snabba stötar
+med sitt vapen. Humanoider utan fjädrar kan istället använda en mantel.
+Tekniken fungerar med enhands eggvapen som svärd och dolkar. De måste ha
+egenskapen stickande. Den du angriper kan inte försöka parera dina attacker.`,
+    krav: "Svärd 12, samt fäktlärare eller fäktbok",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  halvsvard: {
+    name: "Fäktkonst: Halvsvärd",
+    text: `Genom att greppa ett svärd längs klingan kan du ge extra kraft till en stöt och pressa
+genom plåt. För att utföra attacken måste du hålla svärdet med två händer (2H).
+Vapnet får egenskapen genomslag (se sida 62) under attacken. Om vapnet har
+egenskapen stickande ignorerar attacken helt motståndarens skydd.`,
+    krav: "Svärd 12, samt fäktlärare eller fäktbok",
+    kostnad: "1 VP",
+    källa: "kopparhavet"
+  },
+
+  mothugg: {
+    name: "Fäktkonst: Mothugg",
+    text: `Om du utför en motattack med hjälp av vapenegenskapen balanserad (se sida 62)
+lyckas du automatiskt med slaget, precis som om du utfört en fri attack efter ett
+drakslag (se sida 46 i Regelboken).`,
+    krav: "Svärd 12, samt fäktlärare eller fäktbok",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  mastarhugg: {
+    name: "Fäktkonst: Mästarhugg",
+    text: `Du utför ett överraskande hugg med ditt svärd, och din motståndare får inte försvara
+sig. Förmågan kan endast användas med vapen med egenskapen balanserad.`,
+    krav: "Svärd 16, samt fäktlärare eller fäktbok",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+  mordarslag: {
+    name: "Fäktkonst: Mördarslag",
+    text: `Du greppar ditt svärd runt klingan med båda händerna och använder parerstången
+som hammare. Du måste hålla svärdet med två händer (2H), och tar T6 i skada om du
+inte bär lämpligt handskydd eller har ett särskilt anpassat vapen.`,
+    krav: "Svärd 12, samt fäktlärare eller fäktbok",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+  forlaning: {
+    name: "Förläning",
+    text: `Du har erhållit en förläning av en furste eller härskare. Beskriv vem som givit dig
+förläningen och var den är belägen. Förläningen ger dig rätt till inkomster, status
+och inflytande i området. Exakt vad detta innebär avgörs av SL, men kan innefatta
+skatteintäkter, soldater, tjänstefolk och politiskt inflytande.`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  gesall: {
+    name: "Gesäll",
+    text: `Du är utbildad gesäll inom ett hantverk. Beskriv vilket skrå eller mästare du är knuten
+till. Du får erkännande som yrkeskunnig och kan ta betalt för ditt arbete enligt
+gällande normer. I städer och samhällen där ditt skrå är verksamt har du ofta tillgång
+till arbete, logi och kontakter.`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  handelshus: {
+    name: "Handelshus",
+    text: `Du är medlem i eller leder ett handelshus. Om slaget lyckas har ditt handelshus en
+kontakt eller en agent på plats som ger dig Rätt att handla (se kapitel 4: Kampanjer),
+och som kan hjälpa dig med råd och kontakter.
+Välj eller slumpa en handelsvara (se sidorna 63–64) som ditt handelshus är
+specialiserat på. När du köper eller säljer denna vara får du en fördel på slaget för
+Köpslå (se handelsreglerna på sida 67).
+Beskriv och namnge ditt handelshus om du skapar ett nytt eller välj ett som redan
+finns beskrivet, till exempel i Ereb Altor: Hjältar från Kopparhavet.`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  kapten: {
+    name: "Kapten",
+    text: `Du har erhållit en kaptenstitel och har erfarenhet som sjöbefäl. För 2 VP får du fördel
+på Övertala och Taktik när du utför en utmaning ombord på ett fartyg. Beskriv den
+stad, furste eller organisation som har givit dig din kaptensvärdighet. Denna
+organisation kallas din flaggmakt. Välj ett av nedanstående (dessa kostar inte VP).
+Du har fått ett kaparbrev i ditt namn. Detta ger dig rätt att angripa din flaggmakts
+fiender och kapa deras skepp.
+Du är en officer i din flaggmakts flotta. I krigstider har du rätt att beordra en mindre
+grupp soldater och kronotjänare som tillhör din flaggmakt.
+Du tillhör din flaggmakts stadsadel. Du är en högborgare i din hemstad. Du har en
+passande bostad, och har tillgång till mat och förnödenheter när du är där. Beskriv
+gärna din släkt och din bostad.`,
+    krav: "Sjökunnighet 12",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  kargor: {
+    name: "Kargör",
+    text: `När sällskapet reser med karavan eller fartyg (se resor i kapitel 4) kan du genom
+noggrann bokföring, kreativa räkenskaper och diverse knep minska sällskapets
+utgifter – halvera driftkostnaden för T4 regioner per långresa. Detta kostar inga VP.
+Under långresor kan du för 2 VP öka antalet varor som du kan köpa och sälja på en ort
+med T6 eller öka antalet läster med T20. Se sida 66.`,
+    krav: "Köpslå 12",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  korsar: {
+    name: "Korsar",
+    text: `Du är en veteran från plundring och piratkrig på Altors hav. Du får fördel på
+UPPTÄCKA FARA när du spanar på fartyg. För 2 VP kan du välja ut ett fartyg inom
+synhåll som du har extra god uppsikt över.`,
+    krav: "Upptäcka Fara 12",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+  luftryttare: {
+    name: "Luftryttare",
+    text: `Du har lärt dig att rida* på flygande varelser som flygödlor, gripar och albadorer.
+Bärförmågan för flygande bestar är en person. Förmågan fungerar bara på varelser
+som är tämjda. Många mäktiga flygande monster, som drakar och rockfågel, kan
+aldrig tämjas.`,
+    krav: "Rida 12",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  monstertamjare: {
+    name: "Monstertämjare",
+    text: `Du har lärt dig att tämja Ereb Altors vilda monster. Huruvida ett monster alls kan
+tämjas varierar. Intelligenta och mäktiga monster som drakar, fågel rock eller
+demoner kan som regel inte tämjas. Andra monster kan ge en eller två tärningar
+nackdel på Bestiologi och Rida när du försöker tämja dem (se nedan). SL avgör
+vilka monster som är svåra att tämja.
+Ett monster som du tämjt kan för 3 VP utföra en monsterattack i strid. Om du rider
+på ett monster du tämjt räknas det som stridstränat. Du kan inte själv attackera i
+samma runda som ditt riddjur.`,
+    krav: "Rida 12, Bestiologi 14",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+  mastare_i_ordo_magus: {
+    name: "Mästare i Ordo Magus",
+    text: `Du är en fullvärdig medlem av Ordo Magus i Krilloan, upptagen och invigd som mästare.
+Läs mera om den anrika magikerorden på sida 57 i Ereb Altor: Hjältar från Kopparhavet.
+Som tecken på din rang bär du en enkel ring av orikalk. Du kan använda den som ditt
+fokus. Du har också tillgång till lärare inom magiskolan hög magi när du befinner dig
+i Kristalltornet i Krilloan, och du har lärt dig besvärjelsen Tornportal (se sida 80).`,
+    krav: "Valfri Magiskola 12",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  naturligt_vapen_klor: {
+    name: "Naturligt vapen – klor",
+    text: `Du kan välja att använda skadebonus för SMI istället för STY vid obeväpnad strid
+(slagsmål).`,
+    krav: "Djurfolk som har klor naturligt",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  navigator: {
+    name: "Navigatör",
+    text: `Du kan alltid avgöra var norr är och vet din ungefärliga position genom att studera
+stjärnorna (2 VP) så länge stjärnhimlen är klar. Du slipper nackdel om du navigerar
+eller agerar som stigfinnare i vildmarken utan lämpliga instrument.`,
+    krav: "Sjökunnighet 12",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  ryttmastare: {
+    name: "Ryttmästare",
+    text: `Du är närmast född i sadeln och lärde dig rida innan du kunde gå. Du kan utnyttja
+din förmåga till följande:
+» Höja riddjurets förflyttning med 2 så länge du sitter i sadeln.
+» För 2 VP kan du utnyttja riddjurets kraft i en närstridsattack och utdela +T6 i skada.
+» För 1 VP kan du bestämma om en attack mot dig träffar dig eller ditt riddjur.
+» Börja spelet med en stridstränad häst, om du väljer förmågan vid spelstart.`,
+    krav: "Rida 14",
+    kostnad: "Varierar",
+    källa: "kopparhavet"
+  },
+  sadelakrobat: {
+    name: "Sadelakrobat",
+    text: `Du kan utföra följande handlingar:
+» Som en fri handling plocka upp ett föremål från marken eller utan problem ta dig
+upp eller ner från ryggen även om riddjuret är i full rörelse. Detta kostar inte VP.
+» Hoppa mellan två riddjurs ryggar med ett slag för Hoppa & Klättra, utan VP-kostnad.
+» För 2 VP undvika att få nackdel för ritt utan sadel.
+» Om du utför en avståndsattack från sadeln kan du för 2 VP ersätta din vanliga
+förflyttning med en sprint.
+» Börja spelet med en häst, om du väljer förmågan vid spelstart.`,
+    krav: "Rida 12",
+    kostnad: "Varierar",
+    källa: "kopparhavet"
+  },
+
+  skeppare: {
+    name: "Skeppare",
+    text: `Du är van vid att framföra ett fartyg och föra befäl ombord. Om du befinner dig i en
+befälsposition på ett fartyg får du fördel på alla slag mot SJÖKUNNIGHET och
+OBSERVATION. Om du befinner dig i en hamnstad eller liknande miljö kan du använda
+ditt rykte som skeppare för att rekrytera besättningsmedlemmar. Detta tar ett skift i
+anspråk. Slå ett slag mot Övertala med fördel. Om du lyckas rekryterar du T6+4
+erfarna besättningsmedlemmar.`,
+    krav: "Sjökunnighet 12",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+
+  slaktare: {
+    name: "Slaktare",
+    text: `Du har upptagits som fullvärdig medlem i en av staden Krilloans största kriminella
+organisationer – Slaktarna. Se sida 82 i Ereb Altor: Hjältar från Kopparhavet för mera
+information om organisationen.
+Du får en personlig slaktkniv (värden som mästersmidd dolk) som räknas som en
+minnessak (sida 27 i Regelboken). Du får även ett skinnförkläde som räknas som
+läderrustning. Du är van vid att stycka kött, och lyckas automatiskt med slag mot
+VILDMARKSVANA för att laga mat i fält (se sida 103 i Regelboken).`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  solriddare: {
+    name: "Solriddare",
+    text: `Du är en fullvärdig solriddare, svuren till Shamash, Utu, Sholak eller någon annan
+solgud. Du kan även följa den Lysande Vägen. På sida 80 i Ereb Altor: Hjältar från
+Kopparhavet kan du läsa mera om en av dessa ordnar (Sanna solriddarorden).
+Du har rätt att begära mat och husrum i soltempel och hos präster och solriddare som
+följer samma gud som du.
+För 3 VP kan du få ditt vapen att lysa med ett starkt ljus. Detta lyser upp en yta om
+20 meter i alla riktningar i en kvart. Ljuset räknas som solljus och orsakar skada på
+varelser som är känsliga för sådant. Se sida 94 och 97 i Regelboken för hur solljus
+påverkar nattfolk. I normalfallet kan SL utgå från att varelser som utsätts för den här
+förmågan är oskyddade.`,
+    krav: "Svärd 12 och socialt stånd motsvarande riddare",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+
+  spadom: {
+    name: "Spådom",
+    text: `Du kan genom spådom finna och tyda tecken i din omgivning. Spådomen kan gälla dig
+själv eller en person som du spår. Detta visar högre makters avsikter och kan hjälpa
+när du står inför ett svårt val eller inte vet vad ditt nästa steg bör vara. För 3 VP kan
+du be om ett tecken av högre makter.
+Du kan då använda en av flera klassiska spådomstekniker, vilka ofta kräver särskild
+utrustning eller offerdjur. Du frågar SL vad du bör göra – vilken väg du bör ta, vem
+du bör lita på, var du bör leta. Spelledaren svarar genom att beskriva det tecken du
+får och beskriva din magkänsla.
+Tecken kan vara tvetydiga och svekfulla, men de leder alltid mot mer äventyr, mot
+skatter, ledtrådar, viktiga SLP:er eller vilda rykten.`,
+    krav: "Myter & Legender 10",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+
+  storfiskare: {
+    name: "Storfiskare",
+    text: `Du slår med fördel vid fiske med nät eller fiskespö. Du får dubbelt så mycket
+matransoner vid ett lyckat slag och vid ett drakslag det tredubbla. Du kan även fiska
+med treudd, spjut eller pilar, men slår då utan fördel och får enbart fångst enligt
+normalt fiske (Regelboken sida 103). Storfiskaren kan förse en besättning på upp till
+12 personer med proviant under en sjöfart så länge denne inte behöver ägna sig åt
+något annat under resan och rätt redskap finns att tillgå. Detta halverar
+driftkostnaden för en seglats.`,
+    krav: "Jakt & fiske 14",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+  stormprast: {
+    name: "Stormpräst",
+    text: `Du har svurit trohet till en av Altors vindgudar och upptagits i dess prästerskap.
+Du har invigts i prästerskapets hemligheter. Se sida 68 i Ereb Altor: Hjältar från
+Kopparhavet för information om Altors olika vindgudar som Marduk och Sankma.
+För 3 VP och ett lämpligt offer (värt minst 5 silver) kan du påverka vädret. Du kan
+lugna en storm, bryta stiltje eller få regn att falla. Inom en kvart har vädret ändrats.
+Detta kan skapa fördelaktiga förhållanden för olika handlingar – torrt väder för resa,
+molnigt väder för att röra sig osedd, och så vidare.
+Om spelgruppen använder tilläggsreglerna för sjöfart i Ereb Altor: Kopparhavet
+innebär detta att du kan modifiera resultatet i Vädertabellen ett snäpp (t.ex. från 3
+till 2 eller 4).
+Stormpräster är alltid välkomna på skepp och fartyg, och får ofta gratis passage.`,
+    krav: "-",
+    kostnad: "3 VP",
+    källa: "kopparhavet"
+  },
+
+  svansforing: {
+    name: "Svansföring",
+    text: `Kan väljas av alla som har en svans. Ger fördel på alla slag som rör balansgång.
+För 2 VP kan du försöka fälla en fiende med din svans som en fri handling och med
+ett motståndsslag för slagsmål (se sida 48 i Regelboken).`,
+    krav: "Svans",
+    kostnad: "2 VP",
+    källa: "kopparhavet"
+  },
+  sändebud: {
+    name: "Sändebud",
+    text: `Du är utvald av en högre makt – en gud eller högre demon, ande eller elementar – som talesperson och företrädare på Altor.
+    Du bestämmer tillsammans med spelledaren vad din högre makt har för natur. Skriv därefter ner några ledord som beskriver din
+    högre makt.När du talar i enlighet med din makts ledord fylls du av gudomlig karisma, och för 2 VP får du fördel på slag mot Övertala.
+    Din högre makt kan ge dig ett tecken genom att tala direkt till dig. Se reglerna för
+    Spådom. Detta är en överväldigande upp-levelse, och du får två tillstånd. Det kostar dessutom 3 VP.
+    Din makt kan kräva att du utför en handling å dennes vägnar. Exakt vad är upp till spelledaren – det kan röra sig om allt
+    från ett enkelt offer, till ett episkt äventyr i maktens namn. Om du vägrar eller avstår kan du inte längre återhämta VP högre än
+    halva din PSY tills du återgår till att följa beskyddarens vilja eller utför en motsvarande botgöring. Du får gratis fördel på
+    alla slag mot Övertala som syftar till att uppfylla ditt uppdrag. Detta kostar inga VP.`,
+    krav: "-",
+    kostnad: "Varierar",
+    källa: "kopparhavet"
+  },
+  timmerman: {
+    name: "Timmerman",
+    text: `Du är utbildad timmerman och van vid att arbeta med träkonstruktioner.
+Du får fördel på slag för HANTVERK när du bygger, reparerar eller bedömer
+träbyggnader, fartyg eller belägringsverktyg. Du kan även bedöma kvaliteten på
+trävirke och avgöra om en konstruktion är säker.`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  },
+
+  vaghals: {
+    name: "Våghals",
+    text: `Du kastar dig huvudstupa in i farliga situationer utan att tveka.
+När du tar en uppenbar risk på eget initiativ får du fördel på det första slaget som
+följer. SL avgör när detta är tillämpligt.`,
+    krav: "-",
+    kostnad: "-",
+    källa: "kopparhavet"
+  }
 };

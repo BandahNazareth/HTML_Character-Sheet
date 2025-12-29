@@ -22,3 +22,7 @@ export function getSkillKälla(id) {
     "okänd"
   );
 }
+export function isItemFromVisibleKälla(character, källaId) {
+  if (!källaId) return true; // items without source are always visible
+  return character.källorSynliga[källaId] !== false;
+}

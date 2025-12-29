@@ -665,6 +665,10 @@ label {
   line-height: 1;
 }
 
+.has-nackdel {
+  color: var(--accent-warning);
+}
+
 table {
   border-collapse: collapse;
 }

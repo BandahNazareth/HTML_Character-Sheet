@@ -15,7 +15,7 @@ import { yrken } from "./data/listor/data_yrken.js";
 import { förmågor } from "./data/listor/data_formagor.js";
 import { kallor, buildGroupedOptions} from "./data/listor/data_kallor.js";
 import { groupByKälla } from "./rules/grundchans.js";
-import {ensureKällaVisibility, isKällaVisible, getSkillKälla} from "./rules/kallaVisibility.js";
+import {ensureKällaVisibility, isKällaVisible, getSkillKälla, isItemFromVisibleKälla} from "./rules/kallaVisibility.js";
 
 // ITEM imports
 import { vapen } from "./data/listor/data_vapen.js";
@@ -36,6 +36,31 @@ function applyCharacterTheme() {
 }
 applyCharacterTheme();
 
+//Kontrollerar om färdigheter har nackdel
+
+function hasNackdelForSkill(rollperson, item) {
+  // 1️⃣ Pressed grundegenskap
+  const grund = item.grundegenskap;
+  if (grund && rollperson.grundegenskaper[grund]?.pressad) {
+    return true;
+  }
+
+  // 2️⃣ Armor-based nackdel (already calculated state)
+  if (!rollperson.rustning) return false;
+
+  const armor = rustningar[rollperson.rustning];
+  if (!armor?.nackdelar) return false;
+
+  // Map skill IDs → armor nackdel flags
+  const armorNackdelMap = {
+    smyga: "smyga",
+    undvika: "undvika",
+    hoppaochklattra: "hoppaochklattra"
+  };
+
+  const flag = armorNackdelMap[item.id];
+  return flag ? armor.nackdelar[flag] === true : false;
+}
 
 //DOMCONTENTLOADED
 window.addEventListener("DOMContentLoaded", () => {
@@ -80,8 +105,6 @@ function renderSkillList({
 );
 
 Object.entries(grouped).forEach(([källaId, items]) => {
- console.log("VIS", källaId, rollperson.källorSynliga?.[källaId]);
-  console.log("KÄLLA DEF", källaId, kallor[källaId]);
   if (!isKällaVisible(rollperson, källaId)) return;
 
   // 1️⃣ ALWAYS ensure state FIRST
@@ -126,6 +149,11 @@ const visibleItems = items.filter(item => {
 
       const row = document.createElement("div");
 
+      const hasNackdel = hasNackdelForSkill(rollperson, item);
+      if (hasNackdel) {
+        row.classList.add("has-nackdel");
+      }
+
       row.innerHTML = `
         <label class="färd-checkbox">
           <input
@@ -136,11 +164,18 @@ const visibleItems = items.filter(item => {
         </label>
 
         ${item.grundchans}
-        ${item.name} (${grundData[item.grundegenskap]?.kort ?? "?"})
+        <span class="skill-name ${hasNackdel ? "has-nackdel" : ""}">
+          ${item.name}
+          (${grundData[item.grundegenskap]?.kort ?? "?"})
+          ${
+            hasNackdel
+              ? `<span class="nackdel-icon" title="Nackdel på slag">⚠️</span>`
+              : ""
+          }
+        </span>
 
-        ${state.tränad ? `<span class="tränad-label">Tränad</span>`
-  : ""}
-      `;
+        ${state.tränad ? `<span class="tränad-label">Tränad</span>` : ""}
+        `;
 
       container.appendChild(row);
     });
@@ -424,7 +459,12 @@ for (let slot = 0; slot < 3; slot++) {
   const select = document.createElement("select");
 
   select.innerHTML = buildGroupedOptions({
-  items: instrument,
+  items: Object.fromEntries(
+    Object.entries(instrument).filter(
+      ([, item]) =>
+        isItemFromVisibleKälla(rollperson, item.källa)
+    )
+  ),
   getLabel: i => i.name,
   getValue: id => id
 });
@@ -498,9 +538,14 @@ for (let slot = 0; slot < 3; slot++) {
   const select = document.createElement("select");
 
   select.innerHTML = buildGroupedOptions({
-  items: vapen,
+  items: Object.fromEntries(
+    Object.entries(vapen).filter(
+      ([, item]) =>
+        isItemFromVisibleKälla(rollperson, item.källa)
+    )
+  ),
   getLabel: w => w.name,
-  getValue: (id) => id
+  getValue: id => id
 });
 
   select.value = rollperson.vapen[slot] ?? "inget";
@@ -628,7 +673,12 @@ const nackdelTextEl = document.getElementById("rustning-nackdel-text");
 
 // Populate dropdown
 rustningSelect.innerHTML = buildGroupedOptions({
-  items: rustningar,
+  items: Object.fromEntries(
+    Object.entries(rustningar).filter(
+      ([, r]) =>
+        isItemFromVisibleKälla(rollperson, r.källa)
+    )
+  ),
   getLabel: r => r.name,
   getValue: id => id
 });
@@ -673,7 +723,12 @@ const hjälmNackdelTextEl = document.getElementById("hjälm-nackdel-text");
 
 // Populate dropdown
 hjälmSelect.innerHTML = buildGroupedOptions({
-  items: hjälmar,
+  items: Object.fromEntries(
+    Object.entries(hjälmar).filter(
+      ([, h]) =>
+        isItemFromVisibleKälla(rollperson, h.källa)
+    )
+  ),
   getLabel: h => h.name,
   getValue: id => id
 });

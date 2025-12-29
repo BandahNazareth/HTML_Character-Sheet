@@ -11,7 +11,7 @@ import { getMaxTrainedFärdigheter } from "../rules/MaxTranadeFardigheter.js";
 import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, getSpelmöten } from "../rollformular_backend.js";
 import { groupByKälla } from "../rules/grundchans.js";
 import { kallor } from "../data/listor/data_kallor.js";
-import {ensureKällaVisibility} from "../rules/kallaVisibility.js";
+import {ensureKällaVisibility, isItemFromVisibleKälla} from "../rules/kallaVisibility.js";
 
 function ensureInitialSpelmöte(character) {
   character.spelmöten ??= [];
@@ -493,19 +493,33 @@ syncEligibility(rollperson.vapenfärdigheter, currentDraft.vapenfärdigheter);
 
   const select = document.createElement("select");
 
-  const available = Object.entries(hjälteData)
+  const groupedHjältar = groupByKälla(
+  Object.entries(hjälteData)
     .filter(([id]) => id !== "ingen")
-    .filter(([id]) => !draft.hjälteförmågor[id]);
+    .filter(([id]) => !draft.hjälteförmågor[id])
+    .filter(([, h]) =>
+      isItemFromVisibleKälla(draft, h.källa)
+    )
+    .map(([id, h]) => ({
+      id,
+      ...h,
+      källa: h.källa ?? "okänd"
+    })),
+  h => h.källa
+);
 
   select.innerHTML = `
-    <option value="">Välj hjälteförmåga…</option>
-    ${available.map(
-      ([id, h]) =>
-        `<option value="${id}">
+  <option value="">Välj hjälteförmåga…</option>
+  ${Object.entries(groupedHjältar).map(([källaId, list]) => `
+    <optgroup label="${kallor[källaId]?.name ?? källaId}">
+      ${list.map(h => `
+        <option value="${h.id}">
           ${h.name} (${h.kostnad}${h.krav ? ", krav: " + h.krav : ""})
-        </option>`
-    ).join("")}
-  `;
+        </option>
+      `).join("")}
+    </optgroup>
+  `).join("")}
+`;
 
   const addBtn = document.createElement("button");
   addBtn.textContent = "Lägg till";
@@ -545,7 +559,7 @@ function labelWrap(label, input) {
     const derived = computeDerived(draft);
     validateResources(draft, derived);
     content.innerHTML = "";
-    
+
     ensureKällaVisibility(draft, kallor);
     // ── Export / Import UI ───────────────────────
 const saveSection = document.createElement("section");
