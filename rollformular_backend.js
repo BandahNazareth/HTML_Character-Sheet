@@ -273,3 +273,59 @@ export function removeSpelmöte(character, spelmöte) {
       (entry.förbättringar ?? []).filter(sm => sm !== spelmöte);
   });
 }
+// Återställt formulär.
+export function createDefaultRollperson() {
+  return structuredClone({
+    avatar: null,
+    theme: "main",
+    namn: "Fyll i namn...",
+    släkte: "människa",
+    yrke: "bard",
+    ålder: "medelålders",
+    svaghet: "Fyll i svaghet...",
+    språk: "Fyll i språk...",
+    socialt_stånd: {
+      namn: "adel",
+      text: "Specificera socialt stånd..."
+    },
+    utseende: "Fyll i utseende...",
+    minnessak: "Fyll i minnessak...",
+
+    grundegenskaper: {
+      styrka: { värde: 10, pressad: false },
+      fysik: { värde: 10, pressad: false },
+      smidighet: { värde: 10, pressad: false },
+      intelligens: { värde: 10, pressad: false },
+      psyke: { värde: 10, pressad: false },
+      karisma: { värde: 10, pressad: false }
+    },
+
+    viljepoäng: { current: 0 },
+    kroppspoäng: { current: 0 },
+
+    spelmöten: [],
+
+    färdigheter: Object.fromEntries(
+      färdigheter.map(f => [
+        f.id,
+        { tränad: false, förbättrad: false, förbättringar: [] }
+      ])
+    ),
+
+    vapenfärdigheter: Object.fromEntries(
+      vapenfärdigheter.map(v => [
+        v.id,
+        { tränad: false, förbättrad: false, förbättringar: [] }
+      ])
+    ),
+
+    instrument: [null, null, null],
+    vapen: [null, null, null],
+    vapenAnteckningar: ["", "", ""],
+
+    rustning: "inget",
+    hjälm: "inget",
+
+    hjälteförmågor: {}
+  });
+}

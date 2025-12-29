@@ -1,4 +1,4 @@
-import { rollperson, computeDerived, validateResources } from "../rollformular_backend.js";
+import { rollperson, computeDerived, validateResources, createDefaultRollperson } from "../rollformular_backend.js";
 import { grundegenskaper as grundData } from "../data/karaktärsdata/grundegenskaper.js";
 import { färdigheter } from "../data/karaktärsdata/fardigheter.js";
 import { vapenfärdigheter } from "../data/karaktärsdata/vapenfardigheter.js";
@@ -10,6 +10,13 @@ import { socialt_stånd as socialtStandData } from "../data/listor/socialt_stand
 import { getMaxTrainedFärdigheter } from "../rules/MaxTranadeFardigheter.js";
 import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, getSpelmöten } from "../rollformular_backend.js";
 
+function ensureInitialSpelmöte(character) {
+  character.spelmöten ??= [];
+
+  if (character.spelmöten.length === 0) {
+    character.spelmöten.push("SM1");
+  }
+}
 
 async function exportCharacter() {
   const payload = {
@@ -403,6 +410,8 @@ currentDraft = typeof structuredClone === "function"
   ? structuredClone(rollperson)
   : JSON.parse(JSON.stringify(rollperson));
 
+    ensureInitialSpelmöte(currentDraft);
+
 // 🔑 Sync eligibility → visibility
 function syncEligibility(src, dest) {
   Object.entries(src).forEach(([id, srcEntry]) => {
@@ -537,6 +546,9 @@ function labelWrap(label, input) {
     // ── Export / Import UI ───────────────────────
 const saveSection = document.createElement("section");
 saveSection.innerHTML = `<h3>Spara / Ladda</h3>`;
+const resetBtn = document.createElement("button");
+resetBtn.textContent = "Återställ karaktär";
+resetBtn.className = "ui-button ui-button--danger";
 
 const exportBtn = document.createElement("button");
 exportBtn.textContent = "Exportera karaktär (JSON)";
@@ -576,9 +588,41 @@ importInput.addEventListener("change", () => {
     Modal.close();
   });
 });
+// ── Reset Character Button ─────────────────────────
+resetBtn.addEventListener("click", () => {
+    const confirmed = confirm(
+      "⚠️ Återställ karaktär\n\n" +
+      "Detta kommer att radera ALLT:\n" +
+      "• Grundegenskaper\n" +
+      "• Färdigheter & förbättringar\n" +
+      "• Hjälteförmågor\n" +
+      "• Utrustning\n\n" +
+      "Detta kan inte ångras.\n\n" +
+      "Vill du fortsätta?"
+    );
 
-saveSection.append(exportBtn, importBtn, importInput);
+    if (!confirmed) return;
+
+    // 🔥 Create fresh default character
+    const fresh = createDefaultRollperson();
+    ensureInitialSpelmöte(fresh);
+
+    // 🔄 Replace rollperson IN PLACE (important)
+    Object.keys(rollperson).forEach(k => delete rollperson[k]);
+    Object.assign(rollperson, fresh);
+
+    // 🧹 Clear autosave / persistence
+    localStorage.clear();
+
+    // 🔁 Update UI everywhere
+    Modal.close();
+    window.dispatchEvent(new Event("character-updated"));
+  });
+
+//Save Handling
+saveSection.append(exportBtn, importBtn, resetBtn, importInput);
 content.appendChild(saveSection);
+
 
 // ── Theme selection ─────────────────────────
 const themeSection = document.createElement("section");
