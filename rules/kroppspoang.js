@@ -1,11 +1,9 @@
-export function computeKroppspoäng(rollperson) {
-  const fysik = rollperson.grundegenskaper.fysik.värde;
+export function computeKroppspoäng(character, derivedGrundegenskaper) {
+  const fysik = derivedGrundegenskaper.fysik.value;
 
-  const tåligStacks = rollperson.hjälteförmågor.tålig ?? 0;
-
-  const max = fysik + tåligStacks * 2;
+  const tåligStacks = character.hjälteförmågor.tålig ?? 0;
 
   return {
-    max
+    max: fysik + tåligStacks * 2
   };
 }

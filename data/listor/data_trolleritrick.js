@@ -1,0 +1,96 @@
+export const trolleritrick = {
+  //GRUNDBOKEN - ALLMÄN MAGI
+hamta: {
+    name: "Hämta",
+    krav: "Valfri magiskola",
+    tidsåtgång: "Handling",
+    text: `Du får ett löst föremål (ej tyngre än vikt 1) inom 10 meter att sväva fram till dig.`,
+    källa: "dod",
+  },
+knapp: {
+    name: "Knäpp",
+    krav: "Valfri magiskola",
+    tidsåtgång: "Handling",
+    text: `Du knäpper till ett föremål eller eller varelse inom 10 meter med magisk kraft. "Attacken" ger 1 poäng skada och kan till exempel krossa glasföremål.`,
+    källa: "dod",
+  },
+kannamagi: {
+    name: "Känna magi",
+    krav: "Valfri magiskola",
+    tidsåtgång: "Handling",
+    text: `Du kan avgöra om en plats du befinner dig på eller ett föremål du håller i är påverkad av magi och i så fall vilken slags magi.`,
+    källa: "dod",
+  },
+lagaklader: {
+    name: "Laga kläder",
+    krav: "Valfri magiskola",
+    tidsåtgång: "Handling",
+    text: `Dina eller någon annans kläder (inom 10 meter) blir hela och rena.`,
+    källa: "dod",
+  },
+ljus: {
+    name: "Ljus",
+    krav: "Valfri magiskola",
+    tidsåtgång: "Handling",
+    text: `Du skapar ett skinande klart ljus från ett valfritt fokusföremål. Det lyser upp ett område med 10 meters radie från dig och håller i ett skift. Det slocknar dock om du når noll KP.`,
+    källa: "dod",
+  },
+  //GRUNDBOKEN - ANIMISM
+blomsterspar: {
+    name: "Blomsterspår",
+    krav: "Animism",
+    tidsåtgång: "Handling",
+    text: `Det växer upp vackra blommor där du går. Blommorna vissnar efter ett skift.`,
+    källa: "dod",
+  },
+frisyr: {
+    name: "Frisyr",
+    krav: "Animism",
+    tidsåtgång: "Handling",
+    text: `Du ändrar hårfärg, hårlängd och frisyr på valfritt sätt. I rätt sammanhang kan det ge dig fördel på BLUFFA eller ÖVERTALA.`,
+    källa: "dod",
+  },
+fagelsang: {
+    name: "Fågelsång",
+    krav: "Animism",
+    tidsåtgång: "Handling",
+    text: `Du omges av vackert fågelkvitter under en kvart. Fåglarna ger dig fördel på UPPTÄCKA FARA. Trolleritricket fungerar bara utomhus.`,
+    källa: "dod",
+  },
+lagamat: {
+    name: "Laga mat",
+    krav: "Animism",
+    tidsåtgång: "Handling",
+    text: `Du lyckas automatiskt laga mat (sid 103) utan att behöva slå mot VILDMARKSVANA och det sker omedelbart (en handling).`,
+    källa: "dod",
+  },
+stada: {
+    name: "Städa",
+    krav: "Animism",
+    tidsåtgång: "Handling",
+    text: `Rummet som du befinner dig i blir städat. Damm och smuts försvinner och saker ställs i ordning.`,
+    källa: "dod",
+  },
+    //GRUNDBOKEN - ELEMENTALISM
+rokpuff: {
+    name: "Rökpuff",
+    krav: "Elementalism",
+    tidsåtgång: "Handling",
+    text: `En imponerande rökpuff slår upp precis framför dig. Väldigt populär för dramatiska entréer och kan ge fördel på SMYGA i vissa lägen. SL avgör.`,
+    källa: "dod",
+  }, 
+tanda: {
+    name: "Tända",
+    krav: "Elementalism",
+    tidsåtgång: "Handling",
+    text: `Du tänder eller släcker ett ljus, en fackla eller en lykta inom 10 meter.`,
+    källa: "dod",
+  },
+varmakyla: {
+    name: "Värma/kyla",
+    krav: "Elementalism",
+    tidsåtgång: "Handling",
+    text: `Området inom 10 meter från dig blir behagligt varmt eller svalt. Effekten skyddar mot kyla (sid 54) i ett skift.`,
+    källa: "dod",
+  },
+}

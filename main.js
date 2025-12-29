@@ -9,7 +9,8 @@ import { initPersistence } from "./persistence.js";
 import { grundegenskaper as grundData } from "./data/karaktärsdata/grundegenskaper.js";
 import { ålder as ålderData } from "./data/listor/data_alder.js";
 import { hjälteförmågor as hjälteData } from "./data/listor/data_hjalteformagor.js";
-import { socialt_stånd } from "./data/listor/socialt_stand.js";
+import { trolleritrick } from "./data/listor/data_trolleritrick.js";
+import { besvärjelser } from "./data/listor/data_besvarjelser.js";
 import { släkten } from "./data/listor/data_slakten.js";
 import { yrken } from "./data/listor/data_yrken.js";
 import { förmågor } from "./data/listor/data_formagor.js";
@@ -23,9 +24,6 @@ import { rustningar } from "./data/listor/data_rustningar.js";
 import { hjälmar } from "./data/listor/data_hjalmar.js";
 import { instrument } from "./data/listor/data_instrument.js";
 
-// Karaktärsdata imports
-import { färdigheter } from "./data/karaktärsdata/fardigheter.js";
-import { vapenfärdigheter } from "./data/karaktärsdata/vapenfardigheter.js";
 
 //Color mode
 function setTheme(themeName) {
@@ -66,7 +64,10 @@ function hasNackdelForSkill(rollperson, item) {
 window.addEventListener("DOMContentLoaded", () => {
 
   initPersistence(); //Load-Autosave hook
- 
+ // ── Ensure spell state exists ─────────────────────────
+  rollperson.trolleritrick ??= {};
+  rollperson.besvärjelser ??= {};
+
   // ── Schema migration: instrument → array ─────────────
   if (!Array.isArray(rollperson.instrument)) {
     const oldValue = rollperson.instrument;
@@ -178,10 +179,37 @@ const visibleItems = items.filter(item => {
         `;
 
       container.appendChild(row);
+      const förbättradBox = row.querySelector(".förbättrad");
+
+      förbättradBox.addEventListener("change", () => {
+        state.förbättrad = förbättradBox.checked;
+
+        if (förbättradBox.checked) {
+          state.harFörbättrats = true; // 🔑 REQUIRED for improvements overlay
+        }
+
+        // trigger updates everywhere
+        window.dispatchEvent(new Event("character-updated"));
+      });
     });
   });
 }
+function ensureMagiskolorAsFardigheter(character) {
+  character.färdigheter ??= {};
 
+  Object.keys(character.magiskolor ?? {}).forEach(magiskolaId => {
+    const skillId = `magiskola_${magiskolaId}`;
+
+    if (!character.färdigheter[skillId]) {
+      character.färdigheter[skillId] = {
+        tränad: true,              // forced, as you want
+        förbättrad: false,
+        förbättringar: [],
+        harFörbättrats: false
+      };
+    }
+  });
+}
 // ── Render function ──────────────────────────
 function render() {
   const derived = computeDerived(rollperson);
@@ -431,9 +459,34 @@ document
       hjälteEl.appendChild(row);
     });
   }
+// ── Magi: Trolleritrick & Besvärjelser ───────────────────────
+const trickEl = document.getElementById("trolleritrick");
+const spellEl = document.getElementById("besvärjelser");
+
+if (trickEl) {
+  renderSpells({
+  title: "Trolleritrick",
+  spellData: trolleritrick,
+  learned: rollperson.trolleritrick,
+  container: trickEl,
+  allowPrepare: false
+});
+}
+
+if (spellEl) {
+  renderSpells({
+  title: "Besvärjelser",
+  spellData: besvärjelser,
+  learned: rollperson.besvärjelser,
+  container: spellEl,
+  allowPrepare: true,
+  derived
+});
+}
 
   // ── Färdigheter/Vapenfärdigheter ─────────────────────────────
-renderSkillList({
+  ensureMagiskolorAsFardigheter(rollperson);
+  renderSkillList({
   derivedList: derived.färdigheter,
   container: document.getElementById("färdigheter"),
   stateObject: rollperson.färdigheter
@@ -445,7 +498,149 @@ renderSkillList({
   stateObject: rollperson.vapenfärdigheter
 });
 }
+// ── Trolleritrick/Besvärjelser ────────────────────────────────────
+function renderSpells({
+  title,
+  spellData,
+  learned,
+  container,
+  allowPrepare = false,
+  derived
+}) {
+  container.innerHTML = "";
 
+  const entries = Object.entries(learned ?? {}).filter(
+    ([, s]) => s.known
+  );
+
+  if (entries.length === 0) {
+    container.innerHTML = `<em>Inga ${title.toLowerCase()} lärda</em>`;
+    return;
+  }
+function updatePreparedCounter(container, derived) {
+  const counter =
+    container.querySelector(".spell-prepared-counter");
+  if (!counter || !derived?.magi) return;
+
+  const maxPrepared = derived.magi.maxPreparedBesvärjelser;
+
+  const preparedCount = Object.values(
+    rollperson.besvärjelser ?? {}
+  ).filter(s => s.prepared).length;
+
+  counter.textContent =
+    `Förberedda besvärjelser: ${preparedCount} / ${maxPrepared}`;
+
+  counter.classList.toggle(
+    "limit-reached",
+    preparedCount >= maxPrepared
+  );
+}
+  const sectionTitle = document.createElement("h3");
+sectionTitle.textContent = title;
+container.appendChild(sectionTitle);
+
+// ── Prepared counter (Besvärjelser only) ─────────────
+if (allowPrepare && derived?.magi) {
+  const counter = document.createElement("div");
+  counter.className = "spell-prepared-counter";
+
+  const maxPrepared = derived.magi.maxPreparedBesvärjelser;
+
+  const preparedCount = entries.filter(
+    ([, s]) => s.prepared
+  ).length;
+
+  counter.textContent =
+    `Förberedda besvärjelser: ${preparedCount} / ${maxPrepared}`;
+
+  if (preparedCount >= maxPrepared) {
+    counter.classList.add("limit-reached");
+  }
+
+  container.appendChild(counter);
+}
+
+  const maxPrepared =
+    derived?.magi?.maxPreparedBesvärjelser ?? 0;
+
+  const preparedCount = entries.filter(
+    ([, s]) => s.prepared
+  ).length;
+
+  entries.forEach(([id, state]) => {
+    const spell = spellData[id];
+    if (!spell) return;
+
+    const row = document.createElement("div");
+    row.className = "spell-row";
+
+    const header = document.createElement("div");
+header.className = "spell-header";
+
+// ── Left: prepared checkbox ─────────────────
+let checkboxWrapper;
+
+if (allowPrepare) {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = !!learned[id].prepared;
+
+  checkbox.addEventListener("click", (e) => {
+  e.stopPropagation(); // ⛔ prevent collapsing
+});
+
+checkbox.addEventListener("change", () => {
+  learned[id].prepared = checkbox.checked;
+  updatePreparedCounter(container, derived);
+});
+  // 🔑 SAME WRAPPER AS FÄRDIGHETER
+  checkboxWrapper = document.createElement("label");
+checkboxWrapper.className = "färd-checkbox";
+
+// ⛔ STOP bubbling from the label itself
+checkboxWrapper.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+checkboxWrapper.appendChild(checkbox);
+}
+
+// ── Spell name (clickable) ───────────────────
+const title = document.createElement("span");
+title.className = "spell-title";
+title.textContent =
+  spell.nivå
+    ? `${spell.name} (Nivå ${spell.nivå})`
+    : spell.name;
+
+// Toggle body ONLY when clicking title
+title.addEventListener("click", () => {
+  body.hidden = !body.hidden;
+});
+
+// ── Assemble header ──────────────────────────
+if (checkboxWrapper) header.appendChild(checkboxWrapper);
+header.appendChild(title);
+
+    const body = document.createElement("div");
+    body.className = "spell-body";
+    body.hidden = true;
+
+    body.innerHTML = `
+  ${spell.nivå ? `<div><strong>Nivå:</strong> ${spell.nivå}</div>` : ""}
+  ${spell.krav ? `<div><strong>Krav:</strong> ${spell.krav}</div>` : ""}
+  ${spell.rekvisit ? `<div><strong>Rekvisit:</strong> ${spell.rekvisit}</div>` : ""}
+  <div><strong>Tidsåtgång:</strong> ${spell.tidsåtgång}</div>
+  ${spell.räckvidd ? `<div><strong>Räckvidd:</strong> ${spell.räckvidd}</div>` : ""}
+  ${spell.varaktighet ? `<div><strong>Varaktighet:</strong> ${spell.varaktighet}</div>` : ""}
+  <p>${spell.text}</p>
+`;
+
+    row.append(header, body);
+    container.appendChild(row);
+  });
+}
 // ── Instrument ────────────────────────────────────
 const instrumentBody = document.getElementById("instrument-rows");
 instrumentBody.innerHTML = "";

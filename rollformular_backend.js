@@ -10,6 +10,7 @@ import { färdigheter } from "./data/karaktärsdata/fardigheter.js";
 import { vapenfärdigheter } from "./data/karaktärsdata/vapenfardigheter.js";
 import { släkten } from "./data/listor/data_slakten.js";
 import { ålder as ålderData } from "./data/listor/data_alder.js";
+import { magiskolor } from "./data/karaktärsdata/magiskolor.js";
 
 // Default skill states
 
@@ -19,9 +20,77 @@ const DEFAULT_SKILL_STATE = {
   förbättringar: []
 };
 
+function normalizeSpells(character) {
+  // Ensure objects exist
+  character.trolleritrick ??= {};
+  character.besvärjelser ??= {};
 
+  // Normalize trolleritrick
+  for (const [id, value] of Object.entries(character.trolleritrick)) {
+    if (value === true) {
+      character.trolleritrick[id] = { known: true };
+    } else {
+      character.trolleritrick[id].known ??= false;
+    }
+  }
+
+  // Normalize besvärjelser
+  for (const [id, value] of Object.entries(character.besvärjelser)) {
+    if (value === true) {
+      character.besvärjelser[id] = {
+        known: true,
+        prepared: false
+      };
+    } else {
+      character.besvärjelser[id].known ??= false;
+      character.besvärjelser[id].prepared ??= false;
+    }
+  }
+}
 // DERIVED VALUES (function)
 export function computeDerived(character) {
+
+  normalizeSpells(character);
+
+  character.magiskolor ??= {};
+character.färdigheter ??= {};
+
+for (const magiskolaId of Object.keys(character.magiskolor)) {
+  const def = magiskolor.find(m => m.id === magiskolaId);
+  if (!def) continue;
+
+  const färdighetId = `magiskola_${def.id}`;
+
+  character.färdigheter[färdighetId] ??= {
+    tränad: true,
+    förbättrad: false,
+    förbättringar: [],
+    harFörbättrats: false
+  };
+
+  // 🔒 Magiskolor are ALWAYS trained
+  character.färdigheter[färdighetId].tränad = true;
+}
+
+// Remove orphaned magiskola skills
+for (const färdighetId of Object.keys(character.färdigheter)) {
+  if (!färdighetId.startsWith("magiskola_")) continue;
+
+  const magiskolaId = färdighetId.replace("magiskola_", "");
+
+  if (!character.magiskolor[magiskolaId]) {
+    delete character.färdigheter[färdighetId];
+  }
+}
+  for (const färdighetId of Object.keys(rollperson.färdigheter)) {
+  if (!färdighetId.startsWith("magiskola_")) continue;
+
+  const magiskolaId = färdighetId.replace("magiskola_", "");
+
+  if (!rollperson.magiskolor[magiskolaId]) {
+    delete rollperson.färdigheter[färdighetId];
+  }
+}
   // ── Derived grundegenskaper (Ålder applied) ──
   const derivedGrundegenskaper = {};
 
@@ -36,7 +105,28 @@ export function computeDerived(character) {
       value: base + mod
     };
   }
+  // ── INT grundchans (used for prepared spells limit) ──
+  const intelligensGrundchans =
+  grundchansFörFärdighet(
+    { grundegenskap: "intelligens" },
+    {
+      ...character,
+      derivedGrundegenskaper
+    }
+  );
+     // ── Enforce prepared besvärjelser limit ─────────────
+  const preparedIds = Object.entries(character.besvärjelser ?? {})
+    .filter(([, s]) => s.prepared)
+    .map(([id]) => id);
 
+  if (preparedIds.length > intelligensGrundchans) {
+    // Too many prepared → unprepare extras (last ones)
+    preparedIds
+      .slice(intelligensGrundchans)
+      .forEach(id => {
+        character.besvärjelser[id].prepared = false;
+      });
+  }
   // ── Släkte → grundförflyttning ──────────────
   const släkteDef = släkten[character.släkte];
   const grundförflyttning = släkteDef.grundförflyttning;
@@ -53,8 +143,14 @@ export function computeDerived(character) {
   const skadebonusSmidighet = skadebonusFrånVärde(smidighetVärde);
 
   // ── Resurser ────────────────────────────────
-  const viljepoäng = computeViljepoäng(character);
-  const kroppspoäng = computeKroppspoäng(character);
+  const viljepoäng = computeViljepoäng(
+  character,
+  derivedGrundegenskaper
+);
+  const kroppspoäng = computeKroppspoäng(
+  character,
+  derivedGrundegenskaper
+);
 
   // ── Färdigheter ─────────────────────────────
   const derivedFärdigheter = färdigheter.map(def => {
@@ -70,6 +166,38 @@ export function computeDerived(character) {
       (state.förbättringar?.length ?? 0)
   };
 });
+// ── Magiskolor → dynamic färdigheter ─────────────────
+const magiskolaFärdigheter = Object.keys(character.magiskolor).map(id => {
+  const def = magiskolor.find(m => m.id === id);
+  if (!def) return null;
+
+  const färdighetId = `magiskola_${id}`;
+
+  const state = character.färdigheter[färdighetId] ?? {
+    tränad: true,
+    förbättrad: false,
+    förbättringar: []
+  };
+
+  return {
+    id: färdighetId,
+    name: def.name,
+    grundegenskap: def.grundegenskap,
+    källa: def.källa,
+
+    tränad: true, // 🔒 ALWAYS trained
+    förbättrad: state.förbättrad,
+    förbättringar: state.förbättringar ?? [],
+    förbättringBonus: state.förbättringar?.length ?? 0,
+
+    grundchans:
+      grundchansFörFärdighet(
+        { grundegenskap: def.grundegenskap, tränad: true },
+        character
+      ) +
+      (state.förbättringar?.length ?? 0)
+  };
+}).filter(Boolean);
 
   // ── Vapenfärdigheter ────────────────────────
   const derivedVapenfärdigheter = vapenfärdigheter.map(def => {
@@ -88,17 +216,24 @@ export function computeDerived(character) {
 
   // ── FINAL RETURN (ONLY ONE) ─────────────────
   return {
-    grundegenskaper: derivedGrundegenskaper,
-    färdigheter: derivedFärdigheter,
-    vapenfärdigheter: derivedVapenfärdigheter,
-    förflyttning: grundförflyttning + förflyttningsBonus,
-    skadebonus: {
-      styrka: skadebonusStyrka,
-      smidighet: skadebonusSmidighet
-    },
-    viljepoäng,
-    kroppspoäng
-  };
+  grundegenskaper: derivedGrundegenskaper,
+  färdigheter: [
+    ...derivedFärdigheter,
+    ...magiskolaFärdigheter
+  ],
+  vapenfärdigheter: derivedVapenfärdigheter,
+  förflyttning: grundförflyttning + förflyttningsBonus,
+  skadebonus: {
+    styrka: skadebonusStyrka,
+    smidighet: skadebonusSmidighet
+  },
+  viljepoäng,
+  kroppspoäng,
+  magi: {
+    intelligensGrundchans,
+    maxPreparedBesvärjelser: intelligensGrundchans
+  }
+};
 }
 //ROLLPERSON
 export const rollperson ={
@@ -116,6 +251,15 @@ export const rollperson ={
   },
   utseende: "Fyll i utseende...",
   minnessak: "Fyll i minnessak...",
+  magiker: false,
+  magiskolor: {},
+  trolleritrick: {
+    // trickId: { known: true }
+    },
+
+    besvärjelser: {
+      // spellId: { known: true, prepared: false }
+    },
 
 //GRUNDEGENSKAPER
   grundegenskaper: {
@@ -278,6 +422,15 @@ export function createDefaultRollperson() {
     },
     utseende: "Fyll i utseende...",
     minnessak: "Fyll i minnessak...",
+    magiker: false,
+    magiskolor: {},
+    trolleritrick: {
+    // trickId: { known: true }
+    },
+
+    besvärjelser: {
+      // spellId: { known: true, prepared: false }
+    },
 
     grundegenskaper: {
       styrka: { värde: 10, pressad: false },

@@ -775,6 +775,46 @@ textarea:not([readonly]) {
     grid-template-columns: 1fr;
   }
 }
+/*Besvärjelser*/
+.spell-row {
+  border-bottom: 1px solid var(--border-muted);
+  padding: 0.25rem 0;
+}
+
+.spell-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: default;
+}
+
+.spell-header input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.spell-title {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.spell-header:hover {
+  color: var(--accent-primary);
+}
+
+.spell-body {
+  margin-left: 1rem;
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+.spell-prepared-counter {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  opacity: 0.85;
+}
+
+.spell-prepared-counter.limit-reached {
+  color: var(--accent-warning);
+}
 /* ── Styled dropdowns ───────────────────── */
 
 select {

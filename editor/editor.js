@@ -5,6 +5,9 @@ import { vapenfärdigheter } from "../data/karaktärsdata/vapenfardigheter.js";
 import { hjälteförmågor as hjälteData } from "../data/listor/data_hjalteformagor.js";
 import { släkten } from "../data/listor/data_slakten.js";
 import { yrken } from "../data/listor/data_yrken.js";
+import { magiskolor } from "../data/karaktärsdata/magiskolor.js";
+import { trolleritrick } from "../data/listor/data_trolleritrick.js";
+import { besvärjelser } from "../data/listor/data_besvarjelser.js";
 import { ålder as ålderData } from "../data/listor/data_alder.js";
 import { socialt_stånd as socialtStandData } from "../data/listor/socialt_stand.js";
 import { getMaxTrainedFärdigheter } from "../rules/MaxTranadeFardigheter.js";
@@ -152,9 +155,19 @@ function migrateCharacterSave(payload) {
   }
 }
 // ── Förbättringar overlay state ─────────────────────
-let currentDraft = null;
+let draft = null; 
+let currentDraft = null; 
+let isEditorDirty = false;
 const modalOverlay = document.getElementById("modal-overlay");
+let saveBtn = null;
+let saveCloseBtn = null;
+let renderEditor;
 
+function updateSaveButtons() {
+  if (!saveBtn || !saveCloseBtn) return;
+  saveBtn.disabled = !isEditorDirty;
+  saveCloseBtn.disabled = !isEditorDirty;
+}
 // ── Commit improvements to live character ─────────
 function commitDraftToRollperson() {
   if (!currentDraft) return;
@@ -163,6 +176,49 @@ function commitDraftToRollperson() {
   Object.assign(rollperson, structuredClone(currentDraft));
 
   window.dispatchEvent(new Event("character-updated"));
+}
+function applyEditorDraft({ close = false } = {}) {
+  if (!draft) return;
+
+  // ── FINAL VALIDATION ─────────────────────
+  const trainedCountFinal =
+    Object.values(draft.färdigheter).filter(f => f.tränad).length +
+    Object.values(draft.vapenfärdigheter).filter(v => v.tränad).length;
+
+  const maxTrainedFinal = getMaxTrainedFärdigheter(draft);
+
+  if (trainedCountFinal > maxTrainedFinal) {
+    alert("För många tränade färdigheter …");
+    return;
+  }
+
+  // ── Yrkes-startförmågor ──────────────────
+  const yrkeDef = yrken[draft.yrke];
+  if (yrkeDef?.hjälteförmågorStart) {
+    for (const h of yrkeDef.hjälteförmågorStart) {
+      if (!draft.hjälteförmågor[h.id]) {
+        draft.hjälteförmågor[h.id] = 1;
+      }
+    }
+  }
+
+  // ── COMMIT draft → rollperson ────────────
+  Object.keys(rollperson).forEach(k => delete rollperson[k]);
+  Object.assign(rollperson, structuredClone(draft));
+
+  window.dispatchEvent(new Event("character-updated"));
+
+  // ── Close or stay open ───────────────────
+  if (close) {
+    Modal.close();
+  } else {
+    draft = structuredClone(rollperson);
+    currentDraft = draft;
+    renderEditor();
+  }
+
+  isEditorDirty = false;
+  updateSaveButtons();
 }
 // ── Modal helper ──────────────────────────────────
 const Modal = (() => {
@@ -183,12 +239,18 @@ const Modal = (() => {
   }
 
   function close() {
-  // 🔑 If improvements were open, commit them
-  if (
+  const editorOpen =
+    document
+      .querySelector('.modal[data-modal="editor"]')
+      ?.classList.contains("active");
+
+  const improvementsOpen =
     document
       .querySelector('.modal[data-modal="improvements"]')
-      ?.classList.contains("active")
-  ) {
+      ?.classList.contains("active");
+
+  // ✅ Improvements: existing logic
+  if (improvementsOpen) {
     commitDraftToRollperson();
   }
 
@@ -198,7 +260,7 @@ const Modal = (() => {
   );
 
   document.body.style.overflow = "";
-  isOpen = false;
+  window.dispatchEvent(new Event("character-updated"));
 }
 
   function init() {
@@ -292,7 +354,7 @@ function renderImprovements() {
 
     // ── Resolve base FV FIRST ─────────────────────
     const derived = computeDerived(currentDraft);
-
+    // Derive färdighetsvärden
     const derivedEntry =
       derived.färdigheter.find(f => f.id === id) ||
       derived.vapenfärdigheter.find(v => v.id === id);
@@ -310,8 +372,18 @@ function renderImprovements() {
 
       // Resolve display name
       const meta =
-        färdigheter.find(f => f.id === id) ||
-        vapenfärdigheter.find(v => v.id === id);
+      färdigheter.find(f => f.id === id) ||
+      vapenfärdigheter.find(v => v.id === id) ||
+      (() => {
+        if (!id.startsWith("magiskola_")) return null;
+        const magiId = id.replace("magiskola_", "");
+        const def = magiskolor.find(m => m.id === magiId);
+        if (!def) return null;
+        return {
+          name: def.name,
+          grundegenskap: def.grundegenskap
+        };
+      })();
 
       const label = document.createElement("strong");
       label.textContent = meta?.name ?? id;
@@ -387,10 +459,17 @@ function renderImprovements() {
 window.addEventListener("DOMContentLoaded", () => {
   
   const openBtn = document.getElementById("open-editor");
-  const saveBtn = document.getElementById("save-editor");
+  saveBtn = document.getElementById("save-editor");
+  saveCloseBtn = document.getElementById("save-close-editor");
+
   saveBtn.classList.add("ui-button", "ui-button--primary");
+  saveCloseBtn.classList.add("ui-button", "ui-button--primary");
+ 
+  function markDirty() {
+    isEditorDirty = true;
+    updateSaveButtons();
+  }
   const content = document.getElementById("editor-content");
-  let draft = null;
 
   Modal.init();
 
@@ -401,6 +480,9 @@ openBtn.addEventListener("click", () => {
     : JSON.parse(JSON.stringify(rollperson));
 
   draft = currentDraft;
+
+  isEditorDirty = false;   // ✅ ADD
+  updateSaveButtons();     // ✅ ADD
 
   Modal.open("editor");
   renderEditor();
@@ -454,36 +536,14 @@ syncEligibility(rollperson.vapenfärdigheter, currentDraft.vapenfärdigheter);
     renderImprovements();
   };
   });
-  saveBtn.addEventListener("click", () => {
-  // ── FINAL VALIDATION ─────────────────────
-  const trainedCountFinal =
-    Object.values(draft.färdigheter).filter(f => f.tränad).length +
-    Object.values(draft.vapenfärdigheter).filter(v => v.tränad).length;
+  // ── Spara (keep editor open) ─────────────────
+saveBtn.addEventListener("click", () => {
+  applyEditorDraft({ close: false });
+});
 
-  const maxTrainedFinal = getMaxTrainedFärdigheter(draft);
-
-  if (trainedCountFinal > maxTrainedFinal) {
-    alert("För många tränade färdigheter …");
-    return;
-  }
-
-  // ✅ MOVE yrkeDef HERE
-  const yrkeDef = yrken[draft.yrke];
-
-  if (yrkeDef?.hjälteförmågorStart) {
-    for (const h of yrkeDef.hjälteförmågorStart) {
-      if (!draft.hjälteförmågor[h.id]) {
-        draft.hjälteförmågor[h.id] = 1;
-      }
-    }
-  }
-
-  // Commit
-  Object.keys(rollperson).forEach(key => delete rollperson[key]);
-  Object.assign(rollperson, structuredClone(draft));
-
-  Modal.close();
-  window.dispatchEvent(new Event("character-updated"));
+// ── Spara och stäng ─────────────────────────
+saveCloseBtn.addEventListener("click", () => {
+  applyEditorDraft({ close: true });
 });
 
   function renderAddHjälteUI(parent) {
@@ -534,6 +594,7 @@ syncEligibility(rollperson.vapenfärdigheter, currentDraft.vapenfärdigheter);
 
   addBtn.addEventListener("click", () => {
     draft.hjälteförmågor[select.value] = 1;
+    markDirty();
     renderEditor();
   });
 
@@ -555,12 +616,52 @@ function labelWrap(label, input) {
   return wrapper;
 }
 
-  function renderEditor() {
+  renderEditor = function () {
     const derived = computeDerived(draft);
     validateResources(draft, derived);
     content.innerHTML = "";
 
     ensureKällaVisibility(draft, kallor);
+    // ── Ensure magic persistence ─────────────────
+    draft.trolleritrick ??= {};
+    draft.besvärjelser ??= {};
+
+ // ── Magi helpers ─────────────────────────────
+function kravMatcharMagiskolor(krav) {
+  if (!krav) return false;
+  if (krav === "Valfri magiskola") return true;
+
+  const kravUpper = krav.toUpperCase();
+
+  return Object.keys(draft.magiskolor).some(id => {
+    const name =
+      magiskolor.find(m => m.id === id)?.name;
+    return name && kravUpper.includes(name.toUpperCase());
+  });
+}   
+
+ // ── Magi: how many magiskolor are allowed ─────────────
+draft.magiskolor ??= {};
+// ── Learned magic tracking ──────────────────
+draft.besvärjelser ??= {};
+draft.trolleritrick ??= {};
+
+const magiskTalangLevels =
+  draft.hjälteförmågor?.magisk_talang ?? 0;
+
+const isMagikerYrke = draft.yrke === "magiker";
+
+const maxMagiskolor =
+  (isMagikerYrke ? 1 : 0) + magiskTalangLevels;
+
+  // ── Enforce magic eligibility ─────────────────
+if (maxMagiskolor === 0) {
+  // Character is no longer allowed magic
+  draft.magiskolor = {};
+  draft.besvärjelser = {};
+  draft.trolleritrick = {};
+}
+
     // ── Export / Import UI ───────────────────────
 const saveSection = document.createElement("section");
 saveSection.innerHTML = `<h3>Spara / Ladda</h3>`;
@@ -640,6 +741,8 @@ resetBtn.addEventListener("click", () => {
 //Save Handling
 saveSection.append(exportBtn, importBtn, resetBtn, importInput);
 content.appendChild(saveSection);
+
+//--Determine how many schools of magic the character has access to
 
 
 // ── Theme selection ─────────────────────────
@@ -822,6 +925,17 @@ content.appendChild(avatarSection);
 const metaSection = document.createElement("section");
 metaSection.innerHTML = `<h3>Rollperson</h3>`;
 
+// ── Namn ───────────────────────────────
+const namnInput = document.createElement("input");
+namnInput.type = "text";
+namnInput.placeholder = "Karaktärens namn";
+namnInput.value = draft.namn ?? "";
+
+namnInput.addEventListener("input", () => {
+  draft.namn = namnInput.value;
+  markDirty();
+});
+
 // Släkte
 const släkteSelect = document.createElement("select");
 släkteSelect.innerHTML = Object.entries(släkten)
@@ -830,6 +944,7 @@ släkteSelect.innerHTML = Object.entries(släkten)
 släkteSelect.value = draft.släkte;
 släkteSelect.onchange = () => {
   draft.släkte = släkteSelect.value;
+  markDirty();
   renderEditor();
 };
 
@@ -841,6 +956,7 @@ yrkeSelect.innerHTML = Object.entries(yrken)
 yrkeSelect.value = draft.yrke;
 yrkeSelect.onchange = () => {
   draft.yrke = yrkeSelect.value;
+  markDirty();
 };
 
 // Ålder
@@ -859,6 +975,7 @@ const svaghetInput = document.createElement("input");
 svaghetInput.value = draft.svaghet;
 svaghetInput.oninput = () => {
   draft.svaghet = svaghetInput.value;
+  markDirty();
 };
 
 // Språk
@@ -866,6 +983,7 @@ const språkInput = document.createElement("input");
 språkInput.value = draft.språk;
 språkInput.oninput = () => {
   draft.språk = språkInput.value;
+  markDirty();
 };
 
 // Socialt stånd
@@ -883,6 +1001,7 @@ const socialText = document.createElement("input");
 socialText.value = draft.socialt_stånd.text;
 socialText.oninput = () => {
   draft.socialt_stånd.text = socialText.value;
+  markDirty();
 };
 
 // Utseende
@@ -890,6 +1009,7 @@ const utseendeInput = document.createElement("input");
 utseendeInput.value = draft.utseende;
 utseendeInput.oninput = () => {
   draft.utseende = utseendeInput.value;
+  markDirty();
 };
 
 // Minnessak
@@ -897,10 +1017,12 @@ const minnessakInput = document.createElement("input");
 minnessakInput.value = draft.minnessak;
 minnessakInput.oninput = () => {
   draft.minnessak = minnessakInput.value;
+  markDirty();
 };
 
 // Layout
 metaSection.append(
+  labelWrap("Namn", namnInput),
   labelWrap("Släkte", släkteSelect),
   labelWrap("Yrke", yrkeSelect),
   labelWrap("Ålder", ålderSelect),
@@ -911,8 +1033,209 @@ metaSection.append(
   labelWrap("Utseende", utseendeInput),
   labelWrap("Minnessak", minnessakInput)
 );
-
 content.appendChild(metaSection);
+// ── Magiskolor ───────────────────────────────
+if (maxMagiskolor > 0) {
+  const magiSection = document.createElement("section");
+  magiSection.innerHTML = `<h3>Magi</h3>`;
+
+  const currentSchools = Object.keys(draft.magiskolor);
+  const remaining = maxMagiskolor - currentSchools.length;
+
+  const info = document.createElement("div");
+  info.style.opacity = "0.7";
+  info.textContent =
+    `Magiskolor: ${currentSchools.length} / ${maxMagiskolor}`;
+
+  magiSection.appendChild(info);
+
+  // Existing magiskolor
+  currentSchools.forEach(id => {
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.justifyContent = "space-between";
+    row.style.alignItems = "center";
+
+    const name =
+      magiskolor.find(m => m.id === id)?.name ?? id;
+
+    const label = document.createElement("strong");
+    label.textContent = name;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "✕";
+    removeBtn.className = "ui-button ui-button--small";
+
+    removeBtn.onclick = () => {
+      delete draft.magiskolor[id];
+      renderEditor();
+    };
+
+    row.append(label, removeBtn);
+    magiSection.appendChild(row);
+  });
+
+  // Add magiskola selector
+  if (remaining > 0) {
+    const select = document.createElement("select");
+    select.innerHTML = `
+      <option value="">Välj magiskola…</option>
+      ${magiskolor
+        .filter(m => !draft.magiskolor[m.id])
+        .map(m => `<option value="${m.id}">${m.name}</option>`)
+        .join("")}
+    `;
+
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Lägg till magiskola";
+    addBtn.className = "ui-button";
+    addBtn.disabled = true;
+
+    select.onchange = () => {
+      addBtn.disabled = !select.value;
+    };
+
+    addBtn.onclick = () => {
+      draft.magiskolor[select.value] = true;
+      markDirty();
+      renderEditor();
+    };
+
+    magiSection.append(select, addBtn);
+  }
+
+  content.appendChild(magiSection);
+}
+// ── Trolleritrick ───────────────────────────
+if (Object.keys(draft.magiskolor).length > 0) {
+  const trickSection = document.createElement("section");
+  trickSection.innerHTML = `<h3>Trolleritrick</h3>`;
+
+  Object.entries(trolleritrick)
+    .filter(([_, t]) => kravMatcharMagiskolor(t.krav))
+    .forEach(([id, t]) => {
+  const row = document.createElement("div");
+  row.className = "spell-row";
+
+  const header = document.createElement("div");
+  header.className = "spell-header";
+  header.textContent = t.name;
+
+  const learned =
+    Object.values(draft.trolleritrick)
+      .some(group => group[id]);
+
+  draft.trolleritrick ??= {};
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = Boolean(draft.trolleritrick[id]);
+
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      draft.trolleritrick[id] = true;
+    } else {
+      delete draft.trolleritrick[id];
+    }
+    markDirty();
+  });
+
+  const headerRow = document.createElement("div");
+  headerRow.style.display = "flex";
+  headerRow.style.justifyContent = "space-between";
+  headerRow.append(header, checkbox);
+
+  const body = document.createElement("div");
+  body.className = "spell-body";
+  body.hidden = true;
+  body.innerHTML = `
+    <div><strong>Krav:</strong> ${t.krav}</div>
+    <div><strong>Tidsåtgång:</strong> ${t.tidsåtgång}</div>
+    <p>${t.text}</p>
+  `;
+
+  header.onclick = () => {
+    body.hidden = !body.hidden;
+  };
+
+  row.append(headerRow, body);
+  trickSection.appendChild(row);
+});
+
+  content.appendChild(trickSection);
+}
+// ── Besvärjelser ────────────────────────────
+if (Object.keys(draft.magiskolor).length > 0) {
+  const spellSection = document.createElement("section");
+  spellSection.innerHTML = `<h3>Besvärjelser</h3>`;
+
+  Object.entries(besvärjelser)
+    .filter(([_, s]) => kravMatcharMagiskolor(s.krav))
+    .forEach(([id, s]) => {
+  const row = document.createElement("div");
+  row.className = "spell-row";
+
+  const header = document.createElement("div");
+  header.className = "spell-header";
+  header.textContent = `${s.name} (Nivå ${s.nivå})`;
+
+  const matchingSchools = Object.keys(draft.magiskolor).filter(ms => {
+    const name =
+      magiskolor.find(m => m.id === ms)?.name;
+    return (
+      s.krav === "Valfri magiskola" ||
+      s.krav?.toUpperCase()?.includes(name?.toUpperCase())
+    );
+  });
+
+  const learned = matchingSchools.some(
+    ms => draft.besvärjelser?.[ms]?.[id]
+  );
+
+  draft.besvärjelser ??= {};
+
+const checkbox = document.createElement("input");
+checkbox.type = "checkbox";
+checkbox.checked = Boolean(draft.besvärjelser[id]);
+
+checkbox.addEventListener("change", () => {
+  if (checkbox.checked) {
+    draft.besvärjelser[id] = true;
+  } else {
+    delete draft.besvärjelser[id];
+  }
+  markDirty();
+});
+
+
+  const headerRow = document.createElement("div");
+  headerRow.style.display = "flex";
+  headerRow.style.justifyContent = "space-between";
+  headerRow.append(header, checkbox);
+
+  const body = document.createElement("div");
+  body.className = "spell-body";
+  body.hidden = true;
+  body.innerHTML = `
+    <div><strong>Nivå:</strong> ${s.nivå}</div>
+    <div><strong>Krav:</strong> ${s.krav}</div>
+    <div><strong>Rekvisit:</strong> ${s.rekvisit}</div>
+    <div><strong>Tidsåtgång:</strong> ${s.tidsåtgång}</div>
+    <div><strong>Räckvidd:</strong> ${s.räckvidd}</div>
+    <div><strong>Varaktighet:</strong> ${s.varaktighet}</div>
+    <p>${s.text}</p>
+  `;
+
+  header.onclick = () => {
+    body.hidden = !body.hidden;
+  };
+
+  row.append(headerRow, body);
+  spellSection.appendChild(row);
+});
+
+  content.appendChild(spellSection);
+}
 // ── Resurser (KP / VP) ───────────────────────
 const resursSection = document.createElement("section");
 resursSection.innerHTML = `
@@ -953,6 +1276,7 @@ resursSection.querySelector(".kp-plus").addEventListener("click", () => {
     draft.kroppspoäng.current + 1,
     derived.kroppspoäng.max
   );
+  markDirty();
   renderEditor();
 });
 
@@ -961,6 +1285,7 @@ resursSection.querySelector(".kp-minus").addEventListener("click", () => {
     draft.kroppspoäng.current - 1,
     0
   );
+  markDirty();
   renderEditor();
 });
 
@@ -970,6 +1295,7 @@ resursSection.querySelector(".vp-plus").addEventListener("click", () => {
     draft.viljepoäng.current + 1,
     derived.viljepoäng.max
   );
+  markDirty();
   renderEditor();
 });
 
@@ -978,6 +1304,7 @@ resursSection.querySelector(".vp-minus").addEventListener("click", () => {
     draft.viljepoäng.current - 1,
     0
   );
+  markDirty();
   renderEditor();
 });
 
@@ -1031,14 +1358,14 @@ resursSection.querySelector(".vp-minus").addEventListener("click", () => {
   const pressadInput = tr.querySelector('input[type="checkbox"]');
 
   valueInput.addEventListener("input", () => {
-    state.värde = Number(valueInput.value);
-    renderEditor();
-  });
+  state.värde = Number(valueInput.value);
+});
 
   pressadInput.addEventListener("change", () => {
-    state.pressad = pressadInput.checked;
-    renderEditor();
-  });
+  state.pressad = pressadInput.checked;
+  markDirty();
+  renderEditor();
+});
 
   tbody.appendChild(tr);
 }
@@ -1067,8 +1394,21 @@ färdTable.innerHTML = `
 
 const färdTbody = färdTable.querySelector("tbody");
 
+const editorFärdigheter = [
+  ...färdigheter,
+  ...Object.keys(draft.magiskolor).map(id => {
+    const def = magiskolor.find(m => m.id === id);
+    return {
+      id: `magiskola_${id}`,
+      name: def.name,
+      grundegenskap: def.grundegenskap,
+      källa: def.källa
+    };
+  })
+];
+
 const groupedFärdigheter = groupByKälla(
-  färdigheter.map(f => ({
+  editorFärdigheter.map(f => ({
     ...f,
     källa: f.källa ?? "okänd"
   }))
@@ -1125,18 +1465,26 @@ Object.entries(groupedFärdigheter).forEach(([källaId, items]) => {
 
     const trainedBox = tr.querySelector(".trained");
     const improvableBox = tr.querySelector(".improvable");
+    const isMagiskola = f.id.startsWith("magiskola_");
+    if (isMagiskola) {
+      state.tränad = true;
+    }
+    improvableBox.addEventListener("change", () => {
+  state.förbättrad = improvableBox.checked;
+
+    if (improvableBox.checked) {
+      state.harFörbättrats = true; // 🔑 THIS is what makes it appear
+    }
+
+    markDirty();
+    renderEditor();
+  });
 
     trainedBox.addEventListener("change", () => {
-      state.tränad = trainedBox.checked;
-      renderEditor();
-    });
-
-    improvableBox.addEventListener("change", () => {
-      if (isMaxed) return;
-      state.förbättrad = improvableBox.checked;
-      if (state.förbättrad) state.harFörbättrats = true;
-      renderEditor();
-    });
+    state.tränad = trainedBox.checked;
+    markDirty();
+    renderEditor();
+  });
 
     färdTbody.appendChild(tr);
   });
@@ -1216,6 +1564,7 @@ Object.entries(groupedVapenfärdigheter).forEach(([källaId, items]) => {
     const checkbox = tr.querySelector("input");
     checkbox.addEventListener("change", () => {
       state.tränad = checkbox.checked;
+      markDirty();
       renderEditor();
     });
 
@@ -1335,5 +1684,6 @@ addBtn.addEventListener("click", () => {
 
 hjälteSection.appendChild(addBtn);
 content.appendChild(hjälteSection);
+updateSaveButtons();
   }
 });

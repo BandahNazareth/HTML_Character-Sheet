@@ -1,11 +1,10 @@
-export function computeViljepoäng(rollperson) {
-  const psyke = rollperson.grundegenskaper.psyke.värde;
+export function computeViljepoäng(karaktär, derivedGrundegenskaper) {
+  const psyke = derivedGrundegenskaper.psyke.value;
 
-  const fokuseradStacks = rollperson.hjälteförmågor.fokuserad ?? 0;
-
-  const max = psyke + fokuseradStacks * 2;
+  const fokuseradStacks =
+    karaktär.hjälteförmågor.fokuserad ?? 0;
 
   return {
-    max
+    max: psyke + fokuseradStacks * 2
   };
 }

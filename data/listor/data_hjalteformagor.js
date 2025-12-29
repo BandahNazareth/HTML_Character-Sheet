@@ -3,7 +3,7 @@ export const hjälteförmågor = {
   ingen: {
     name: "-",
     text: `-`,
-    kostnad: "undefined",
+    kostnad: "-",
     källa: "dod"
   },
   blixtsnabb: {

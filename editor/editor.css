@@ -118,6 +118,33 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+/* Editor modal layout */
+.modal[data-modal="editor"] {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+/* Scrollable editor content */
+#editor-content {
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 1rem;
+}
+/* Sticky editor footer */
+.editor-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+
+  padding: 0.75rem 1rem;
+  background: var(--bg, --accent-dark);
+  box-shadow: 0 -2px 6px var(--accent-light);
+}
 #editor-root .editor-table {
   width: 100%;
   border-collapse: collapse;
