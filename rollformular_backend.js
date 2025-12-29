@@ -58,45 +58,31 @@ export function computeDerived(character) {
 
   // ── Färdigheter ─────────────────────────────
   const derivedFärdigheter = färdigheter.map(def => {
-  const state =
-    character.färdigheter[def.id] ??
-    DEFAULT_SKILL_STATE;
-
-  const förbättringar = state.förbättringar ?? [];
-  const förbättringBonus = förbättringar.length;
+  const state = character.färdigheter[def.id] ?? DEFAULT_SKILL_STATE;
 
   return {
     ...def,
     ...state,
-    förbättringar,
-    förbättringBonus,
+    källa: def.källa, // ✅ ADD THIS
+    förbättringBonus: state.förbättringar?.length ?? 0,
     grundchans:
-      grundchansFörFärdighet(
-        { ...def, ...state },
-        character
-      ) + förbättringBonus
+      grundchansFörFärdighet({ ...def, ...state }, character) +
+      (state.förbättringar?.length ?? 0)
   };
 });
 
   // ── Vapenfärdigheter ────────────────────────
   const derivedVapenfärdigheter = vapenfärdigheter.map(def => {
-  const state =
-    character.vapenfärdigheter[def.id] ??
-    DEFAULT_SKILL_STATE;
-
-  const förbättringar = state.förbättringar ?? [];
-  const förbättringBonus = förbättringar.length;
+  const state = character.vapenfärdigheter[def.id] ?? DEFAULT_SKILL_STATE;
 
   return {
     ...def,
     ...state,
-    förbättringar,
-    förbättringBonus,
+    källa: def.källa, // ✅ ADD THIS
+    förbättringBonus: state.förbättringar?.length ?? 0,
     grundchans:
-      grundchansFörFärdighet(
-        { ...def, ...state },
-        character
-      ) + förbättringBonus
+      grundchansFörFärdighet({ ...def, ...state }, character) +
+      (state.förbättringar?.length ?? 0)
   };
 });
 
@@ -151,6 +137,8 @@ export const rollperson ={
 
 //SPELMÖTEN
 spelmöten: [],
+//KÄLLOR
+källorSynliga: {},
 //FÄRDIGHETER
   färdigheter: Object.fromEntries(
   färdigheter.map(f => [
@@ -304,6 +292,8 @@ export function createDefaultRollperson() {
     kroppspoäng: { current: 0 },
 
     spelmöten: [],
+
+    källorSynliga: {},
 
     färdigheter: Object.fromEntries(
       färdigheter.map(f => [

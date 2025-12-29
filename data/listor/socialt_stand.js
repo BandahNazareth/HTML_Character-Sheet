@@ -3,7 +3,8 @@ export const socialt_stånd ={
         name: "-",
         text: "-",
         möjligaFärdigheter:[],
-        extraFardighet: 0
+        extraFardighet: 0,
+        källa: "dod"
     },
     slav: {
         name: "Slav",
@@ -13,7 +14,8 @@ export const socialt_stånd ={
             {id: "Undvika"},
             {id: "Undre världen"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     },
     egendomslös: {
         name: "Egendomslös",
@@ -23,7 +25,8 @@ export const socialt_stånd ={
             {id: "Bluffa"},
             {id: "Finna dolda ting"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     },
     bonde: {
         name: "Bonde",
@@ -33,7 +36,8 @@ export const socialt_stånd ={
             {id: "Jakt & fiske"},
             {id: "Sjökunnighet"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     },
     borgare: {
         name: "Borgare",
@@ -43,7 +47,8 @@ export const socialt_stånd ={
             {id: "Hantverk"},
             {id: "Främmande språk"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     },
     prästerskap: {
         name: "Prästerskap",
@@ -53,7 +58,8 @@ export const socialt_stånd ={
             {id: "Läkekonst"},
             {id: "Observation"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     },
     adel: {
         name: "Adel",
@@ -63,6 +69,7 @@ export const socialt_stånd ={
             {id: "Höviskhet"},
             {id: "Övertala"}
         ],
-        extraFardighet: 1
+        extraFardighet: 1,
+        källa: "kopparhavet"
     }
 }

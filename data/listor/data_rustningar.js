@@ -11,7 +11,7 @@ export const rustningar = {
       undvika: false,
       hoppaochklattra: false
     },
-    källa: "DoD"
+    källa: "dod"
   },
   fjallpansar: {
     name: "Fjällpansar",
@@ -25,7 +25,7 @@ export const rustningar = {
       undvika: true,
       hoppaochklattra: false
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   gambeson: {
     name: "Gambeson",
@@ -39,7 +39,7 @@ export const rustningar = {
       undvika: false,
       hoppaochklattra: true
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   helrustning: {
     name: "Helrustning",
@@ -53,7 +53,7 @@ export const rustningar = {
       undvika: true,
       hoppaochklattra: false
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   kyrass: {
     name: "Kyrass",
@@ -67,7 +67,7 @@ export const rustningar = {
       undvika: true,
       hoppaochklattra: true
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   lader: {
     name: "Läder",
@@ -81,7 +81,7 @@ export const rustningar = {
       undvika: false,
       hoppaochklattra: false
     },
-    källa: "DoD"
+    källa: "dod"
   },
   nitlader: {
     name: "Nitläder",
@@ -95,7 +95,7 @@ export const rustningar = {
       undvika: false,
       hoppaochklattra: false
     },
-    källa: "DoD"
+    källa: "dod"
   },
   platrustning: {
     name: "Plåtrustning",
@@ -109,7 +109,7 @@ export const rustningar = {
       undvika: true,
       hoppaochklattra: true
     },
-    källa: "DoD"
+    källa: "dod"
   },
   ringbrynja: {
     name: "Ringbrynja",
@@ -123,6 +123,6 @@ export const rustningar = {
       undvika: true,
       hoppaochklattra: false
     },
-    källa: "DoD"
+    källa: "dod"
   }
 }

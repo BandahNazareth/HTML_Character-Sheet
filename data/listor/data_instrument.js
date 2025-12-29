@@ -5,7 +5,7 @@ export const instrument = {
     tillgång: "",
     vikt: "0",
     effekt: "",
-    källa: "DoD"
+    källa: "dod"
   },
   blashorn: {
     name: "Blåshorn",
@@ -13,7 +13,7 @@ export const instrument = {
     tillgång: "Vanlig",
     vikt: "1",
     effekt: "Ökar räckvidden för Tonkonst till 100 meter.",
-    källa: "DoD"
+    källa: "dod"
   },
   flojt: {
     name: "Flöjt",
@@ -21,7 +21,7 @@ export const instrument = {
     tillgång: "Vanlig",
     vikt: "1",
     effekt: "Minskar VP-kostnaden för Tonkonst till 2.",
-    källa: "DoD"
+    källa: "dod"
   },
   harpa: {
     name: "Harpa",
@@ -29,7 +29,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "2",
     effekt: "Minskar VP-kostnaden för Tonkonst till 1.",
-    källa: "DoD"
+    källa: "dod"
   },
   jonglerbollar: {
     name: "Jonglerbollar",
@@ -37,7 +37,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "0.25",
     effekt: "Ger fördel på UPPTRÄDA.",
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   luta: {
     name: "Luta",
@@ -45,7 +45,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "1",
     effekt: "Minskar VP-kostnaden för Tonkonst till 1.",
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   lyra: {
     name: "Lyra",
@@ -53,7 +53,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "1",
     effekt: "Minskar VP-kostnaden för Tonkonst till 1.",
-    källa: "DoD"
+    källa: "dod"
   },
   sackpipa: {
     name: "Säckpipa",
@@ -61,7 +61,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "1",
     effekt: "Minskar VP-kostnaden för Tonkonst till 1 och ökar räckvidden till 50 meter.",
-    källa: "DoD"
+    källa: "dod"
   },
   trumma: {
     name: "Trumma",
@@ -69,7 +69,7 @@ export const instrument = {
     tillgång: "Vanlig",
     vikt: "1",
     effekt: "Ökar räckvidden för Tonkonst till 50 meter.",
-    källa: "DoD"
+    källa: "dod"
   },
   vassflöjt: {
     name: "Vassflöjt",
@@ -77,7 +77,7 @@ export const instrument = {
     tillgång: "Ovanlig",
     vikt: "-",
     effekt: "Minskar VP-kostnaden för Tonkonst till 2.",
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   }
 }
   

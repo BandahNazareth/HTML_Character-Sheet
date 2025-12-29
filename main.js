@@ -13,12 +13,19 @@ import { socialt_stånd } from "./data/listor/socialt_stand.js";
 import { släkten } from "./data/listor/data_slakten.js";
 import { yrken } from "./data/listor/data_yrken.js";
 import { förmågor } from "./data/listor/data_formagor.js";
+import { kallor, buildGroupedOptions} from "./data/listor/data_kallor.js";
+import { groupByKälla } from "./rules/grundchans.js";
+import {ensureKällaVisibility, isKällaVisible, getSkillKälla} from "./rules/kallaVisibility.js";
 
 // ITEM imports
 import { vapen } from "./data/listor/data_vapen.js";
 import { rustningar } from "./data/listor/data_rustningar.js";
 import { hjälmar } from "./data/listor/data_hjalmar.js";
 import { instrument } from "./data/listor/data_instrument.js";
+
+// Karaktärsdata imports
+import { färdigheter } from "./data/karaktärsdata/fardigheter.js";
+import { vapenfärdigheter } from "./data/karaktärsdata/vapenfardigheter.js";
 
 //Color mode
 function setTheme(themeName) {
@@ -29,6 +36,8 @@ function applyCharacterTheme() {
 }
 applyCharacterTheme();
 
+
+//DOMCONTENTLOADED
 window.addEventListener("DOMContentLoaded", () => {
 
   initPersistence(); //Load-Autosave hook
@@ -54,6 +63,10 @@ function wrapAsFardCheckbox(input) {
   label.appendChild(input);
 }
 
+ensureKällaVisibility(rollperson, kallor);
+
+const BASE_KÄLLA_ID = "dod";
+
 function renderSkillList({
   derivedList,
   container,
@@ -61,48 +74,78 @@ function renderSkillList({
 }) {
   container.innerHTML = "";
 
-  derivedList.forEach(item => {
-    stateObject[item.id] ??= {
+  const grouped = groupByKälla(
+  derivedList,
+  item => item.källa
+);
+
+Object.entries(grouped).forEach(([källaId, items]) => {
+ console.log("VIS", källaId, rollperson.källorSynliga?.[källaId]);
+  console.log("KÄLLA DEF", källaId, kallor[källaId]);
+  if (!isKällaVisible(rollperson, källaId)) return;
+
+  // 1️⃣ ALWAYS ensure state FIRST
+items.forEach(item => {
+  if (!stateObject[item.id]) {
+    stateObject[item.id] = {
       tränad: false,
       förbättrad: false,
       förbättringar: []
     };
-
-    const row = document.createElement("div");
-
-    row.innerHTML = `
-      <label class="färd-checkbox">
-        <input
-          type="checkbox"
-          class="förbättrad"
-          ${item.förbättrad ? "checked" : ""}
-        >
-      </label>
-
-      ${item.grundchans}
-      ${item.name} (${grundData[item.grundegenskap]?.kort ?? "?"})
-
-      ${item.tränad ? `<span class="tränad-label">Tränad</span>` : ""}
-    `;
-
-    const checkbox = row.querySelector(".förbättrad");
-
-    checkbox.addEventListener("change", () => {
-  const state = stateObject[item.id];
-
-  state.förbättrad = checkbox.checked;
-
-  if (state.förbättrad) {
-    state.förbättringar ??= [];
   }
-
-  render();
 });
 
-    container.appendChild(row);
+// 2️⃣ THEN filter
+const visibleItems = items.filter(item => {
+  const state = stateObject[item.id];   // now guaranteed
+  const källaDef = kallor[källaId];
+  const isBase = källaDef?.type === "base";
+
+  // Base skills are ALWAYS visible
+  if (isBase) return true;
+
+  // Addon skills only if trained
+  return state.tränad === true;
+});
+
+  if (visibleItems.length === 0) return;
+
+    // ── Källa header ─────────────────────
+    const källaDef = kallor[källaId];
+
+    const header = document.createElement("h4");
+    header.className = "skill-kalla-header";
+    header.textContent =
+      källaDef?.altname ?? källaId;
+
+    container.appendChild(header);
+
+    // ── Render skills ───────────────────
+    visibleItems.forEach(item => {
+      const state = stateObject[item.id];
+
+      const row = document.createElement("div");
+
+      row.innerHTML = `
+        <label class="färd-checkbox">
+          <input
+            type="checkbox"
+            class="förbättrad"
+            ${state.förbättrad ? "checked" : ""}
+          >
+        </label>
+
+        ${item.grundchans}
+        ${item.name} (${grundData[item.grundegenskap]?.kort ?? "?"})
+
+        ${state.tränad ? `<span class="tränad-label">Tränad</span>`
+  : ""}
+      `;
+
+      container.appendChild(row);
+    });
   });
 }
-
 
 // ── Render function ──────────────────────────
 function render() {
@@ -380,9 +423,11 @@ for (let slot = 0; slot < 3; slot++) {
   const selectTd = document.createElement("td");
   const select = document.createElement("select");
 
-  select.innerHTML = Object.entries(instrument)
-    .map(([id, i]) => `<option value="${id}">${i.name}</option>`)
-    .join("");
+  select.innerHTML = buildGroupedOptions({
+  items: instrument,
+  getLabel: i => i.name,
+  getValue: id => id
+});
 
   // 🔑 SLOT-SPECIFIC VALUE
   select.value = rollperson.instrument[slot] ?? "";
@@ -452,11 +497,11 @@ for (let slot = 0; slot < 3; slot++) {
   const selectTd = document.createElement("td");
   const select = document.createElement("select");
 
-  select.innerHTML = Object.entries(vapen)
-    .map(
-      ([id, w]) => `<option value="${id}">${w.name}</option>`
-    )
-    .join("");
+  select.innerHTML = buildGroupedOptions({
+  items: vapen,
+  getLabel: w => w.name,
+  getValue: (id) => id
+});
 
   select.value = rollperson.vapen[slot] ?? "inget";
   selectTd.appendChild(select);
@@ -582,9 +627,11 @@ wrapAsFardCheckbox(cbHoppa);
 const nackdelTextEl = document.getElementById("rustning-nackdel-text");
 
 // Populate dropdown
-rustningSelect.innerHTML = Object.entries(rustningar)
-  .map(([id, r]) => `<option value="${id}">${r.name}</option>`)
-  .join("");
+rustningSelect.innerHTML = buildGroupedOptions({
+  items: rustningar,
+  getLabel: r => r.name,
+  getValue: id => id
+});
 
 // Initial value
 rustningSelect.value = rollperson.rustning ?? "inget";
@@ -625,9 +672,11 @@ wrapAsFardCheckbox(cbFinnaDolda);
 const hjälmNackdelTextEl = document.getElementById("hjälm-nackdel-text");
 
 // Populate dropdown
-hjälmSelect.innerHTML = Object.entries(hjälmar)
-  .map(([id, h]) => `<option value="${id}">${h.name}</option>`)
-  .join("");
+hjälmSelect.innerHTML = buildGroupedOptions({
+  items: hjälmar,
+  getLabel: h => h.name,
+  getValue: id => id
+});
 
 // Initial value
 hjälmSelect.value = rollperson.hjälm ?? "inget";

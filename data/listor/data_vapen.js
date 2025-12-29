@@ -1,4 +1,5 @@
 export const vapen = {
+  //GRUNDBOKEN
   inget: {
     name: "-",
     grepp: "-",
@@ -11,7 +12,7 @@ export const vapen = {
     egenskaper: "-",
     typ: "",
     vikt: "0",
-    källa: "DoD"
+    källa: "dod"
   },
   armborstlatt: {
     name: "Armborst, lätt",
@@ -25,7 +26,7 @@ export const vapen = {
     egenskaper: "Långsam (laddar 1 runda)",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   armborsttungt: {
     name: "Armborst, tungt",
@@ -39,7 +40,7 @@ export const vapen = {
     egenskaper: "Långsam (laddar 2 rundor), tung",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   bredsvard: {
     name: "Bredsvärd",
@@ -53,7 +54,7 @@ export const vapen = {
     egenskaper: "Stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   bagekort: {
     name: "Båge, kort",
@@ -67,7 +68,7 @@ export const vapen = {
     egenskaper: "—",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   bagelang: {
     name: "Båge, lång",
@@ -81,21 +82,7 @@ export const vapen = {
     egenskaper: "—",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
-  },
-  dirk: {
-    name: "Dirk",
-    grepp: "1H",
-    STY: "7",
-    räckvidd: "2",
-    skada: "T10",
-    BV: "8",
-    pris: "8 silver",
-    tillgång: "Vanlig",
-    egenskaper: "Stickande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
+    källa: "dod"
   },
   dolk: {
     name: "Dolk",
@@ -109,77 +96,7 @@ export const vapen = {
     egenskaper: "Smidig, stickande, huggande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
-  },
-  dubbelyxa: {
-    name: "Dubbelyxa",
-    grepp: "2H",
-    STY: "16",
-    räckvidd: "2",
-    skada: "2T10",
-    BV: "9",
-    pris: "160 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  feliciskhuggare: {
-    name: "Felicisk huggare",
-    grepp: "1H",
-    STY: "9",
-    räckvidd: "2",
-    skada: "2T6",
-    BV: "12",
-    pris: "80 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Fällande, huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  flamberge: {
-    name: "Flamberge",
-    grepp: "2H",
-    STY: "16",
-    räckvidd: "2",
-    skada: "2T10",
-    BV: "15",
-    pris: "250 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Stickande, huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  giftampull: {
-    name: "Giftampull",
-    grepp: "1H",
-    STY: "—",
-    räckvidd: "5",
-    skada: "—",
-    BV: "—",
-    pris: "—",
-    tillgång: "—",
-    egenskaper: "Gift (tillstånd), ingen direkt skada",
-    typ: "Avstånd",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  glav: {
-    name: "Glav",
-    grepp: "2H",
-    STY: "13",
-    räckvidd: "2",
-    skada: "2T8",
-    BV: "12",
-    pris: "40 silver",
-    tillgång: "Ovanlig",
-    egenskaper: "Huggande, genomslag",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
+    källa: "dod"
   },
   handyxa: {
     name: "Handyxa",
@@ -193,7 +110,7 @@ export const vapen = {
     egenskaper: "Fällande, huggande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   heligolja: {
     name: "Helig olja",
@@ -207,7 +124,7 @@ export const vapen = {
     egenskaper: "Extra skada på odöda",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   hillebard: {
     name: "Hillebard",
@@ -221,7 +138,7 @@ export const vapen = {
     egenskaper: "Lång, fällande, stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kastkniv: {
     name: "Kastkniv",
@@ -235,7 +152,7 @@ export const vapen = {
     egenskaper: "Smidig",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kastnat: {
     name: "Kastnät",
@@ -249,7 +166,7 @@ export const vapen = {
     egenskaper: "Fällande, ingen skada",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kastspjut: {
     name: "Kastspjut",
@@ -263,7 +180,7 @@ export const vapen = {
     egenskaper: "Stickande, kan användas i närstrid (räckvidd 7)",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kniv: {
     name: "Kniv",
@@ -277,22 +194,9 @@ export const vapen = {
     egenskaper: "Smidig, stickande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
-  korpnabb: {
-    name: "Korpnäbb",
-    grepp: "1H",
-    STY: "10",
-    räckvidd: "2",
-    skada: "2T6",
-    BV: "12",
-    pris: "35 silver",
-    tillgång: "Ovanlig",
-    egenskaper: "Krossande, genomslag",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
+  
   kortspjut: {
     name: "Kortspjut",
     grepp: "1H",
@@ -305,7 +209,7 @@ export const vapen = {
     egenskaper: "Stickande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kortsvard: {
     name: "Kortsvärd",
@@ -319,7 +223,7 @@ export const vapen = {
     egenskaper: "Stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   kroksabel: {
     name: "Kroksabel",
@@ -333,7 +237,7 @@ export const vapen = {
     egenskaper: "Fällande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   lans: {
     name: "Lans",
@@ -347,7 +251,7 @@ export const vapen = {
     egenskaper: "Lång, stickande, kräver stridstränat riddjur",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   langspjut: {
     name: "Långspjut",
@@ -361,21 +265,7 @@ export const vapen = {
     egenskaper: "Lång, stickande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
-  },
-  langsvard: {
-    name: "Långsvärd",
-    grepp: "2H",
-    STY: "13",
-    räckvidd: "2",
-    skada: "2T8",
-    BV: "15",
-    pris: "200 silver",
-    tillgång: "Ovanlig",
-    egenskaper: "Balanserad, stickande, huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
+    källa: "dod"
   },
   morgonstjarna: {
     name: "Morgonstjärna",
@@ -389,7 +279,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   obevapnad: {
     name: "Obeväpnad",
@@ -403,7 +293,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   oljedeg: {
     name: "Oljedeg",
@@ -417,7 +307,7 @@ export const vapen = {
     egenskaper: "Brandfarligt (tänds med fackla), yteffekt",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   parerdolk: {
     name: "Parerdolk",
@@ -431,63 +321,7 @@ export const vapen = {
     egenskaper: "Smidig, stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
-  },
-  pata: {
-    name: "Pata",
-    grepp: "1H",
-    STY: "7",
-    räckvidd: "2",
-    skada: "2T6",
-    BV: "10",
-    pris: "180 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Balanserad, huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  palyxa: {
-    name: "Pålyxa",
-    grepp: "2H",
-    STY: "16",
-    räckvidd: "2",
-    skada: "2T10",
-    BV: "12",
-    pris: "100 silver",
-    tillgång: "Ovanlig",
-    egenskaper: "Huggande eller stickande, fällande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  rustningsdolk: {
-    name: "Rustningsdolk",
-    grepp: "1H",
-    STY: "-",
-    räckvidd: "2",
-    skada: "T8",
-    BV: "7",
-    pris: "10 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Genomslag, smidig, stickande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
-  },
-  saryng: {
-    name: "Saryng",
-    grepp: "1H",
-    STY: "13",
-    räckvidd: "2",
-    skada: "2T8",
-    BV: "10",
-    pris: "150 silver",
-    tillgång: "Sällsynt",
-    egenskaper: "Stickande, huggande",
-    typ: "Närstrid",
-    vikt: "1",
-    källa: "Kopparhavet"
+    källa: "dod"
   },
   skold_liten: {
     name: "Sköld, liten",
@@ -501,7 +335,7 @@ export const vapen = {
     egenskaper: "Krossande (sköld som vapen)",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   slagsvard: {
     name: "Slagsvärd",
@@ -515,7 +349,7 @@ export const vapen = {
     egenskaper: "Stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   slinga: {
     name: "Slinga",
@@ -529,7 +363,7 @@ export const vapen = {
     egenskaper: "—",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   slunga: {
     name: "Slunga",
@@ -543,7 +377,7 @@ export const vapen = {
     egenskaper: "—",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   stridsgissel: {
     name: "Stridsgissel",
@@ -557,7 +391,7 @@ export const vapen = {
     egenskaper: "Krossande, fällande, kan ej parera",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   stridshammarelätt: {
     name: "Stridshammare (lätt)",
@@ -571,7 +405,7 @@ export const vapen = {
     egenskaper: "Krossande, fällande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   stridshammaretung: {
     name: "Stridshammare (tung)",
@@ -585,7 +419,7 @@ export const vapen = {
     egenskaper: "Krossande, fällande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   stridsklubba: {
     name: "Stridsklubba",
@@ -599,7 +433,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   stridsyxa: {
     name: "Stridsyxa",
@@ -613,7 +447,7 @@ export const vapen = {
     egenskaper: "Fällande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   syraflaska: {
     name: "Syraflaska",
@@ -627,7 +461,7 @@ export const vapen = {
     egenskaper: "Frätande",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   tillhyggelätt: {
     name: "Tillhygge, lätt",
@@ -641,7 +475,7 @@ export const vapen = {
     egenskaper: "Krossande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   tillhyggetungt: {
     name: "Tillhygge, tungt",
@@ -655,7 +489,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   tjarkruka: {
     name: "Tjärkruka",
@@ -669,7 +503,7 @@ export const vapen = {
     egenskaper: "Brandfarligt, yteffekt",
     typ: "Avstånd",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   treudd: {
     name: "Treudd",
@@ -683,7 +517,7 @@ export const vapen = {
     egenskaper: "Fällande, stickande, kan kastas",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   traklubbaliten: {
     name: "Träklubba (liten)",
@@ -697,7 +531,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   traklubbastor: {
     name: "Träklubba (stor)",
@@ -711,7 +545,7 @@ export const vapen = {
     egenskaper: "Krossande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   trastav: {
     name: "Trästav",
@@ -725,7 +559,7 @@ export const vapen = {
     egenskaper: "Krossande, fällande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   tvahandssvard: {
     name: "Tvåhandssvärd",
@@ -739,7 +573,7 @@ export const vapen = {
     egenskaper: "Stickande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
   },
   tvahandsyxa: {
     name: "Tvåhandsyxa",
@@ -753,6 +587,175 @@ export const vapen = {
     egenskaper: "Fällande, huggande",
     typ: "Närstrid",
     vikt: "1",
-    källa: "DoD"
+    källa: "dod"
+  },
+  //KOPPARHAVET
+  dirk: {
+    name: "Dirk",
+    grepp: "1H",
+    STY: "7",
+    räckvidd: "2",
+    skada: "T10",
+    BV: "8",
+    pris: "8 silver",
+    tillgång: "Vanlig",
+    egenskaper: "Stickande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  dubbelyxa: {
+    name: "Dubbelyxa",
+    grepp: "2H",
+    STY: "16",
+    räckvidd: "2",
+    skada: "2T10",
+    BV: "9",
+    pris: "160 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  feliciskhuggare: {
+    name: "Felicisk huggare",
+    grepp: "1H",
+    STY: "9",
+    räckvidd: "2",
+    skada: "2T6",
+    BV: "12",
+    pris: "80 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Fällande, huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  flamberge: {
+    name: "Flamberge",
+    grepp: "2H",
+    STY: "16",
+    räckvidd: "2",
+    skada: "2T10",
+    BV: "15",
+    pris: "250 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Stickande, huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  giftampull: {
+    name: "Giftampull",
+    grepp: "1H",
+    STY: "—",
+    räckvidd: "5",
+    skada: "—",
+    BV: "—",
+    pris: "—",
+    tillgång: "—",
+    egenskaper: "Gift (tillstånd), ingen direkt skada",
+    typ: "Avstånd",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  glav: {
+    name: "Glav",
+    grepp: "2H",
+    STY: "13",
+    räckvidd: "2",
+    skada: "2T8",
+    BV: "12",
+    pris: "40 silver",
+    tillgång: "Ovanlig",
+    egenskaper: "Huggande, genomslag",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  korpnabb: {
+    name: "Korpnäbb",
+    grepp: "1H",
+    STY: "10",
+    räckvidd: "2",
+    skada: "2T6",
+    BV: "12",
+    pris: "35 silver",
+    tillgång: "Ovanlig",
+    egenskaper: "Krossande, genomslag",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  langsvard: {
+    name: "Långsvärd",
+    grepp: "2H",
+    STY: "13",
+    räckvidd: "2",
+    skada: "2T8",
+    BV: "15",
+    pris: "200 silver",
+    tillgång: "Ovanlig",
+    egenskaper: "Balanserad, stickande, huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  pata: {
+    name: "Pata",
+    grepp: "1H",
+    STY: "7",
+    räckvidd: "2",
+    skada: "2T6",
+    BV: "10",
+    pris: "180 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Balanserad, huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  palyxa: {
+    name: "Pålyxa",
+    grepp: "2H",
+    STY: "16",
+    räckvidd: "2",
+    skada: "2T10",
+    BV: "12",
+    pris: "100 silver",
+    tillgång: "Ovanlig",
+    egenskaper: "Huggande eller stickande, fällande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  rustningsdolk: {
+    name: "Rustningsdolk",
+    grepp: "1H",
+    STY: "-",
+    räckvidd: "2",
+    skada: "T8",
+    BV: "7",
+    pris: "10 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Genomslag, smidig, stickande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
+  },
+  saryng: {
+    name: "Saryng",
+    grepp: "1H",
+    STY: "13",
+    räckvidd: "2",
+    skada: "2T8",
+    BV: "10",
+    pris: "150 silver",
+    tillgång: "Sällsynt",
+    egenskaper: "Stickande, huggande",
+    typ: "Närstrid",
+    vikt: "1",
+    källa: "kopparhavet"
   },
 };

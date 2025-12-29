@@ -9,6 +9,9 @@ import { ålder as ålderData } from "../data/listor/data_alder.js";
 import { socialt_stånd as socialtStandData } from "../data/listor/socialt_stand.js";
 import { getMaxTrainedFärdigheter } from "../rules/MaxTranadeFardigheter.js";
 import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, getSpelmöten } from "../rollformular_backend.js";
+import { groupByKälla } from "../rules/grundchans.js";
+import { kallor } from "../data/listor/data_kallor.js";
+import {ensureKällaVisibility} from "../rules/kallaVisibility.js";
 
 function ensureInitialSpelmöte(character) {
   character.spelmöten ??= [];
@@ -542,7 +545,8 @@ function labelWrap(label, input) {
     const derived = computeDerived(draft);
     validateResources(draft, derived);
     content.innerHTML = "";
-
+    
+    ensureKällaVisibility(draft, kallor);
     // ── Export / Import UI ───────────────────────
 const saveSection = document.createElement("section");
 saveSection.innerHTML = `<h3>Spara / Ladda</h3>`;
@@ -645,7 +649,32 @@ themeSelect.addEventListener("change", () => {
 
 themeSection.appendChild(themeSelect);
 content.appendChild(themeSection); 
-     
+
+// ── Källa visibility ─────────────────────────
+const kallaSection = document.createElement("section");
+kallaSection.innerHTML = `<h3>Visa innehåll från</h3>`;
+
+Object.entries(kallor).forEach(([id, k]) => {
+  const label = document.createElement("label");
+  label.style.display = "flex";
+  label.style.gap = "0.5rem";
+  label.style.alignItems = "center";
+
+  const cb = document.createElement("input");
+  cb.type = "checkbox";
+  cb.checked = draft.källorSynliga[id] !== false;
+
+  cb.addEventListener("change", () => {
+    draft.källorSynliga[id] = cb.checked;
+    renderEditor(); // live feedback
+  });
+
+  label.append(cb, document.createTextNode(k.name));
+  kallaSection.appendChild(label);
+});
+
+content.appendChild(kallaSection);
+
 // ── Avatar / Porträtt ─────────────────────────
 const avatarSection = document.createElement("section");
 avatarSection.innerHTML = `<h3>Porträtt</h3>`;
@@ -1024,60 +1053,80 @@ färdTable.innerHTML = `
 
 const färdTbody = färdTable.querySelector("tbody");
 
-for (const f of färdigheter) {
-  const state =
-    draft.färdigheter[f.id] ??
-    (draft.färdigheter[f.id] = {
-      tränad: false,
-      förbättrad: false, 
-      förbättringar: [],  
-      harFörbättrats: false   
+const groupedFärdigheter = groupByKälla(
+  färdigheter.map(f => ({
+    ...f,
+    källa: f.källa ?? "okänd"
+  }))
+);
+
+Object.entries(groupedFärdigheter).forEach(([källaId, items]) => {
+  // ── Källa header row ───────────────────
+  const headerTr = document.createElement("tr");
+  const headerTd = document.createElement("td");
+  headerTd.colSpan = 5;
+  headerTd.className = "editor-kalla-header";
+  headerTd.textContent =
+    kallor[källaId]?.name ?? källaId;
+
+  headerTr.appendChild(headerTd);
+  färdTbody.appendChild(headerTr);
+
+  // ── Skill rows ─────────────────────────
+  items.forEach(f => {
+    const state =
+      draft.färdigheter[f.id] ??
+      (draft.färdigheter[f.id] = {
+        tränad: false,
+        förbättrad: false,
+        förbättringar: [],
+        harFörbättrats: false
+      });
+
+    const derivedF =
+      derived.färdigheter.find(x => x.id === f.id);
+
+    const totalFV =
+      derivedF.grundchans + state.förbättringar.length;
+    const isMaxed = totalFV >= 18;
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${f.name}</td>
+      <td>${grundData[f.grundegenskap]?.kort ?? "?"}</td>
+      <td><strong>${derivedF.grundchans}</strong></td>
+      <td>
+        <input type="checkbox" class="trained" ${state.tränad ? "checked" : ""} />
+      </td>
+      <td>
+        <input
+          type="checkbox"
+          class="improvable"
+          ${state.förbättrad ? "checked" : ""}
+          ${isMaxed ? "disabled" : ""}
+        />
+      </td>
+    `;
+
+    const trainedBox = tr.querySelector(".trained");
+    const improvableBox = tr.querySelector(".improvable");
+
+    trainedBox.addEventListener("change", () => {
+      state.tränad = trainedBox.checked;
+      renderEditor();
     });
-  const derivedF = derived.färdigheter.find(x => x.id === f.id);
-  const totalFV = derivedF.grundchans + state.förbättringar.length;
-  const isMaxed = totalFV >= 18;
 
-  const tr = document.createElement("tr");
+    improvableBox.addEventListener("change", () => {
+      if (isMaxed) return;
+      state.förbättrad = improvableBox.checked;
+      if (state.förbättrad) state.harFörbättrats = true;
+      renderEditor();
+    });
 
-  tr.innerHTML = `
-  <td>${f.name}</td>
-  <td>${grundData[f.grundegenskap]?.kort ?? "?"}</td>
-  <td><strong>${derivedF.grundchans}</strong></td>
-  <td>
-  <input type="checkbox" class="trained" ${state.tränad ? "checked" : ""} />
-  </td>
-  <td>
-    <input
-      type="checkbox"
-      class="improvable"
-      ${state.förbättrad ? "checked" : ""}
-      ${isMaxed ? "disabled" : ""}
-    />
-  </td>
-`;
-
-  const trainedBox = tr.querySelector(".trained");
-const improvableBox = tr.querySelector(".improvable");
-
-trainedBox.addEventListener("change", () => {
-  state.tränad = trainedBox.checked;
-  renderEditor();
+    färdTbody.appendChild(tr);
+  });
 });
-
-improvableBox.addEventListener("change", () => {
-  if (isMaxed) return; // 🔒 hard stop
-
-  state.förbättrad = improvableBox.checked;
-
-  if (improvableBox.checked) {
-    state.harFörbättrats = true;
-  }
-
-  renderEditor();
-});
-
-  färdTbody.appendChild(tr);
-}
 
 färdSection.appendChild(färdTable);
 content.appendChild(färdSection);
@@ -1102,41 +1151,63 @@ vapenTable.innerHTML = `
 
 const vapenTbody = vapenTable.querySelector("tbody");
 
-for (const v of vapenfärdigheter) {
-  const state =
-    draft.vapenfärdigheter[v.id] ??
-    (draft.vapenfärdigheter[v.id] = {
-      tränad: false,
-      förbättrad: false,
-      förbättringar: [],
-      harFörbättrats: false
+const groupedVapenfärdigheter = groupByKälla(
+  vapenfärdigheter.map(v => ({
+    ...v,
+    källa: v.källa ?? "okänd"
+  }))
+);
+
+Object.entries(groupedVapenfärdigheter).forEach(([källaId, items]) => {
+  // ── Källa header ───────────────────
+  const headerTr = document.createElement("tr");
+  const headerTd = document.createElement("td");
+  headerTd.colSpan = 4;
+  headerTd.className = "editor-kalla-header";
+  headerTd.textContent =
+    kallor[källaId]?.name ?? källaId;
+
+  headerTr.appendChild(headerTd);
+  vapenTbody.appendChild(headerTr);
+
+  // ── Rows ───────────────────────────
+  items.forEach(v => {
+    const state =
+      draft.vapenfärdigheter[v.id] ??
+      (draft.vapenfärdigheter[v.id] = {
+        tränad: false,
+        förbättrad: false,
+        förbättringar: [],
+        harFörbättrats: false
+      });
+
+    const derivedV =
+      derived.vapenfärdigheter.find(x => x.id === v.id);
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${v.name}</td>
+      <td>${grundData[v.grundegenskap]?.kort ?? "?"}</td>
+      <td><strong>${derivedV.grundchans}</strong></td>
+      <td>
+        <input
+          type="checkbox"
+          ${state.tränad ? "checked" : ""}
+          ${!state.tränad && trainedCount >= maxTrained ? "disabled" : ""}
+        />
+      </td>
+    `;
+
+    const checkbox = tr.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      state.tränad = checkbox.checked;
+      renderEditor();
     });
-  const derivedV = derived.vapenfärdigheter.find(x => x.id === v.id);
 
-  const tr = document.createElement("tr");
-
-  tr.innerHTML = `
-  <td>${v.name}</td>
-  <td>${grundData[v.grundegenskap]?.kort ?? "?"}</td>
-  <td><strong>${derivedV.grundchans}</strong></td>
-  <td>
-    <input
-      type="checkbox"
-      ${state.tränad ? "checked" : ""}
-      ${!state.tränad && trainedCount >= maxTrained ? "disabled" : ""}
-    />
-  </td>
-`;
-
-  const checkbox = tr.querySelector("input");
-
-  checkbox.addEventListener("change", () => {
-  state.tränad = checkbox.checked;
-  renderEditor();
+    vapenTbody.appendChild(tr);
+  });
 });
-
-  vapenTbody.appendChild(tr);
-}
 
 vapenSection.appendChild(vapenTable);
 content.appendChild(vapenSection);

@@ -14,3 +14,15 @@ export function grundchansFörFärdighet(färdighet, rollperson) {
 
   return färdighet.tränad ? grundchans * 2 : grundchans;
 }
+// Källhantering
+export function groupByKälla(items) {
+  const groups = {};
+
+  items.forEach(item => {
+    const källaId = item.källa ?? "okänd";
+    groups[källaId] ??= [];
+    groups[källaId].push(item);
+  });
+
+  return groups;
+}

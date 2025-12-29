@@ -10,7 +10,7 @@ export const hjälmar = {
       upptackafara: false,
       avstandsattacker: false
     },
-    källa: "-"
+    källa: "dod"
   },
   blomhjälm: {
     name: "Blomhjälm",
@@ -24,7 +24,7 @@ export const hjälmar = {
       avstandsattacker: false,
       finnadoldating: true
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   tunnhjälm: {
     name: "Tunnhjälm",
@@ -37,7 +37,7 @@ export const hjälmar = {
       upptackafara: true,
       avstandsattacker: true
     },
-    källa: "DoD"
+    källa: "dod"
   },
   visirhjälm: {
     name: "Visirhjälm",
@@ -50,7 +50,7 @@ export const hjälmar = {
       upptackafara: true,
       avstandsattacker: true
     },
-    källa: "Kopparhavet"
+    källa: "kopparhavet"
   },
   öppen_hjälm: {
     name: "Öppen hjälm",
@@ -63,7 +63,7 @@ export const hjälmar = {
       upptackafara: true,
       avstandsattacker: false
     },
-    källa: "DoD"
+    källa: "dod"
   }
 }
 
