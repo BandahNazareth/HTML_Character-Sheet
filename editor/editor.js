@@ -310,29 +310,29 @@ function renderImprovements() {
 
     // Existing improvement chips
     entry.förbättringar.forEach(sm => {
-      const chip = document.createElement("span");
-      chip.className = "improvement-chip";
-      chip.textContent = sm;
+    const chip = document.createElement("span");
+    chip.className = "improvement-chip";
+    chip.textContent = sm;
 
-      chip.addEventListener("click", () => {
-        const target =
-          title === "Färdigheter"
-            ? currentDraft.färdigheter
-            : currentDraft.vapenfärdigheter;
+    chip.addEventListener("click", () => {
+      const target =
+        title === "Färdigheter"
+          ? currentDraft.färdigheter
+          : currentDraft.vapenfärdigheter;
 
-        removeImprovement(target, id, sm);
+      removeImprovement(target, id, sm);
 
-        const entry = target[id];
-        if ((entry.förbättringar?.length ?? 0) === 0) {
-          entry.förbättrad = false;
-          entry.harFörbättrats = false;
-        }
+      const entry = target[id];
+      if ((entry.förbättringar?.length ?? 0) === 0) {
+        entry.förbättrad = false;
+        entry.harFörbättrats = false;
+      }
 
-        renderImprovements();
-      });
+      renderImprovements();
+    });
 
-  row.appendChild(chip);
-});
+    row.appendChild(chip);
+  });
 
     // + SM button (only if spelmöten exist and not already added)
     if (isMaxed) {
@@ -351,23 +351,18 @@ function renderImprovements() {
       addChip.textContent = `+ ${latestSM}`;
 
       addChip.addEventListener("click", () => {
-  // 🔑 Apply improvement to REAL character
-  const target =
-  title === "Färdigheter"
-    ? currentDraft.färdigheter
-    : currentDraft.vapenfärdigheter;
+      const target =
+        title === "Färdigheter"
+          ? currentDraft.färdigheter
+          : currentDraft.vapenfärdigheter;
 
-  addImprovement(target, id, latestSM);
-
-  // Update draft entry
-  entry.förbättringar.push(latestSM);
-  entry.harFörbättrats = true;
+      addImprovement(target, id, latestSM);
 
       renderImprovements();
     });
 
-  row.appendChild(addChip);
-}
+      row.appendChild(addChip);
+    }
 
     section.appendChild(row);
   });
