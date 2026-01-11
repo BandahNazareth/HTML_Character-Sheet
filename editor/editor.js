@@ -762,10 +762,10 @@ themeSelect.value = draft.theme ?? "main";
 
 themeSelect.addEventListener("change", () => {
   draft.theme = themeSelect.value;
+  markDirty(); 
 });
-
 themeSection.appendChild(themeSelect);
-content.appendChild(themeSection); 
+content.appendChild(themeSection);
 
 // ── Källa visibility ─────────────────────────
 const kallaSection = document.createElement("section");
@@ -784,6 +784,7 @@ Object.entries(kallor).forEach(([id, k]) => {
   cb.addEventListener("change", () => {
     draft.källorSynliga[id] = cb.checked;
     renderEditor(); // live feedback
+    markDirty(); 
   });
 
   label.append(cb, document.createTextNode(k.name));
@@ -995,6 +996,7 @@ socialSelect.value = draft.socialt_stånd.namn;
 socialSelect.onchange = () => {
   draft.socialt_stånd.namn = socialSelect.value;
   renderEditor();
+  markDirty(); 
 };
 
 const socialText = document.createElement("input");
@@ -1359,6 +1361,7 @@ resursSection.querySelector(".vp-minus").addEventListener("click", () => {
 
   valueInput.addEventListener("input", () => {
   state.värde = Number(valueInput.value);
+  markDirty(); 
 });
 
   pressadInput.addEventListener("change", () => {

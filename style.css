@@ -192,9 +192,9 @@ h1, h2, h3, h4, h5 {
 #grundegenskaper {
   background: var(--bg);
   border: 3px solid var(--accent-light);
-  width: 50rem;
+  width: 63rem;
   padding: 1rem;
-  align-items: start;
+  align-items: center;
 }
 .grund-box {
   display: inline-block;
@@ -767,7 +767,7 @@ textarea:not([readonly]) {
 }
 .defense-sections {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 @media (max-width: 1024px) {

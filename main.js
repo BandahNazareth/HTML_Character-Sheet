@@ -37,27 +37,47 @@ applyCharacterTheme();
 //Kontrollerar om färdigheter har nackdel
 
 function hasNackdelForSkill(rollperson, item) {
+  const skillId = item.id;
+
   // 1️⃣ Pressed grundegenskap
   const grund = item.grundegenskap;
   if (grund && rollperson.grundegenskaper[grund]?.pressad) {
     return true;
   }
 
-  // 2️⃣ Armor-based nackdel (already calculated state)
-  if (!rollperson.rustning) return false;
+  // 2️⃣ Rustning nackdelar
+  if (rollperson.rustning) {
+    const armor = rustningar[rollperson.rustning];
 
-  const armor = rustningar[rollperson.rustning];
-  if (!armor?.nackdelar) return false;
+    const armorNackdelMap = {
+      smyga: "smyga",
+      undvika: "undvika",
+      hoppaochklattra: "hoppaochklattra"
+    };
 
-  // Map skill IDs → armor nackdel flags
-  const armorNackdelMap = {
-    smyga: "smyga",
-    undvika: "undvika",
-    hoppaochklattra: "hoppaochklattra"
-  };
+    const flag = armorNackdelMap[skillId];
+    if (flag && armor?.nackdelar?.[flag]) {
+      return true;
+    }
+  }
 
-  const flag = armorNackdelMap[item.id];
-  return flag ? armor.nackdelar[flag] === true : false;
+  // 3️⃣ Hjälm nackdelar
+  if (rollperson.hjälm) {
+    const helmet = hjälmar[rollperson.hjälm];
+
+    const helmetNackdelMap = {
+      upptackafara: "upptackafara",
+      avstandsattacker: "avstandsattacker",
+      finnadoldating: "finnadoldating"
+    };
+
+    const flag = helmetNackdelMap[skillId];
+    if (flag && helmet?.nackdelar?.[flag]) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 //DOMCONTENTLOADED
@@ -514,7 +534,7 @@ function renderSpells({
   );
 
   if (entries.length === 0) {
-    container.innerHTML = `<em>Inga ${title.toLowerCase()} lärda</em>`;
+    container.innerHTML = `<h3>Inga ${title.toLowerCase()} lärda</h3>`;
     return;
   }
 function updatePreparedCounter(container, derived) {
@@ -898,7 +918,7 @@ function updateRustningUI() {
 
 rustningSelect.addEventListener("change", () => {
   updateRustningUI();
-  render(); // if armor later affects rolls
+  render();
 });
 
 updateRustningUI();
@@ -939,16 +959,16 @@ function updateHjälmUI() {
 
   hjälmBVEl.textContent = hjälm.SV || "0";
 
-  cbUpptäckaFara.checked = hjälm.nackdelar.upptackafara ?? false;
-  cbAvstånd.checked = hjälm.nackdelar.avstandsattacker ?? false;
-  cbFinnaDolda.checked = hjälm.nackdelar.finnadoldating ?? false;
+  cbUpptäckaFara.checked = hjälm.nackdelar.upptackafara;
+  cbAvstånd.checked = hjälm.nackdelar.avstandsattacker;
+  cbFinnaDolda.checked = hjälm.nackdelar.finnadoldating;
 
   hjälmNackdelTextEl.textContent = hjälm.nackdelarText;
 }
 
 hjälmSelect.addEventListener("change", () => {
   updateHjälmUI();
-  render(); // future-proof if helmets affect rolls
+  render();
 });
 
 updateHjälmUI();
