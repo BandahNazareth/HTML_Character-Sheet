@@ -8,6 +8,11 @@ export const kallor ={
         name: "Ereb Altor",
         altname: "Övriga färdigheter",
         type: "addon"
+    },
+    magiboken: {
+        name: "Magiboken",
+        altname: "Övriga färdigheter",
+        type: "addon"
     }
 };
 // ── Render function ──────────────────────────

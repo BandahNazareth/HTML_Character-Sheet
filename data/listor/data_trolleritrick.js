@@ -93,4 +93,25 @@ varmakyla: {
     text: `Området inom 10 meter från dig blir behagligt varmt eller svalt. Effekten skyddar mot kyla (sid 54) i ett skift.`,
     källa: "dod",
   },
+locksang: {
+  name: "Locksång",
+  krav: "Harmonism",
+  tidsåtgång: "Handling",
+  text: `Du lockar till dig en skara små däggdjur, som ekorrar, igelkottar, skogsmöss eller råttor, beroende på miljön. De stannar så länge du sjunger eller spelar.`,
+  källa: "magiboken",
+},
+magiskmelodi: {
+  name: "Magisk melodi",
+  krav: "Harmonism",
+  tidsåtgång: "Handling",
+  text: `Du ger din röst eller instrumentspel en magisk karaktär som imponerar på alla som lyssnar. Effekter ger fördel på UPPTRÄDA i relevanta sammanhang (SL avgör) förutom på att lägga besvärjelser.`,
+  källa: "magiboken",
+},
+rostforvrangning: {
+  name: "Röstförvrängning",
+  krav: "Harmonism",
+  tidsåtgång: "Handling",
+  text: `Du kan förställa din röst så att du låter helt oigenkännlig, vilket kan ge fördel på BLUFFA i vissa lägen. SL avgör.`,
+  källa: "magiboken",
+},
 }
