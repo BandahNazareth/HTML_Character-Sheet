@@ -3,6 +3,7 @@ export const trolleritrick = {
 hamta: {
     name: "Hämta",
     krav: "Valfri magiskola",
+    magiskola: "valfri",
     tidsåtgång: "Handling",
     text: `Du får ett löst föremål (ej tyngre än vikt 1) inom 10 meter att sväva fram till dig.`,
     källa: "dod",
@@ -10,6 +11,7 @@ hamta: {
 knapp: {
     name: "Knäpp",
     krav: "Valfri magiskola",
+    magiskola: "valfri",
     tidsåtgång: "Handling",
     text: `Du knäpper till ett föremål eller eller varelse inom 10 meter med magisk kraft. "Attacken" ger 1 poäng skada och kan till exempel krossa glasföremål.`,
     källa: "dod",
@@ -17,6 +19,7 @@ knapp: {
 kannamagi: {
     name: "Känna magi",
     krav: "Valfri magiskola",
+    magiskola: "valfri",
     tidsåtgång: "Handling",
     text: `Du kan avgöra om en plats du befinner dig på eller ett föremål du håller i är påverkad av magi och i så fall vilken slags magi.`,
     källa: "dod",
@@ -24,6 +27,7 @@ kannamagi: {
 lagaklader: {
     name: "Laga kläder",
     krav: "Valfri magiskola",
+    magiskola: "valfri",
     tidsåtgång: "Handling",
     text: `Dina eller någon annans kläder (inom 10 meter) blir hela och rena.`,
     källa: "dod",
@@ -31,6 +35,7 @@ lagaklader: {
 ljus: {
     name: "Ljus",
     krav: "Valfri magiskola",
+    magiskola: "valfri",
     tidsåtgång: "Handling",
     text: `Du skapar ett skinande klart ljus från ett valfritt fokusföremål. Det lyser upp ett område med 10 meters radie från dig och håller i ett skift. Det slocknar dock om du når noll KP.`,
     källa: "dod",
@@ -39,6 +44,7 @@ ljus: {
 blomsterspar: {
     name: "Blomsterspår",
     krav: "Animism",
+    magiskola: "animism",
     tidsåtgång: "Handling",
     text: `Det växer upp vackra blommor där du går. Blommorna vissnar efter ett skift.`,
     källa: "dod",
@@ -46,6 +52,7 @@ blomsterspar: {
 frisyr: {
     name: "Frisyr",
     krav: "Animism",
+    magiskola: "animism",
     tidsåtgång: "Handling",
     text: `Du ändrar hårfärg, hårlängd och frisyr på valfritt sätt. I rätt sammanhang kan det ge dig fördel på BLUFFA eller ÖVERTALA.`,
     källa: "dod",
@@ -53,6 +60,7 @@ frisyr: {
 fagelsang: {
     name: "Fågelsång",
     krav: "Animism",
+    magiskola: "animism",
     tidsåtgång: "Handling",
     text: `Du omges av vackert fågelkvitter under en kvart. Fåglarna ger dig fördel på UPPTÄCKA FARA. Trolleritricket fungerar bara utomhus.`,
     källa: "dod",
@@ -60,6 +68,7 @@ fagelsang: {
 lagamat: {
     name: "Laga mat",
     krav: "Animism",
+    magiskola: "animism",
     tidsåtgång: "Handling",
     text: `Du lyckas automatiskt laga mat (sid 103) utan att behöva slå mot VILDMARKSVANA och det sker omedelbart (en handling).`,
     källa: "dod",
@@ -67,6 +76,7 @@ lagamat: {
 stada: {
     name: "Städa",
     krav: "Animism",
+    magiskola: "animism",
     tidsåtgång: "Handling",
     text: `Rummet som du befinner dig i blir städat. Damm och smuts försvinner och saker ställs i ordning.`,
     källa: "dod",
@@ -75,6 +85,7 @@ stada: {
 rokpuff: {
     name: "Rökpuff",
     krav: "Elementalism",
+    magiskola: "elementalism",
     tidsåtgång: "Handling",
     text: `En imponerande rökpuff slår upp precis framför dig. Väldigt populär för dramatiska entréer och kan ge fördel på SMYGA i vissa lägen. SL avgör.`,
     källa: "dod",
@@ -82,6 +93,7 @@ rokpuff: {
 tanda: {
     name: "Tända",
     krav: "Elementalism",
+    magiskola: "elementalism",
     tidsåtgång: "Handling",
     text: `Du tänder eller släcker ett ljus, en fackla eller en lykta inom 10 meter.`,
     källa: "dod",
@@ -89,6 +101,7 @@ tanda: {
 varmakyla: {
     name: "Värma/kyla",
     krav: "Elementalism",
+    magiskola: "elementalism",
     tidsåtgång: "Handling",
     text: `Området inom 10 meter från dig blir behagligt varmt eller svalt. Effekten skyddar mot kyla (sid 54) i ett skift.`,
     källa: "dod",
@@ -96,6 +109,7 @@ varmakyla: {
 locksang: {
   name: "Locksång",
   krav: "Harmonism",
+  magiskola: "harmonism",
   tidsåtgång: "Handling",
   text: `Du lockar till dig en skara små däggdjur, som ekorrar, igelkottar, skogsmöss eller råttor, beroende på miljön. De stannar så länge du sjunger eller spelar.`,
   källa: "magiboken",
@@ -103,6 +117,7 @@ locksang: {
 magiskmelodi: {
   name: "Magisk melodi",
   krav: "Harmonism",
+  magiskola: "harmonism",
   tidsåtgång: "Handling",
   text: `Du ger din röst eller instrumentspel en magisk karaktär som imponerar på alla som lyssnar. Effekter ger fördel på UPPTRÄDA i relevanta sammanhang (SL avgör) förutom på att lägga besvärjelser.`,
   källa: "magiboken",
@@ -110,6 +125,7 @@ magiskmelodi: {
 rostforvrangning: {
   name: "Röstförvrängning",
   krav: "Harmonism",
+  magiskola: "harmonism",
   tidsåtgång: "Handling",
   text: `Du kan förställa din röst så att du låter helt oigenkännlig, vilket kan ge fördel på BLUFFA i vissa lägen. SL avgör.`,
   källa: "magiboken",

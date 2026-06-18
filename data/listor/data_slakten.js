@@ -31,6 +31,7 @@ export const släkten ={
         förmågor: [
             {id: "svarfangad", kostnad: 3}
         ],
+        källa: "dod"
     },
     människa: {
         name: "Människa",

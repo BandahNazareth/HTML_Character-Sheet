@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="editor/editor.css" />
   <link rel="stylesheet" href="themes/themes.css" />
+  <link rel="stylesheet" href="data/bibliotek/bibliotek.css" />
 </head>
 
 <body>
@@ -21,6 +22,11 @@
     class="editor-button improvements"
     data-tooltip="Förbättringar"
     aria-label="Förbättringar">
+  </button>
+  <button
+    id="open-bibliotek"
+    class="editor-button bibliotek"
+    data-tooltip="Bibliotek">
   </button>
   <!-- SHARED MODAL OVERLAY -->
     <div id="editor-root">
@@ -58,7 +64,16 @@
             <button id="add-spelmote">Lägg till spelmöte</button>
           </footer>
         </div>
-
+        <!-- BIBLIOTEK MODAL-->
+         <div class="editor-modal modal" data-modal="bibliotek">
+          <header>
+            <h2>Bibliotek</h2>
+            <button class="modal-close">✕</button>
+          </header>
+          <div id="bibliotek-content">
+            <!-- populated by JS-->
+          </div>
+         </div>
       </div>
     </div>
 

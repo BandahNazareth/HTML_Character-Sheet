@@ -48,7 +48,11 @@ body {
 }
 
 .modal.active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  width: min(95vw, 940px);
+  max-width: 940px;
+  margin: 0 auto 0;
 }
 /* ── Modal animation base ───────────────────── */
 .modal {
@@ -101,15 +105,15 @@ body {
   line-height: 1.4;
 }
 
-
 #editor-root .editor-modal {
   background: var(--bg);
-  width: 90%;
-  max-width: 1000px;
+  width: min(95vw, 940px);
+  max-width: 940px;
   max-height: 90vh;
   overflow-y: auto;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0rem;
+  margin: 0 auto;
 }
 
 #editor-root .editor-modal header,
@@ -119,16 +123,12 @@ body {
   align-items: center;
 }
 /* Editor modal layout */
-.modal[data-modal="editor"] {
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-}
 
 /* Scrollable editor content */
 #editor-content {
   overflow-y: auto;
   flex: 1;
+  padding: 0 rem 0;
   padding-bottom: 1rem;
 }
 /* Sticky editor footer */
@@ -373,6 +373,14 @@ body {
 
 .editor-button.improvements:hover {
   background-image: url("../art/forbattringar_clicked.svg");
+}
+/* ── Bibliotek button specifics ─────────── */
+.editor-button.bibliotek {
+  background-image: url("../art/bibliotek.svg");
+}
+
+.editor-button.bibliotek:hover {
+  background-image: url("../art/bibliotek_hover.svg");
 }
 
 /* Optional: keyboard accessibility */

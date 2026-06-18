@@ -1,6 +1,7 @@
 export const yrken ={
     bard: {
         name: "Bard",
+        basMagiskola: 1,
         hjälteförmågorStart: [
             {id: "Tonkonst"}
         ],
@@ -8,6 +9,7 @@ export const yrken ={
     },
     hantverkare: {
         name: "Hantverkare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Garverimästare"},
             {id: "Mästersmed"},
@@ -17,6 +19,7 @@ export const yrken ={
     },
     jägare: {
         name: "Jägare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Följeslagare"}
         ],
@@ -24,6 +27,7 @@ export const yrken ={
     },
     krigare: {
         name: "Krigare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Stridsvana"}
         ],
@@ -31,17 +35,21 @@ export const yrken ={
     },
     lärd: {
         name: "Lärd",
+        basMagiskola: 0,
         hjälteförmågorStart: [
-            {id: "Tonkonst"}
+            {id: "Intuition"}
         ],
         källa: "dod"
     },
     magiker: {
         name: "Magiker",
-        hjälteförmågorStart: []
+        basMagiskola: 1,
+        hjälteförmågorStart: [],
+        källa: "dod"
     },
     nasare: {
         name: "Nasare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Skattletare"}
         ],
@@ -49,6 +57,7 @@ export const yrken ={
     },
     riddare: {
         name: "Riddare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Förkämpe"}
         ],
@@ -56,6 +65,7 @@ export const yrken ={
     },
     sjöfarare: {
         name: "Sjöfarare",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Sjöben"}
         ],
@@ -63,6 +73,7 @@ export const yrken ={
     },
     tjuv: {
         name: "Tjuv",
+        basMagiskola: 0,
         hjälteförmågorStart: [
             {id: "Tjuvhugg"}
         ],

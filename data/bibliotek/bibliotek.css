@@ -1,0 +1,167 @@
+/* Bibliotek overlay styling */
+#bibliotek-content {
+  font-family: "Flareserif 821 BT", serif;
+  color: var(--text);
+  width: 100%;
+  max-width: 880px;
+  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.modal[data-modal="bibliotek"] header {
+  width: 100%;
+  margin: 0 0 0.75rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal[data-modal="bibliotek"] header h2 {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.bibliotek-overview {
+  display: grid;
+  width: 100%;
+  justify-items: start;
+}
+
+.bibliotek-section__details {
+  background: var(--bg);
+  border: 1px solid var(--accent-dark);
+  border-radius: 0.35rem;
+  padding: 0.5rem;
+}
+
+.bibliotek-section__details summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin: 0;
+  list-style: none;
+}
+
+.bibliotek-section__details summary h3 {
+  margin: 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.bibliotek-section__content {
+  margin-top: 0.75rem;
+  display: block;
+  text-align: left;
+}
+
+.bibliotek-group {
+  margin-bottom: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.bibliotek-group:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.bibliotek-group__header {
+  font-size: 13px;
+  margin: 0 0 0.75rem;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  padding-bottom: 0.5rem;
+  text-align: left;
+}
+
+.bibliotek-group__items {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(130px, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.bibliotek-section[data-section="lägga-besvärjelser"] .bibliotek-group__items {
+  grid-template-columns: 1fr;
+}
+
+.bibliotek-section--single-column .bibliotek-group__items {
+  grid-template-columns: 1fr;
+}
+
+.bibliotek-entry {
+  background: var(--bg);
+  padding: 0.65rem;
+  border-radius: 0.35rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bibliotek-entry__details {
+  width: 100%;
+  border: none;
+}
+
+.bibliotek-entry__details summary {
+  border: none;
+}
+
+.bibliotek-entry__details summary {
+  border: none;
+}
+
+.bibliotek-entry__details summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.bibliotek-entry__details summary::-webkit-details-marker,
+.bibliotek-entry__details summary::marker {
+  margin-right: 0.4rem;
+  font-size: 1rem;
+}
+
+.bibliotek-entry__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  font-size: 16px;
+}
+
+.bibliotek-entry__body,
+.bibliotek-entry__body p,
+.bibliotek-entry__meta {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.bibliotek-entry__meta {
+  margin: 0 0 0.5rem;
+  opacity: 0.8;
+}
+
+.bibliotek-entry__body {
+  margin-top: 0.5rem;
+}
+
+.bibliotek-section__details[open] .bibliotek-section__content {
+  padding-top: 0.5rem;
+}
+
+.bibliotek-entry__details[open] {
+  margin-top: 0.5rem;
+}

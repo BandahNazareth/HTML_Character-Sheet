@@ -15,6 +15,7 @@ import { addImprovement, removeImprovement, addSpelmöte, removeSpelmöte, getSp
 import { groupByKälla } from "../rules/grundchans.js";
 import { kallor } from "../data/listor/data_kallor.js";
 import {ensureKällaVisibility, isItemFromVisibleKälla} from "../rules/kallaVisibility.js";
+import { initBibliotekOverlay } from "../data/bibliotek/bibliotek.js";
 
 function ensureInitialSpelmöte(character) {
   character.spelmöten ??= [];
@@ -286,6 +287,7 @@ const Modal = (() => {
 
 const impContent = document.getElementById("improvements-content");
 const openImpBtn = document.getElementById("open-improvements");
+
 let addSMBtn;
 
 function renderImprovements() {
@@ -472,6 +474,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const content = document.getElementById("editor-content");
 
   Modal.init();
+  initBibliotekOverlay(name => Modal.open(name));
 
 /* ───────────────── Editor button ───────────────── */
 openBtn.addEventListener("click", () => {
@@ -496,6 +499,8 @@ currentDraft = typeof structuredClone === "function"
   : JSON.parse(JSON.stringify(rollperson));
 
     ensureInitialSpelmöte(currentDraft);
+
+
 
 // 🔑 Sync eligibility → visibility
 function syncEligibility(src, dest) {
@@ -627,16 +632,16 @@ function labelWrap(label, input) {
     draft.besvärjelser ??= {};
 
  // ── Magi helpers ─────────────────────────────
-function kravMatcharMagiskolor(krav) {
-  if (!krav) return false;
-  if (krav === "Valfri magiskola") return true;
+function magiskolaMatchar(magiskola) {
+  if (!magiskola) return false;
+  if (magiskola === "valfri") return true;
 
-  const kravUpper = krav.toUpperCase();
+  const magiskolaUpper = magiskola.toUpperCase();
 
   return Object.keys(draft.magiskolor).some(id => {
     const name =
       magiskolor.find(m => m.id === id)?.name;
-    return name && kravUpper.includes(name.toUpperCase());
+    return name && magiskolaUpper.includes(name.toUpperCase());
   });
 }   
 
@@ -646,13 +651,11 @@ draft.magiskolor ??= {};
 draft.besvärjelser ??= {};
 draft.trolleritrick ??= {};
 
-const magiskTalangLevels =
-  draft.hjälteförmågor?.magisk_talang ?? 0;
-
-const isMagikerYrke = draft.yrke === "magiker";
+const yrke = yrken[draft.yrke];
 
 const maxMagiskolor =
-  (isMagikerYrke ? 1 : 0) + magiskTalangLevels;
+  (yrke?.basMagiskola ?? 0)+
+  (draft.hjälteförmågor?.magisk_talang ?? 0);
 
   // ── Enforce magic eligibility ─────────────────
 if (maxMagiskolor === 0) {
@@ -1114,14 +1117,14 @@ if (Object.keys(draft.magiskolor).length > 0) {
   trickSection.innerHTML = `<h3>Trolleritrick</h3>`;
 
   Object.entries(trolleritrick)
-    .filter(([_, t]) => kravMatcharMagiskolor(t.krav))
+    .filter(([_, t]) => magiskolaMatchar(t.magiskola))
     .forEach(([id, t]) => {
   const row = document.createElement("div");
   row.className = "spell-row";
 
   const header = document.createElement("div");
   header.className = "spell-header";
-  header.textContent = t.name;
+  header.textContent = `${t.name} - ${t.magiskola}`;
 
   const learned =
     Object.values(draft.trolleritrick)
@@ -1171,21 +1174,50 @@ if (Object.keys(draft.magiskolor).length > 0) {
   const spellSection = document.createElement("section");
   spellSection.innerHTML = `<h3>Besvärjelser</h3>`;
 
-  Object.entries(besvärjelser)
-    .filter(([_, s]) => kravMatcharMagiskolor(s.krav))
-    .forEach(([id, s]) => {
+  let currentSchool = null;
+let currentLevel = null;
+
+Object.entries(besvärjelser)
+  .filter(([_, s]) => magiskolaMatchar(s.magiskola))
+  .sort(([, a], [, b]) => {
+    if (a.magiskola !== b.magiskola) {
+      return a.magiskola.localeCompare(b.magiskola, "sv");
+    }
+    if (a.nivå !== b.nivå) {
+      return a.nivå - b.nivå;
+    }
+    return a.name.localeCompare(b.name, "sv");
+  })
+  .forEach(([id, s]) => {
+  if (s.magiskola !== currentSchool) {
+  currentSchool = s.magiskola;
+  currentLevel = null;
+
+  const schoolHeader = document.createElement("h4");
+  schoolHeader.textContent =
+  s.magiskola.charAt(0).toUpperCase() + s.magiskola.slice(1);
+  spellSection.appendChild(schoolHeader);
+}
+
+if (s.nivå !== currentLevel) {
+  currentLevel = s.nivå;
+
+  const levelHeader = document.createElement("h5");
+  levelHeader.textContent = `Nivå ${s.nivå}`;
+  spellSection.appendChild(levelHeader);
+}
   const row = document.createElement("div");
   row.className = "spell-row";
 
   const header = document.createElement("div");
   header.className = "spell-header";
-  header.textContent = `${s.name} (Nivå ${s.nivå})`;
+  header.textContent = `${s.name} - Krav: ${s.krav}`;
 
   const matchingSchools = Object.keys(draft.magiskolor).filter(ms => {
     const name =
       magiskolor.find(m => m.id === ms)?.name;
     return (
-      s.krav === "Valfri magiskola" ||
+      s.magiskola === "valfri" ||
       s.krav?.toUpperCase()?.includes(name?.toUpperCase())
     );
   });
@@ -1674,6 +1706,7 @@ for (const [id, count] of Object.entries(draft.hjälteförmågor)) {
   }
 
   hjälteTbody.appendChild(tr);
+  markDirty();
 }
 hjälteSection.appendChild(hjälteTable);
 
