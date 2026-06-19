@@ -1,13 +1,295 @@
+import { LaggaBesvarjelser } from "./data_lagga_besvarjelser.js";
 import { hjälteförmågor } from "../listor/data_hjalteformagor.js";
 import { släkten } from "../listor/data_slakten.js";
 import { yrken } from "../listor/data_yrken.js";
 import { trolleritrick } from "../listor/data_trolleritrick.js";
 import { besvärjelser } from "../listor/data_besvarjelser.js";
+import { vapen } from "../listor/data_vapen.js";
+import { rustningar } from "../listor/data_rustningar.js";
+import { kläder } from "../listor/data_klader.js";
+import { föremål } from "../listor/data_foremal.js";
+import { tjänster } from "../listor/data_tjanster.js";
 import { kallor } from "../listor/data_kallor.js";
-import { LaggaBesvarjelser } from "./data_lagga_besvarjelser.js";
 
 function formatKällaLabel(källaId) {
   return kallor[källaId]?.name ?? källaId;
+}
+
+function formatAttributeKey(key) {
+  const labels = {
+    grepp: "Grepp",
+    STY: "STY",
+    räckvidd: "Räckvidd",
+    skada: "Skada",
+    BV: "BV",
+    pris: "Pris",
+    tillgång: "Tillgång",
+    egenskaper: "Egenskaper",
+    typ: "Typ",
+    vikt: "Vikt",
+    SV: "SV",
+    nackdelarText: "Nackdelar",
+    effekt: "Effekt",
+    kategori: "Kategori",
+    text: "Text",
+    nivå: "Nivå",
+    kostnad: "Kostnad",
+  };
+
+  return labels[key] ?? key.replace(/_/g, " ").replace(/([a-zåäö])([A-ZÅÄÖ])/g, "$1 $2").replace(/^\w/, (m) => m.toUpperCase());
+}
+
+function formatAttributeValue(value) {
+  if (typeof value === "boolean") {
+    return value ? "Ja" : "Nej";
+  }
+
+  return String(value);
+}
+
+function renderAttributes(item) {
+  const excludedKeys = new Set(["name", "title", "rubrik", "text", "beskrivning", "description", "källa"]);
+  const fields = Object.entries(item).filter(
+    ([key, value]) => !excludedKeys.has(key) && value !== undefined && value !== null && value !== ""
+  );
+
+  if (fields.length === 0) {
+    return "";
+  }
+
+  return `
+    <div class="bibliotek-entry__attributes">
+      ${fields
+        .map(([key, value]) => {
+          const label = formatAttributeKey(key);
+
+          if (typeof value === "object" && !Array.isArray(value)) {
+            const nested = Object.entries(value)
+              .map(
+                ([nestedKey, nestedValue]) =>
+                  `<div class="bibliotek-entry__attribute-nested"><strong>${formatAttributeKey(nestedKey)}</strong>: <span class="bibliotek-entry__attribute-value">${formatAttributeValue(nestedValue)}</span></div>`
+              )
+              .join("");
+
+            return `
+              <div class="bibliotek-entry__attribute">
+                <strong>${label}</strong>
+                <div class="bibliotek-entry__attribute-nested-list">
+                  ${nested}
+                </div>
+              </div>
+            `;
+          }
+
+          return `
+            <div class="bibliotek-entry__attribute">
+              <strong>${label}</strong>: <span class="bibliotek-entry__attribute-value">${formatAttributeValue(value)}</span>
+            </div>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+}
+
+let bibliotekSearchQuery = "";
+let bibliotekSectionFilter = "all";
+let bibliotekSourceFilters = new Set(Object.keys(kallor));
+
+function normalizeSearchText(value) {
+  return String(value ?? "").toLowerCase().trim();
+}
+
+function getAvailableSources() {
+  const sources = new Set(Object.keys(kallor));
+  const entries = [
+    LaggaBesvarjelser,
+    hjälteförmågor,
+    släkten,
+    yrken,
+    trolleritrick,
+    besvärjelser,
+    vapen,
+    rustningar,
+    kläder,
+    föremål,
+    tjänster,
+  ];
+
+  entries.forEach((collection) => {
+    Object.values(collection || {}).forEach((item) => {
+      sources.add(item.källa ?? "okänd");
+    });
+  });
+
+  return [...sources];
+}
+
+function sourceMatchesFilter(item) {
+  if (bibliotekSourceFilters.size === 0) {
+    return false;
+  }
+
+  return bibliotekSourceFilters.has(item.källa ?? "okänd");
+}
+
+function itemMatchesQuery(item, query) {
+  if (!query) return true;
+
+  const values = [
+    item.name,
+    item.title,
+    item.rubrik,
+    item.text,
+    item.beskrivning,
+    item.description,
+    item.källa,
+    item.kostnad,
+    item.nivå,
+    item.pris,
+    item.tillgång,
+    item.typ,
+    item.egenskaper,
+    item.effekt,
+    item.kategori,
+    item.vikt,
+  ];
+
+  const nestedValues = Object.entries(item)
+    .filter(([, value]) => typeof value === "object" && !Array.isArray(value))
+    .flatMap(([, value]) => Object.values(value));
+
+  const haystack = [...values, ...nestedValues]
+    .filter((value) => value !== undefined && value !== null)
+    .map((value) => String(value).toLowerCase())
+    .join(" ");
+
+  return haystack.includes(query);
+}
+
+function renderBibliotekControls() {
+  const sections = [
+    { value: "all", label: "Visa alla" },
+    { value: "lägga-besvärjelser", label: "Lägga besvärjelser" },
+    { value: "hjälteförmågor", label: "Hjälteförmågor" },
+    { value: "släkten", label: "Släkten" },
+    { value: "yrken", label: "Yrken" },
+    { value: "trolleritrick", label: "Trolleritrick" },
+    { value: "besvärjelser", label: "Besvärjelser" },
+    { value: "vapen", label: "Vapen" },
+    { value: "rustningar", label: "Rustningar" },
+    { value: "kläder", label: "Kläder" },
+    { value: "föremål", label: "Föremål" },
+    { value: "tjänster", label: "Tjänster" },
+  ];
+
+  const sources = getAvailableSources();
+
+  return `
+    <div class="bibliotek-controls">
+      <label class="bibliotek-control bibliotek-control--search">
+        <span class="bibliotek-control__label">Sök</span>
+        <div class="bibliotek-search-wrapper">
+          <input id="bibliotek-search" type="search" placeholder="Sök i biblioteket..." value="${bibliotekSearchQuery}" />
+          <button id="bibliotek-clear-search" type="button" class="bibliotek-clear-button">×</button>
+        </div>
+      </label>
+      <label class="bibliotek-control">
+        <span class="bibliotek-control__label">Sektion</span>
+        <select id="bibliotek-section-filter">
+          ${sections
+            .map(
+              (section) =>
+                `<option value="${section.value}" ${bibliotekSectionFilter === section.value ? "selected" : ""}>${section.label}</option>`
+            )
+            .join("")}
+        </select>
+      </label>
+    </div>
+    <div class="bibliotek-source-filter">
+      ${sources
+        .map(
+          (source) =>
+            `<label class="bibliotek-source-filter__item"><input type="checkbox" value="${source}" ${
+              bibliotekSourceFilters.has(source) ? "checked" : ""
+            } /> ${formatKällaLabel(source)}</label>`
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderBibliotekList() {
+  return `
+    <div class="bibliotek-overview">
+      ${renderEntries("Lägga besvärjelser", LaggaBesvarjelser)}
+      ${renderEntries("Hjälteförmågor", hjälteförmågor)}
+      ${renderEntries("Släkten", släkten)}
+      ${renderEntries("Yrken", yrken)}
+      ${renderEntries("Trolleritrick", trolleritrick)}
+      ${renderEntries("Besvärjelser", besvärjelser)}
+      ${renderEntries("Vapen", vapen)}
+      ${renderEntries("Rustningar", rustningar)}
+      ${renderEntries("Kläder", kläder)}
+      ${renderEntries("Föremål", föremål)}
+      ${renderEntries("Tjänster", tjänster)}
+    </div>
+  `;
+}
+
+function attachBibliotekFilterListeners() {
+  const searchInput = document.getElementById("bibliotek-search");
+  const sectionSelect = document.getElementById("bibliotek-section-filter");
+
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      bibliotekSearchQuery = normalizeSearchText(searchInput.value);
+      updateBibliotekList();
+    });
+  }
+
+  if (sectionSelect) {
+    sectionSelect.addEventListener("change", () => {
+      bibliotekSectionFilter = sectionSelect.value;
+      updateBibliotekList();
+    });
+  }
+
+  const clearButton = document.getElementById("bibliotek-clear-search");
+  if (clearButton) {
+    clearButton.addEventListener("click", () => {
+      bibliotekSearchQuery = "";
+      const searchInput = document.getElementById("bibliotek-search");
+      if (searchInput) {
+        searchInput.value = "";
+      }
+      updateBibliotekList();
+    });
+  }
+
+  const sourceCheckboxes = document.querySelectorAll("#bibliotek-content .bibliotek-source-filter input[type='checkbox']");
+  sourceCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      bibliotekSourceFilters = new Set(
+        Array.from(sourceCheckboxes)
+          .filter((input) => input.checked)
+          .map((input) => input.value)
+      );
+      updateBibliotekList();
+    });
+  });
+}
+
+function updateBibliotekList() {
+  const listContainer = document.getElementById("bibliotek-list");
+  if (!listContainer) return;
+
+  const html = renderBibliotekList();
+  listContainer.innerHTML = html;
+
+  if (!html.includes("bibliotek-section")) {
+    listContainer.innerHTML = `<p class="bibliotek-no-results">Inga poster matchar sökningen.</p>`;
+  }
 }
 
 function renderEntries(title, entries) {
@@ -20,7 +302,12 @@ function renderEntries(title, entries) {
     `;
   }
 
+  const query = normalizeSearchText(bibliotekSearchQuery);
+  const sectionKey = title.toLowerCase().replace(/\s+/g, "-");
+  const matchesSection = bibliotekSectionFilter === "all" || bibliotekSectionFilter === sectionKey;
+
   const groups = Object.entries(entries)
+    .filter(([, item]) => matchesSection && itemMatchesQuery(item, query) && sourceMatchesFilter(item))
     .sort(([, a], [, b]) => (a.källa || "").localeCompare(b.källa || "") || (a.name || "").localeCompare(b.name || ""))
     .reduce((acc, [id, item]) => {
       const källa = item.källa ?? "okänd";
@@ -34,7 +321,7 @@ function renderEntries(title, entries) {
     .map(([källa, items]) => {
       const itemRows = items
         .map(({ id, item }) => {
-  const name = item.name ?? item.title ?? item.rubrik ?? id;
+          const name = item.name ?? item.title ?? item.rubrik ?? id;
           const description = item.text ?? item.beskrivning ?? item.description ?? "";
           const metadata = [
             item.kostnad ? `Kostnad: ${item.kostnad}` : null,
@@ -42,6 +329,7 @@ function renderEntries(title, entries) {
           ]
             .filter(Boolean)
             .join(" • ");
+          const attributesHtml = renderAttributes(item);
 
           return `
             <article class="bibliotek-entry">
@@ -51,6 +339,7 @@ function renderEntries(title, entries) {
                 </summary>
                 <div class="bibliotek-entry__body">
                   ${metadata ? `<p class="bibliotek-entry__meta">${metadata}</p>` : ""}
+                  ${attributesHtml}
                   ${description ? `<p>${description}</p>` : ""}
                 </div>
               </details>
@@ -70,6 +359,10 @@ function renderEntries(title, entries) {
     })
     .join("");
 
+  if (!groupHtml.trim()) {
+    return "";
+  }
+
   const sectionClass = title === "Lägga besvärjelser" ? "bibliotek-section--single-column" : "";
   return `
     <section class="bibliotek-section ${sectionClass}" data-section="${title.toLowerCase().replace(/\s+/g, '-')}">
@@ -88,15 +381,13 @@ function renderBibliotekContent() {
   if (!content) return;
 
   content.innerHTML = `
-    <div class="bibliotek-overview">
-      ${renderEntries("Hjälteförmågor", hjälteförmågor)}
-      ${renderEntries("Yrken", yrken)}
-      ${renderEntries("Släkten", släkten)}
-      ${renderEntries("Trolleritrick", trolleritrick)}
-      ${renderEntries("Besvärjelser", besvärjelser)}
-      ${renderEntries("Lägga besvärjelser", LaggaBesvarjelser)}
+    ${renderBibliotekControls()}
+    <div id="bibliotek-list">
+      ${renderBibliotekList()}
     </div>
   `;
+
+  attachBibliotekFilterListeners();
 }
 
 export function initBibliotekOverlay(openModal) {
