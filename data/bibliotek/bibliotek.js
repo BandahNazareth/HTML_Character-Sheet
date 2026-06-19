@@ -335,7 +335,7 @@ function renderEntries(title, entries) {
             <article class="bibliotek-entry">
               <details class="bibliotek-entry__details">
                 <summary>
-                  <strong>${name}</strong>
+                  ${name}
                 </summary>
                 <div class="bibliotek-entry__body">
                   ${metadata ? `<p class="bibliotek-entry__meta">${metadata}</p>` : ""}

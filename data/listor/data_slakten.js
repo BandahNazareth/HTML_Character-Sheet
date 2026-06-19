@@ -18,7 +18,7 @@ export const släkten ={
         källa: "dod"
     },
      dvärg: {
-        name: "dvarg",
+        name: "Dvärg",
         grundförflyttning: 8,
         förmågor: [
             {id: "langsint", kostnad: 3}

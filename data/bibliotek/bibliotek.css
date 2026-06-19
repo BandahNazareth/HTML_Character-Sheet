@@ -26,7 +26,8 @@
 .bibliotek-overview {
   display: grid;
   width: 100%;
-  justify-items: start;
+  grid-template-columns: 1fr;
+  justify-items: stretch;
 }
 
 .bibliotek-controls {
@@ -67,7 +68,7 @@
   font-size: 12px;
   background: rgba(255,255,255,0.04);
   padding: 0.5rem 0.75rem;
-  border-radius: 0.35rem;
+  border-radius: 0rem;
   border: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -88,7 +89,7 @@
 .bibliotek-clear-button {
   min-width: 2.5rem;
   border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 0.35rem;
+  border-radius: 0rem;
   background: var(--bg-secondary);
   color: var(--text);
   cursor: pointer;
@@ -104,7 +105,7 @@
 .bibliotek-control select {
   width: 100%;
   border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 0.35rem;
+  border-radius: 0rem;
   padding: 0.55rem 0.75rem;
   background: var(--bg-secondary);
   color: var(--text);
@@ -115,11 +116,15 @@
 .bibliotek-control select:focus {
   outline: 2px solid var(--accent-dark);
 }
+.bibliotek-section{
+  width: 100%;
+  font-style: normal;
+}
 
 .bibliotek-section__details {
   background: var(--bg);
   border: 1px solid var(--accent-dark);
-  border-radius: 0.35rem;
+  border-radius: 0rem;
   padding: 0.5rem;
 }
 
@@ -174,19 +179,14 @@
   align-items: stretch;
 }
 
-.bibliotek-section[data-section="lägga-besvärjelser"] .bibliotek-group__items {
-  grid-template-columns: 1fr;
-}
-
 .bibliotek-section--single-column .bibliotek-group__items {
   grid-template-columns: 1fr;
 }
 
 .bibliotek-entry {
   background: var(--bg);
-  padding: 0.65rem;
-  border-radius: 0.35rem;
-  width: 100%;
+  padding: 0.1rem;
+  border-radius: 0rem;
   display: flex;
   flex-direction: column;
 }
