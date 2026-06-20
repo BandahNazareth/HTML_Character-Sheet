@@ -1,6 +1,7 @@
 import { LaggaBesvarjelser } from "./data_lagga_besvarjelser.js";
 import { hjälteförmågor } from "../listor/data_hjalteformagor.js";
 import { släkten } from "../listor/data_slakten.js";
+import { förmågor } from "../listor/data_formagor.js";
 import { yrken } from "../listor/data_yrken.js";
 import { trolleritrick } from "../listor/data_trolleritrick.js";
 import { besvärjelser } from "../listor/data_besvarjelser.js";
@@ -47,8 +48,8 @@ function formatAttributeValue(value) {
   return String(value);
 }
 
-function renderAttributes(item) {
-  const excludedKeys = new Set(["name", "title", "rubrik", "text", "beskrivning", "description", "källa"]);
+function renderAttributes(item, extraExcludes = []) {
+  const excludedKeys = new Set(["name", "title", "rubrik", "text", "beskrivning", "description", "källa", ...extraExcludes]);
   const fields = Object.entries(item).filter(
     ([key, value]) => !excludedKeys.has(key) && value !== undefined && value !== null && value !== ""
   );
@@ -63,6 +64,35 @@ function renderAttributes(item) {
         .map(([key, value]) => {
           const label = formatAttributeKey(key);
 
+          if (Array.isArray(value)) {
+            const items = value
+              .map((entry) => {
+                if (entry && typeof entry === "object") {
+                  const abilityInfo = entry.id ? förmågor[entry.id] : null;
+                  const nested = [
+                    abilityInfo ? `<div class="bibliotek-entry__attribute-nested"><strong>Namn</strong>: <span class="bibliotek-entry__attribute-value">${abilityInfo.name}</span></div>` : null,
+                    entry.id && !abilityInfo ? `<div class="bibliotek-entry__attribute-nested"><strong>ID</strong>: <span class="bibliotek-entry__attribute-value">${entry.id}</span></div>` : null,
+                    entry.kostnad ? `<div class="bibliotek-entry__attribute-nested"><strong>Kostnad</strong>: <span class="bibliotek-entry__attribute-value">${formatAttributeValue(entry.kostnad)}</span></div>` : null,
+                  ]
+                    .filter(Boolean)
+                    .join("");
+
+                  return `<div class="bibliotek-entry__attribute-nested-item">${nested}</div>`;
+                }
+
+                return `<div class="bibliotek-entry__attribute-nested-item"><span class="bibliotek-entry__attribute-value">${formatAttributeValue(entry)}</span></div>`;
+              })
+              .join("");
+
+            return `
+              <div class="bibliotek-entry__attribute">
+                <strong>${label}</strong>
+                <div class="bibliotek-entry__attribute-nested-list">
+                  ${items}
+                </div>
+              </div>
+            `;
+          }
           if (typeof value === "object" && !Array.isArray(value)) {
             const nested = Object.entries(value)
               .map(
@@ -106,6 +136,7 @@ function getAvailableSources() {
     LaggaBesvarjelser,
     hjälteförmågor,
     släkten,
+    förmågor,
     yrken,
     trolleritrick,
     besvärjelser,
@@ -159,7 +190,15 @@ function itemMatchesQuery(item, query) {
     .filter(([, value]) => typeof value === "object" && !Array.isArray(value))
     .flatMap(([, value]) => Object.values(value));
 
-  const haystack = [...values, ...nestedValues]
+  const arrayValues = Object.entries(item)
+    .filter(([, value]) => Array.isArray(value))
+    .flatMap(([, value]) =>
+      value.flatMap((entry) =>
+        entry && typeof entry === "object" ? Object.values(entry) : [entry]
+      )
+    );
+
+  const haystack = [...values, ...nestedValues, ...arrayValues]
     .filter((value) => value !== undefined && value !== null)
     .map((value) => String(value).toLowerCase())
     .join(" ");
@@ -173,6 +212,7 @@ function renderBibliotekControls() {
     { value: "lägga-besvärjelser", label: "Lägga besvärjelser" },
     { value: "hjälteförmågor", label: "Hjälteförmågor" },
     { value: "släkten", label: "Släkten" },
+    { value: "förmågor", label: "Förmågor" },
     { value: "yrken", label: "Yrken" },
     { value: "trolleritrick", label: "Trolleritrick" },
     { value: "besvärjelser", label: "Besvärjelser" },
@@ -225,6 +265,7 @@ function renderBibliotekList() {
       ${renderEntries("Lägga besvärjelser", LaggaBesvarjelser)}
       ${renderEntries("Hjälteförmågor", hjälteförmågor)}
       ${renderEntries("Släkten", släkten)}
+      ${renderEntries("Förmågor", förmågor)}
       ${renderEntries("Yrken", yrken)}
       ${renderEntries("Trolleritrick", trolleritrick)}
       ${renderEntries("Besvärjelser", besvärjelser)}
@@ -308,7 +349,10 @@ function renderEntries(title, entries) {
 
   const groups = Object.entries(entries)
     .filter(([, item]) => matchesSection && itemMatchesQuery(item, query) && sourceMatchesFilter(item))
-    .sort(([, a], [, b]) => (a.källa || "").localeCompare(b.källa || "") || (a.name || "").localeCompare(b.name || ""))
+    .sort(([, a], [, b]) =>
+      (a.källa || "").localeCompare(b.källa || "", "sv") ||
+      (a.name || a.title || a.rubrik || "").localeCompare(b.name || b.title || b.rubrik || "", "sv")
+    )
     .reduce((acc, [id, item]) => {
       const källa = item.källa ?? "okänd";
       acc[källa] ??= [];
@@ -317,35 +361,107 @@ function renderEntries(title, entries) {
     }, {});
 
   const groupHtml = Object.entries(groups)
-    .sort(([a], [b]) => formatKällaLabel(a).localeCompare(formatKällaLabel(b)))
+    .sort(([a], [b]) => formatKällaLabel(a).localeCompare(formatKällaLabel(b), "sv"))
     .map(([källa, items]) => {
-      const itemRows = items
-        .map(({ id, item }) => {
-          const name = item.name ?? item.title ?? item.rubrik ?? id;
-          const description = item.text ?? item.beskrivning ?? item.description ?? "";
-          const metadata = [
-            item.kostnad ? `Kostnad: ${item.kostnad}` : null,
-            item.nivå ? `Nivå ${item.nivå}` : null,
-          ]
-            .filter(Boolean)
-            .join(" • ");
-          const attributesHtml = renderAttributes(item);
+      const renderEntryRow = ({ id, item }, extraExcludes = []) => {
+        const name = item.name ?? item.title ?? item.rubrik ?? id;
+        const description = item.text ?? item.beskrivning ?? item.description ?? "";
+        const metadata = [
+          item.kostnad ? `Kostnad: ${item.kostnad}` : null,
+        ]
+          .filter(Boolean)
+          .join(" • ");
+        const attributesHtml = renderAttributes(item, extraExcludes);
 
-          return `
-            <article class="bibliotek-entry">
-              <details class="bibliotek-entry__details">
-                <summary>
-                  ${name}
-                </summary>
-                <div class="bibliotek-entry__body">
-                  ${metadata ? `<p class="bibliotek-entry__meta">${metadata}</p>` : ""}
-                  ${attributesHtml}
-                  ${description ? `<p>${description}</p>` : ""}
-                </div>
-              </details>
-            </article>
-          `;
-        })
+        return `
+          <article class="bibliotek-entry">
+            <details class="bibliotek-entry__details">
+              <summary>
+                ${name}
+              </summary>
+              <div class="bibliotek-entry__body">
+                ${metadata ? `<p class="bibliotek-entry__meta">${metadata}</p>` : ""}
+                ${attributesHtml}
+                ${description ? `<p>${description}</p>` : ""}
+              </div>
+            </details>
+          </article>
+        `;
+      };
+
+      if (title === "Besvärjelser") {
+        const levelGroups = items.reduce((acc, entry) => {
+          const nivå = entry.item.nivå ?? "okänd";
+          const magiskola = entry.item.magiskola ?? "okänd";
+          acc[nivå] ??= {};
+          acc[nivå][magiskola] ??= [];
+          acc[nivå][magiskola].push(entry);
+          return acc;
+        }, {});
+
+        const sortedLevels = Object.entries(levelGroups).sort(([a], [b]) => {
+          const aNum = Number(a);
+          const bNum = Number(b);
+          if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) {
+            return aNum - bNum;
+          }
+          if (!Number.isNaN(aNum)) {
+            return -1;
+          }
+          if (!Number.isNaN(bNum)) {
+            return 1;
+          }
+          return a.localeCompare(b, "sv");
+        });
+
+        const levelHtml = sortedLevels
+          .map(([nivå, magGroups]) => {
+            const levelLabel = nivå === "okänd" ? "Nivå okänd" : `Nivå ${nivå}`;
+            const sortedMagiskolor = Object.entries(magGroups)
+              .sort(([a], [b]) => a.localeCompare(b, "sv"));
+
+            const magHtml = sortedMagiskolor
+              .map(([magiskola, magItems]) => {
+                const magLabel = magiskola === "okänd" ? "Magiskola okänd" : magiskola.charAt(0).toUpperCase() + magiskola.slice(1);
+                const magRows = magItems
+                  .sort((a, b) => {
+                    const aName = a.item.name ?? a.item.title ?? a.item.rubrik ?? "";
+                    const bName = b.item.name ?? b.item.title ?? b.item.rubrik ?? "";
+                    return aName.localeCompare(bName, "sv");
+                  })
+                  .map((entry) => renderEntryRow(entry, ["nivå", "magiskola"]))
+                  .join("");
+
+                return `
+                  <div class="bibliotek-magiskola-group">
+                    <div class="bibliotek-magiskola-header">${magLabel}</div>
+                    <div class="bibliotek-group__items">
+                      ${magRows}
+                    </div>
+                  </div>
+                `;
+              })
+              .join("");
+
+            return `
+              <div class="bibliotek-nivå-group">
+                <div class="bibliotek-nivå-header">${levelLabel}</div>
+                ${magHtml}
+              </div>
+            `;
+          })
+          .join("");
+
+        return `
+          <div class="bibliotek-group">
+            <div class="bibliotek-group__header">${formatKällaLabel(källa)}</div>
+            ${levelHtml}
+          </div>
+        `;
+      }
+
+      const itemRows = items
+        .map((entry) => renderEntryRow(entry))
         .join("");
 
       return `

@@ -520,6 +520,28 @@ label {
   opacity: 0.9;
 }
 
+.bibliotek-nivå-header {
+  text-decoration: underline;
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 600;
+}
+
+.bibliotek-magiskola-header {
+  font-style: italic;
+  font-weight: 400;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.bibliotek-entry,
+.bibliotek-entry__body,
+.bibliotek-entry__details summary {
+  font-weight: 400;
+}
+
+.bibliotek-entry__details summary:hover {
+  color: var(--accent-hover);
+}
+
 /* ÖVRIGT box layout */
 #förflyttning,
 #skadebonus {

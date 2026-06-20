@@ -57,4 +57,131 @@ varaktighet: {
   </ul>`,
   källa: "dod",
 },
+misslyckandedrakdemonslag: {
+  rubrik: "Misslyckande, Drakslag och Demonslag",
+  text: `Om slaget för att lägga besvärjelsen misslyckas förlorar du ändå de VP du satsat, och besvärjelsen tar inte effekt. Exakt hur du misslyckas yttrar sig i berättelsen kan du beskriva fritt, så länge det inte har någon spelmekanisk effekt.
+  <br>
+  <b>Drakslag:</b> Om du slår ett drakslag när du lägger din besvärjelse krävs det ett drakslag för att motstå, parera eller ducka besvärjelsen, samt att du får välja en av nedanstående effekter:
+  <ul>
+  <li>Skadan eller räckvidden av besvärjelsen fördubblas.</li>
+  <li>Besvärjelsen kostar dig inga <b>VP</b>.</li>
+  <li>Du får omedelbart lägga en besvärjelse till, fast med nackdel på slaget.</li>
+  </ul>
+  <b>Demonslag:</b> Om du slår ett demonslag (20) får du inte pressa slaget. Det kan även finnas risk att något går riktigt snett - se den frivilliga regeln om magiska missöden nedan.
+  `,
+  källa: "dod",
+},
+magiskaforemal: {
+  rubrik: "Magiska föremål",
+  text: `Magiska föremål kan ha en eller flera besvärjelser i sig som kan akriveras även av en icke-magiker. Om inget annat anges krävs det dock ett lyckat slag mot <b>FRÄMMANDE SPRÅK</b> eller valfri magiskola för att identifiera besvärjelserna och kunna använda dem.
+  <br>
+  <b>Viljepoäng:</b> Det kostar fortfarande <b>VP</b> att använda besvärjelser i ett magiskt föremål. Vissa magiska föremål kan lagra <b>VP</b> som du kan använda istället för dina egna. Läs mer på sidan 62.`,
+  källa: "dod",
+},
+magiskamissöden: {
+  rubrik: "Magiska missöden",
+  text: `
+  <table>
+  <tr>
+  <th>T20</th>
+  <th>Magiskt missöde</th>
+  </tr>
+  <tr>
+  <td>1</td>
+  <td>De magiska krafterna gör dig Omtöcknad.</td>
+  </tr>
+  <tr>
+  <td>2</td>
+  <td>Besvärjandet gör dig plötsligt Utmattad.</td>
+  </tr>
+  <tr>
+  <td>3</td>
+  <td>Energierna suger musten ur din kropp och gör dig Krasslig.</td>
+  </tr>
+  <tr>
+  <td>4</td>
+  <td>Besvärjelsen undflyr din kontroll, vilket gör dig mycket Arg.</td>
+  </tr>
+  <tr>
+  <td>5</td>
+  <td>Besvärjelsen drabbar dig med demoniska syner som gör dig Rädd.</td>
+  </tr>
+  <tr>
+  <td>6</td>
+  <td>Du ser världen bakom slöjan och inser din egen betydelselöshet. Du blir Uppgive.</td>
+  </tr>
+  <tr>
+  <td>7</td>
+  <td>Magin härjar din kropp och du tar T6 KP skada per effektgrad.</td>
+  </tr>
+  <tr>
+  <td>8</td>
+  <td>Besvärjelsen suger ut din psykiska kraft och du förlorar T6 VP per effektgrad.</td>
+  </tr>
+  <tr>
+  <td>9</td>
+  <td>Besvärjelsen utlöser en magisk sjukdom med smittvärde 3T6. Du själv och alla du kommer i kontakt med under det kommande skiftet utsätts för smittan.</td>
+  </tr>
+  <tr>
+  <td>10</td>
+  <td>En slumpvis vald annan besvärjelse som du aktivera istället för den som du lade, med samma mål och samma effektgrad.</td>
+  </tr>
+  <tr>
+  <td>11</td>
+  <td>Så fort du uttalar en lögn kräks du upp en groda. Slå en T4 varje morgon. Vid en etta försvinner effekten. Den kan också hävas av SKINGRA.</td>
+  </tr>
+  <tr>
+  <td>12</td>
+  <td>Allt guld och silver som du vidrör vittrar sönder till damm. Slå en T4 varje morgon. Vid en etta försvinner effekten. Den kan också hävas av SKINGRA.</td>
+  </tr>
+  <tr>
+  <td>13</td>
+  <td>Besvärjelsen förblindar dig och du agerar som i totalt mörker (sid 52). Slå en T4 varje morgon. Vid en etta försvinner effekten. Den kan också hävas av SKINGRA.</td>
+  </tr>
+  <tr>
+  <td>14</td>
+  <td>Du får minnesförlust och glömmer vem du själv och de andra rollpersonerna är. Effekten måste rollspelas. Slå en T4 varje morgon. Vid en etta försvinner effekten.</td>
+  </tr>
+  <tr>
+  <td>15</td>
+  <td>Besvärjelsen drabbar även en vän eller något annat oavsiktligt offer. En helande eller hjälpande besvärjelse påverkar en fiende.</td>
+  </tr>
+  <tr>
+  <td>16</td>
+  <td>Besvärjelsens effekt slår bakut. En offensiv besvärjelse drabbar dig själv i stället för det avsedda målet. En skyddande eller helande besvärjelse skadar i stället för att läka.</td>
+  </tr>
+  <tr>
+  <td>17</td>
+  <td>Du förvandlas till ett djur. Slå T6: 1. Katt, 2. Räv, 3. Get, 4. varg, 5. hjort, 6. björn. Du får speldata enligt sid 99 och kan inte prata men du behåller dina mentala förmågor. Slå en T4 varje skift. Vid en etta återställs du. Förvandlingen kan också hävas av SKINGRA.</td>
+  </tr>
+  <tr>
+  <td>18</td>
+  <td>Du föryngras en kategori, exempelvis från medelålders till uing. Dina grundegenskaper påverkas enligt tabellen på sidan 24, men inte dina FV. Om du redan var ung blir du ett barn, med -2 i STY och FYS, ner till ett minimum av 3. Effekten är permanent, och du åldras normalt från din nya ålder.</td>
+  </tr>
+  <tr>
+  <td>19</td>
+  <td>Du åldras en kategori, exempelvis från medelålders till gammal. Dina grundegenskaper och sekundära egenskaper påverkas enligt tabellen på sidan 24, men inte dina FV. Om du redan var gammal blir du mycket skröplig och får -2 på STY och FYS. Effekten är permanent, och du åldras normalt från din nya ålder.</td>
+  </tr>
+  <tr>
+  <td>20</td>
+  <td>Din magi lockar till sig en demon (sid 85) från en annan dimension. Demonen dyker upp inom det kommande skiftet och går till angrepp och ställer till med något otyg. Detaljerna är upp till SL.</td>
+  </tr>
+  </table>`,
+  källa: "dod",
+},
+larasigmagi: {
+  rubrik: "Lära sig magi",
+  text: `Du kan lära dig nya besvärjelser av en lärare eller från en formelsamling. Du måste ha FV i magiskolan som besvärjelsen tillhör, eller i vilken magiskola som helst för att lära dig en allmän besvärjelse.
+  <br>
+  <b>Krav:</b> Vissa besvärjelser anger krav som du måste uppfylla för att lära sig besvärjelsen. Oftast är det en magiskola eller att kunna en annan besvärjelse.
+  <br>
+  <b>Lärare:</b> Lättast (men ofta dyrast) är att lära sig en besvärjelse från en lärare som kan besvärjelsen. Undervisningen tar ett skift, men du kan aktivera den nya besvärjelsen först efter spelpassets slut. DÅ måste du använda ett förbättringskryss (sid 29) för magiskolan till att lära dig den nya besvärjelsen i stället för att försöka öka FV i magiskolan. Slå ett slag mot INT, med fördel. Om det lyckas har du lärt dig besvärjelsen, annars inte.
+  <br>
+  <b>Formelbok:</b> Har du tur kan du hitta besvärjelser i andra magikers formelböcker. Dessa kan du lära dig på egen hand. Detta fungerar som att lära sig av en lärare, men du slår mot FRÄMMANDE SPRÅK i stället för INT och utan fördel.
+  <br>
+  <b>Trolleritrick:</b> Trolleritrick är lättare att lära sig än riktiga besvärjelser. Du kan lära dig ett nytt trolleritrick på en kvart av en lärare eller en formelbok. Inget förbättringskryss eller slag krävs.
+  <br>
+  <b>Magiskolor:</b> Du kan lära dig fler magiskolor genom att skaffa hjälteförmågan Magisk talang (sid 38) och sedan studera för en lärare med FV i magiskolan i minst en vecka. Vid veckans slut får du slå mot INT, och får grundchans (INT) som FV i magiskolan om du lyckas. Om du misslyckas får du försöka igen efter ytterligare en veckas studier. Även icke-magiker kan lära sig magi på detta sätt.`,
+  källa: "dod",
+},
 }
