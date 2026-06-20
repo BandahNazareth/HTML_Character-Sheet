@@ -526,10 +526,20 @@ label {
   font-weight: 600;
 }
 
+.bibliotek-kategori-header {
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 600;
+}
+
 .bibliotek-magiskola-header {
   font-style: italic;
   font-weight: 400;
   margin: 0.25rem 0 0.5rem;
+  color: var(--bibliotek-magiskola-color, inherit);
+}
+
+.bibliotek-magiskola-group .bibliotek-entry__details summary {
+  color: var(--bibliotek-magiskola-color, inherit);
 }
 
 .bibliotek-entry,

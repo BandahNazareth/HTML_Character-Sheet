@@ -24,9 +24,15 @@ html[data-theme="main"] {
   /* ── Skill sections ──────────────────── */
   --skills-bg: #faf6f0;
 
+
   /* ── UI elements ─────────────────────── */
   --avatar-border: #ca1313;
   --logo-color: #ca1313;
+  --animism-color: #79c050;
+  --elementalism-color: #f86d11;
+  --mentalism-color: #7d5a94;
+  --valfri-color: #21354b;
+  --harmonism-color: #b13a7f;
 }
 html[data-theme="dark"] {
   --bg: #2b2b2b;
@@ -56,6 +62,10 @@ html[data-theme="dark"] {
   /* ── UI elements ─────────────────────── */
   --avatar-border: #ca1313;
   --logo-color: #221b22;
+  --elementalism-color: #f86d11;
+  --mentalism-color: #7d5a94;
+  --valfri-color: #7d8894;
+  --harmonism-color: #b13a7f;
 }
 
 html[data-theme="pink-dragon"] {
@@ -86,6 +96,10 @@ html[data-theme="pink-dragon"] {
   /* ── UI elements ─────────────────────── */
   --avatar-border: #ad317a;
   --logo-color: #221b22;
+  --elementalism-color: #f86d11;
+  --mentalism-color: #7d5a94;
+  --valfri-color: #21354b;
+  --harmonism-color: #b13a7f;
 }
 html[data-theme="blue-steel"] {
   --bg: #cfcfcf;
@@ -115,6 +129,10 @@ html[data-theme="blue-steel"] {
   /* ── UI elements ─────────────────────── */
   --avatar-border: #317bad;
   --logo-color: #221b22;
+  --elementalism-color: #f86d11;
+  --mentalism-color: #7d5a94;
+  --valfri-color: #21354b;
+  --harmonism-color: #b13a7f;
 }
 
 #editor-root {
@@ -134,7 +152,7 @@ html[data-theme="blue-steel"] {
   --accent-dark: #7c7c7c;
   --accent-warning: #be2f1ce8;
   --accent-hover: #e7aa25e8;
-  
+
   /* ── Resource colors ─────────────────── */
   --vp-bg: #2f5f8f;
   --kp-bg: #8f2f1f;
@@ -145,4 +163,8 @@ html[data-theme="blue-steel"] {
   /* ── UI elements ─────────────────────── */
   --avatar-border: #0c0c0c;
   --logo-color: #221b22;
+  --elementalism-color: #f86d11;
+  --mentalism-color: #7d5a94;
+  --valfri-color: #659eda;
+  --harmonism-color: #b13a7f;
 }

@@ -4,7 +4,7 @@ export const släkten ={
         name: "Alv",
         grundförflyttning: 10,
         förmågor: [
-            {id: "inre_frid", kostnad: 0}
+            {id: "inre_frid"}
         ],
         källa: "dod"
     },
@@ -12,8 +12,8 @@ export const släkten ={
         name: "Anka",
         grundförflyttning: 8,
         förmågor: [
-            {id: "vresig", kostnad: 3},
-            {id: "simfotter", kostnad:0}
+            {id: "vresig"},
+            {id: "simfotter"}
         ],
         källa: "dod"
     },
@@ -21,7 +21,7 @@ export const släkten ={
         name: "Dvärg",
         grundförflyttning: 8,
         förmågor: [
-            {id: "langsint", kostnad: 3}
+            {id: "langsint"}
         ],
         källa: "dod"
     },
@@ -29,7 +29,7 @@ export const släkten ={
         name: "Halvling",
         grundförflyttning: 8,
         förmågor: [
-            {id: "svarfangad", kostnad: 3}
+            {id: "svarfangad"}
         ],
         källa: "dod"
     },
@@ -37,7 +37,7 @@ export const släkten ={
         name: "Människa",
         grundförflyttning: 10,
         förmågor: [
-            {id: "anpasslig", kostnad: 3}
+            {id: "anpasslig"}
         ],
         källa: "dod"
     },
@@ -45,7 +45,7 @@ export const släkten ={
         name: "Vargfolk",
         grundförflyttning: 12,
         förmågor: [
-            {id: "jaktsinne", kostnad: 3}
+            {id: "jaktsinne"}
         ],
         källa: "dod"
     },

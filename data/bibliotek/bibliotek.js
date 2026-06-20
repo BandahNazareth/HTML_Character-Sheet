@@ -49,7 +49,7 @@ function formatAttributeValue(value) {
 }
 
 function renderAttributes(item, extraExcludes = []) {
-  const excludedKeys = new Set(["name", "title", "rubrik", "text", "beskrivning", "description", "källa", ...extraExcludes]);
+  const excludedKeys = new Set(["name", "title", "rubrik", "text", "beskrivning", "description", "källa", "kostnad", ...extraExcludes]);
   const fields = Object.entries(item).filter(
     ([key, value]) => !excludedKeys.has(key) && value !== undefined && value !== null && value !== ""
   );
@@ -423,6 +423,8 @@ function renderEntries(title, entries) {
             const magHtml = sortedMagiskolor
               .map(([magiskola, magItems]) => {
                 const magLabel = magiskola === "okänd" ? "Magiskola okänd" : magiskola.charAt(0).toUpperCase() + magiskola.slice(1);
+                const magCssVarName = `--${magiskola.replace(/\s+/g, "-").toLowerCase()}-color`;
+                const magCssStyle = `--bibliotek-magiskola-color: var(${magCssVarName}, var(--accent-hover));`;
                 const magRows = magItems
                   .sort((a, b) => {
                     const aName = a.item.name ?? a.item.title ?? a.item.rubrik ?? "";
@@ -433,7 +435,7 @@ function renderEntries(title, entries) {
                   .join("");
 
                 return `
-                  <div class="bibliotek-magiskola-group">
+                  <div class="bibliotek-magiskola-group" style="${magCssStyle}">
                     <div class="bibliotek-magiskola-header">${magLabel}</div>
                     <div class="bibliotek-group__items">
                       ${magRows}
@@ -460,16 +462,50 @@ function renderEntries(title, entries) {
         `;
       }
 
-      const itemRows = items
-        .map((entry) => renderEntryRow(entry))
-        .join("");
+      let groupContent;
+
+      if (title === "Föremål") {
+        const categoryGroups = items.reduce((acc, entry) => {
+          const category = entry.item.kategori ?? "okänd";
+          acc[category] ??= [];
+          acc[category].push(entry);
+          return acc;
+        }, {});
+
+        groupContent = Object.entries(categoryGroups)
+          .sort(([a], [b]) => a.localeCompare(b, "sv"))
+          .map(([category, categoryItems]) => {
+            const categoryLabel = category === "okänd" ? "Kategori okänd" : category;
+            const categoryRows = categoryItems
+              .map((entry) => renderEntryRow(entry, ["kategori"]))
+              .join("");
+
+            return `
+              <div class="bibliotek-kategori-group">
+                <div class="bibliotek-kategori-header">${categoryLabel}</div>
+                <div class="bibliotek-group__items">
+                  ${categoryRows}
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      } else {
+        const itemRows = items
+          .map((entry) => renderEntryRow(entry))
+          .join("");
+
+        groupContent = `
+          <div class="bibliotek-group__items">
+            ${itemRows}
+          </div>
+        `;
+      }
 
       return `
         <div class="bibliotek-group">
           <div class="bibliotek-group__header">${formatKällaLabel(källa)}</div>
-          <div class="bibliotek-group__items">
-            ${itemRows}
-          </div>
+          ${groupContent}
         </div>
       `;
     })
