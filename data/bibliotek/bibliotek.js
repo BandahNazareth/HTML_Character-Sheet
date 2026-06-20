@@ -490,6 +490,39 @@ function renderEntries(title, entries) {
             `;
           })
           .join("");
+      } else if (title === "Trolleritrick") {
+        const magiskolaGroups = items.reduce((acc, entry) => {
+          const magiskola = entry.item.magiskola ?? "okänd";
+          acc[magiskola] ??= [];
+          acc[magiskola].push(entry);
+          return acc;
+        }, {});
+
+        groupContent = Object.entries(magiskolaGroups)
+          .sort(([a], [b]) => a.localeCompare(b, "sv"))
+          .map(([magiskola, magItems]) => {
+            const magLabel = magiskola === "okänd" ? "Magiskola okänd" : magiskola.charAt(0).toUpperCase() + magiskola.slice(1);
+            const magCssVarName = `--${magiskola.replace(/\s+/g, "-").toLowerCase()}-color`;
+            const magCssStyle = `--bibliotek-magiskola-color: var(${magCssVarName}, var(--accent-hover));`;
+            const magRows = magItems
+              .sort((a, b) => {
+                const aName = a.item.name ?? a.item.title ?? a.item.rubrik ?? "";
+                const bName = b.item.name ?? b.item.title ?? b.item.rubrik ?? "";
+                return aName.localeCompare(bName, "sv");
+              })
+              .map((entry) => renderEntryRow(entry, ["magiskola"]))
+              .join("");
+
+            return `
+              <div class="bibliotek-magiskola-group" style="${magCssStyle}">
+                <div class="bibliotek-magiskola-header">${magLabel}</div>
+                <div class="bibliotek-group__items">
+                  ${magRows}
+                </div>
+              </div>
+            `;
+          })
+          .join("");
       } else {
         const itemRows = items
           .map((entry) => renderEntryRow(entry))
