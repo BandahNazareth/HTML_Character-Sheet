@@ -36,14 +36,14 @@ export const tjänster ={
     },
     klippning: {
         name: "Klippning",
-        pris: "2 sulver",
+        pris: "2 silver",
         tillgång: "Vanlig",
         effekt: "Läker ett valfritt tillstånd på en kvart. Endast en klippning per vecka.",
         källa: "dod",
     },
     lagningavklader: {
         name: "Lagning av kläder",
-        pris: "5 sulver",
+        pris: "5 silver",
         tillgång: "Vanlig",
         effekt: "Tar bort effekt av trasiga kläder (sid 102)",
         källa: "dod",

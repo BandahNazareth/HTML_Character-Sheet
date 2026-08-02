@@ -11,6 +11,7 @@ import { kläder } from "../listor/data_klader.js";
 import { föremål } from "../listor/data_foremal.js";
 import { tjänster } from "../listor/data_tjanster.js";
 import { kallor } from "../listor/data_kallor.js";
+import { rollperson } from "../../rollformular_backend.js";
 
 function formatKällaLabel(källaId) {
   return kallor[källaId]?.name ?? källaId;
@@ -260,6 +261,9 @@ function renderBibliotekControls() {
             .join("")}
         </select>
       </label>
+      <div style="display:flex;align-items:flex-end;padding-left:0.5rem;">
+        <button id="bibliotek-reset-favorites" type="button" class="bibliotek-clear-button ui-button ui-button--small">Rensa favoriter</button>
+      </div>
     </div>
     <div class="bibliotek-source-filter">
       ${sources
@@ -323,6 +327,15 @@ function attachBibliotekFilterListeners() {
     });
   }
 
+  const resetFavBtn = document.getElementById("bibliotek-reset-favorites");
+  if (resetFavBtn) {
+    resetFavBtn.addEventListener("click", () => {
+      rollperson.bibliotekFavoriter = {};
+      updateBibliotekList();
+      window.dispatchEvent(new Event('character-updated'));
+    });
+  }
+
   const sourceCheckboxes = document.querySelectorAll("#bibliotek-content .bibliotek-source-filter input[type='checkbox']");
   sourceCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
@@ -336,12 +349,34 @@ function attachBibliotekFilterListeners() {
   });
 }
 
+function attachBibliotekFavoriteListeners() {
+  const boxes = document.querySelectorAll('#bibliotek-list .bibliotek-fav-checkbox');
+  boxes.forEach((box) => {
+    // prevent the checkbox click from toggling the <details> open/close
+    box.addEventListener('click', (e) => e.stopPropagation());
+
+    box.addEventListener('change', (e) => {
+      const id = box.dataset.id;
+      rollperson.bibliotekFavoriter ??= {};
+      if (box.checked) {
+        rollperson.bibliotekFavoriter[id] = true;
+      } else {
+        delete rollperson.bibliotekFavoriter[id];
+      }
+      window.dispatchEvent(new Event('character-updated'));
+    });
+  });
+}
+
 function updateBibliotekList() {
   const listContainer = document.getElementById("bibliotek-list");
   if (!listContainer) return;
 
   const html = renderBibliotekList();
   listContainer.innerHTML = html;
+
+  // Attach favorite listeners for newly rendered buttons
+  attachBibliotekFavoriteListeners();
 
   if (!html.includes("bibliotek-section")) {
     listContainer.innerHTML = `<p class="bibliotek-no-results">Inga poster matchar sökningen.</p>`;
@@ -390,10 +425,12 @@ function renderEntries(title, entries) {
           .join(" • ");
         const attributesHtml = renderAttributes(item, extraExcludes);
 
+        const checked = rollperson.bibliotekFavoriter && rollperson.bibliotekFavoriter[id] ? 'checked' : '';
         return `
           <article class="bibliotek-entry">
             <details class="bibliotek-entry__details">
               <summary>
+                <input type="checkbox" class="bibliotek-fav-checkbox" data-id="${id}" ${checked} />
                 ${name}
               </summary>
               <div class="bibliotek-entry__body">
@@ -590,6 +627,31 @@ function renderBibliotekContent() {
   `;
 
   attachBibliotekFilterListeners();
+  attachBibliotekFavoriteListeners();
+}
+
+export function findBibliotekItem(searchId) {
+  const collections = [
+    LaggaBesvarjelser,
+    hjälteförmågor,
+    släkten,
+    förmågor,
+    yrken,
+    trolleritrick,
+    besvärjelser,
+    vapen,
+    rustningar,
+    kläder,
+    föremål,
+    tjänster,
+  ];
+
+  for (const col of collections) {
+    if (!col) continue;
+    if (col[searchId]) return { id: searchId, item: col[searchId] };
+  }
+
+  return null;
 }
 
 export function initBibliotekOverlay(openModal) {

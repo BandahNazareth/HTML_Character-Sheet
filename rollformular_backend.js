@@ -321,7 +321,9 @@ rustning: "inget",
 hjälm: "inget",
 //HJÄLTEFÖRMÅGOR
   hjälteförmågor: {}
-  
+  ,
+// Bibliotek favoriter
+  bibliotekFavoriter: {}
 };
 const derived = computeDerived(rollperson);
 console.log(derived.färdigheter);

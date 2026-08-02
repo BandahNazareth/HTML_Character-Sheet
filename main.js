@@ -18,6 +18,7 @@ import { förmågor } from "./data/listor/data_formagor.js";
 import { kallor, buildGroupedOptions} from "./data/listor/data_kallor.js";
 import { groupByKälla } from "./rules/grundchans.js";
 import {ensureKällaVisibility, isKällaVisible, getSkillKälla, isItemFromVisibleKälla} from "./rules/kallaVisibility.js";
+import { findBibliotekItem } from "./data/bibliotek/bibliotek.js";
 
 // ITEM imports
 import { vapen } from "./data/listor/data_vapen.js";
@@ -225,9 +226,57 @@ const visibleItems = items.filter(item => {
   });
 }
 // ── Render function ──────────────────────────
+function getBibliotekFavoriteText(item) {
+  if (!item) return "";
+  if (item.text || item.beskrivning || item.description) {
+    return item.text || item.beskrivning || item.description;
+  }
+
+  const parts = [];
+  if (item.grepp) parts.push(`Grepp: ${item.grepp}`);
+  if (item.typ) parts.push(item.typ);
+  if (item.skada) parts.push(`Skada: ${item.skada}`);
+  if (item.BV) parts.push(`BV: ${item.BV}`);
+  if (item.räckvidd) parts.push(`Räckvidd: ${item.räckvidd}`);
+  if (item.egenskaper) parts.push(item.egenskaper);
+  if (item.pris) parts.push(item.pris);
+  if (item.vikt) parts.push(`Vikt: ${item.vikt}`);
+  if (item.tillgång) parts.push(`Tillgång: ${item.tillgång}`);
+  if (item.kostnad) parts.push(`Kostnad: ${item.kostnad}`);
+
+  return parts.join(" • ");
+}
+
 function render() {
   const derived = computeDerived(rollperson);
   validateResources(rollperson, derived);
+  // Render bibliotek favorites sidebar
+  let favEl = document.getElementById('bibliotek-favorites');
+  if (!favEl) {
+    favEl = document.createElement('aside');
+    favEl.id = 'bibliotek-favorites';
+    document.body.appendChild(favEl);
+  }
+
+  const favIds = Object.keys(rollperson.bibliotekFavoriter ?? {});
+  if (favIds.length === 0) {
+    favEl.innerHTML = `<div class="bibliotek-favorites__empty">Inga favoriter</div>`;
+  } else {
+    favEl.innerHTML = favIds
+      .map(id => {
+        const found = findBibliotekItem(id);
+        const item = found?.item ?? {};
+        const header = item.name ?? item.title ?? item.rubrik ?? id;
+        const text = getBibliotekFavoriteText(item) || "Ingen beskrivning tillgänglig.";
+        return `
+          <article class="bibliotek-favorite-entry" data-id="${id}">
+            <h4 class="bibliotek-favorite-header">${header}</h4>
+            <div class="bibliotek-favorite-text">${text}</div>
+          </article>
+        `;
+      })
+      .join("");
+  }
 // ---Avatar image
 const avatarImg = document.getElementById("avatar-image");
 
