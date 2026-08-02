@@ -183,7 +183,9 @@ function applyEditorDraft({ close = false } = {}) {
 
   // ── FINAL VALIDATION ─────────────────────
   const trainedCountFinal =
-    Object.values(draft.färdigheter).filter(f => f.tränad).length +
+    Object.entries(draft.färdigheter)
+      .filter(([id, f]) => f.tränad && !id.startsWith("magiskola_"))
+      .length +
     Object.values(draft.vapenfärdigheter).filter(v => v.tränad).length;
 
   const maxTrainedFinal = getMaxTrainedFärdigheter(draft);
@@ -897,7 +899,9 @@ avatarSection.append(
 content.appendChild(avatarSection);
 
   const trainedCount =
-    Object.values(draft.färdigheter).filter(f => f.tränad).length +
+    Object.entries(draft.färdigheter)
+      .filter(([id, f]) => f.tränad && !id.startsWith("magiskola_"))
+      .length +
     Object.values(draft.vapenfärdigheter).filter(v => v.tränad).length;
 
   const maxTrained = getMaxTrainedFärdigheter(draft);
@@ -906,9 +910,10 @@ content.appendChild(avatarSection);
   if (trainedCount > maxTrained) {
     let toRemove = trainedCount - maxTrained;
 
-    // Untrain färdigheter first
-    for (const f of Object.values(draft.färdigheter)) {
+    // Untrain färdigheter first (skip magiskolor)
+    for (const [id, f] of Object.entries(draft.färdigheter)) {
       if (toRemove <= 0) break;
+      if (id.startsWith("magiskola_")) continue;
       if (f.tränad) {
         f.tränad = false;
         toRemove--;
@@ -1073,6 +1078,7 @@ if (maxMagiskolor > 0) {
 
     removeBtn.onclick = () => {
       delete draft.magiskolor[id];
+      markDirty();
       renderEditor();
     };
 
@@ -1430,16 +1436,7 @@ färdTable.innerHTML = `
 const färdTbody = färdTable.querySelector("tbody");
 
 const editorFärdigheter = [
-  ...färdigheter,
-  ...Object.keys(draft.magiskolor).map(id => {
-    const def = magiskolor.find(m => m.id === id);
-    return {
-      id: `magiskola_${id}`,
-      name: def.name,
-      grundegenskap: def.grundegenskap,
-      källa: def.källa
-    };
-  })
+  ...färdigheter
 ];
 
 const groupedFärdigheter = groupByKälla(
@@ -1617,6 +1614,11 @@ limitEl.style.fontWeight = "bold";
 
 limitEl.textContent =
   `Tränade färdigheter: ${trainedCount} / ${maxTrained}`;
+
+if (maxMagiskolor > 0) {
+  const magCount = Object.keys(draft.magiskolor ?? {}).length;
+  limitEl.textContent += ` • Magiskolor: ${magCount} / ${maxMagiskolor}`;
+}
 
 if (trainedCount >= maxTrained) {
   limitEl.style.color = "#b45309"; // amber

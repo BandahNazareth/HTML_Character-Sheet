@@ -11,6 +11,7 @@ import { ålder as ålderData } from "./data/listor/data_alder.js";
 import { hjälteförmågor as hjälteData } from "./data/listor/data_hjalteformagor.js";
 import { trolleritrick } from "./data/listor/data_trolleritrick.js";
 import { besvärjelser } from "./data/listor/data_besvarjelser.js";
+import { magiskolor } from "./data/karaktärsdata/magiskolor.js";
 import { släkten } from "./data/listor/data_slakten.js";
 import { yrken } from "./data/listor/data_yrken.js";
 import { förmågor } from "./data/listor/data_formagor.js";
@@ -120,6 +121,15 @@ function renderSkillList({
 }) {
   container.innerHTML = "";
 
+  // Hide magiskolor that are marked hiddenOnSheet
+  derivedList = (derivedList || []).filter(item => {
+    if (!item.id || !item.id.startsWith("magiskola_")) return true;
+    const magId = item.id.replace("magiskola_", "");
+    const def = magiskolor.find(m => m.id === magId);
+    if (!def) return true;
+    return !def.hiddenOnSheet;
+  });
+
   const grouped = groupByKälla(
   derivedList,
   item => item.källa
@@ -212,22 +222,6 @@ const visibleItems = items.filter(item => {
         window.dispatchEvent(new Event("character-updated"));
       });
     });
-  });
-}
-function ensureMagiskolorAsFardigheter(character) {
-  character.färdigheter ??= {};
-
-  Object.keys(character.magiskolor ?? {}).forEach(magiskolaId => {
-    const skillId = `magiskola_${magiskolaId}`;
-
-    if (!character.färdigheter[skillId]) {
-      character.färdigheter[skillId] = {
-        tränad: true,              // forced, as you want
-        förbättrad: false,
-        förbättringar: [],
-        harFörbättrats: false
-      };
-    }
   });
 }
 // ── Render function ──────────────────────────
@@ -505,7 +499,6 @@ if (spellEl) {
 }
 
   // ── Färdigheter/Vapenfärdigheter ─────────────────────────────
-  ensureMagiskolorAsFardigheter(rollperson);
   renderSkillList({
   derivedList: derived.färdigheter,
   container: document.getElementById("färdigheter"),

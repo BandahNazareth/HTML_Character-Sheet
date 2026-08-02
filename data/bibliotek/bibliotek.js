@@ -130,6 +130,19 @@ function normalizeSearchText(value) {
   return String(value ?? "").toLowerCase().trim();
 }
 
+function getItemSources(item) {
+  if (!item) return ["okänd"];
+  const k = item.källa;
+  if (Array.isArray(k) && k.length > 0) return k.map((s) => s ?? "okänd");
+  if (k) return [k];
+  return ["okänd"];
+}
+
+function getPrimarySource(item) {
+  const s = getItemSources(item);
+  return s[0];
+}
+
 function getAvailableSources() {
   const sources = new Set(Object.keys(kallor));
   const entries = [
@@ -149,7 +162,8 @@ function getAvailableSources() {
 
   entries.forEach((collection) => {
     Object.values(collection || {}).forEach((item) => {
-      sources.add(item.källa ?? "okänd");
+      const itemSources = getItemSources(item);
+      itemSources.forEach((s) => sources.add(s ?? "okänd"));
     });
   });
 
@@ -161,7 +175,8 @@ function sourceMatchesFilter(item) {
     return false;
   }
 
-  return bibliotekSourceFilters.has(item.källa ?? "okänd");
+  const itemSources = getItemSources(item);
+  return itemSources.some((s) => bibliotekSourceFilters.has(s));
 }
 
 function itemMatchesQuery(item, query) {
@@ -350,13 +365,15 @@ function renderEntries(title, entries) {
   const groups = Object.entries(entries)
     .filter(([, item]) => matchesSection && itemMatchesQuery(item, query) && sourceMatchesFilter(item))
     .sort(([, a], [, b]) =>
-      (a.källa || "").localeCompare(b.källa || "", "sv") ||
+      (getPrimarySource(a) || "").localeCompare(getPrimarySource(b) || "", "sv") ||
       (a.name || a.title || a.rubrik || "").localeCompare(b.name || b.title || b.rubrik || "", "sv")
     )
     .reduce((acc, [id, item]) => {
-      const källa = item.källa ?? "okänd";
-      acc[källa] ??= [];
-      acc[källa].push({ id, item });
+      const itemSources = getItemSources(item);
+      itemSources.forEach((källa) => {
+        acc[källa] ??= [];
+        acc[källa].push({ id, item });
+      });
       return acc;
     }, {});
 

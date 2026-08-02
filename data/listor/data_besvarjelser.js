@@ -9,8 +9,8 @@ export const besvärjelser = {
     tidsåtgång: "Handling",
     räckvidd: "Beröring",
     Varaktighet: "Skift",
-    text: `Du skyddar en person eller en plats (inte större än en människa) mot magi. Effektgraden för alla besvärjelser som kastas mot personen eller platsen sänks med effektgraden i BESKYDDARE. Du kan även använda besvärjelsen för att skydda mot magiska attacker från monster (sid 83). Varje effektgrad minskar då antalet tärningar som slås för skadan med 1.`,
-    källa: "dod",
+    text: `Du skyddar en person eller ett föremål (inte större än en människa) mot magi. Du kan lägga besvärjelsen på dig själv. Effektgraden för alla besvärjelser (inklusive SKINGRA) som läggs mot målet sänks med effektgraden i BESKYDDARE. Effekten bryts omedelbart om målet förflyttar sig, frivilligt eller ej. Du kan även använda besvärjelsen för att skydda mot magiska attacker från monster (sid 83). Varje effektgrad minskar då antalet tärningar som slås för skadan med ett. Exakt vad som kan anses vara en magiskt attack avgörs av SL.`,
+    källa: ["dod","magiboken"],
   },
   skingra: {
   name: "Skingra",
@@ -21,8 +21,8 @@ export const besvärjelser = {
   tidsåtgång: "Handling",
   räckvidd: "10 meter",
   varaktighet: "Omedelbar",
-  text: `Du skingrar en aktiv besvärjelse eller magisk effekt. Effektgraden i SKINGRA måste vara lika hög eller högre än effektgraden i den besvärjelse som ska skingras.`,
-  källa: "dod",
+  text: `Du avbryter en pågående besvärjelse med samma eller lägre effektgrad (inklusive BESKYDDARE). Att SKINGRA en ritual tar en kvart. Besvärjelsen kan även användas till att avbryta andra magiska effekter, om äventyret eller SL tillåter det. SKINGRA kan inte användas mot kraftfulla ritualer som SPIRITUS FAMILIARIS, NEXUS och PERMANENS (inklusive besvärjelser som gjorts permanenta). För att häva sådan magi krävsbesvärjelsen MOTRITUAL (sid 13 i Magiboken).`,
+  källa: ["dod","magiboken"],
 },
 antimagi: {
   name: "Antimagi",
@@ -51,14 +51,19 @@ kraftöverföring: {
 sigill: {
   name: "Sigill",
   nivå: "4",
-  krav: "Valfri magiskola",
+  krav: "KRAFTÖVERFÖRING eller valfri förtrollningsbesvärjelse på nivå 3",
   magiskola: "valfri",
   rekvisit: "Ord, gest",
   tidsåtgång: "Skift",
   räckvidd: "Beröring",
   varaktighet: "Skift",
-  text: `Du binder en besvärjelse till ett föremål. Effektgraden i SIGILL avgör effektgraden för den bundna besvärjelsen. När besvärjelsen aktiveras upplöses sigillet, om det inte kombineras med PERMANENS.`,
-  källa: "dod",
+  text: `Du binder en besvärjelse till valfritt dött föremål. Du slår först för besvärjelsen och sedan för SIGILL, och de måste ha samma effektgrad (för trolleritrick räcker effektgrad 1 för SIGILLET). Båda slagen måste lyckas för att upprätta SIGILLET. 
+  <br>
+  När du lägger SIGILL avgör du även villkoret för hur den bundna besvärjelsen utlöses - vanligtvis en handling. När så sker används VP från personen som aktiverar den. Om denna person inte kan eller vill använda sina VP aktiveras inte besvärjelsen. Det ärvs inget slag för att aktivera en bunden besvärjelse - det lyckas automatiskt, utan schans för drak- eller demonslag. Om den bundna besvärjelsen vanligtvis aktiveras med ett motståndsslag slår målet i stället ett rakt slag för att motstå effekten. När en bunden besvärjelse aktiveras upplöses SIGILLET, om inte SIGILLET vid skapandet kombineras med PERMANENS. SIGILL kan även kombineras med LADDNING eller NEXUS för att ge föremålet egen kraft, i stället för att förbruka användarens VP. Du kan genomföra alla dessa ritualer på ett föremål under ett och samma skift, men du måste slå (och betala VP) separat för samtliga.
+  <br>
+  Du kan inte binda alkemiska recept (kapitel 11 i Magiboken) eller förtrollningar (kapitel 12 i Magiboken)
+  `,
+  källa: ["dod","magiboken"],
 },
 laddning: {
   name: "Laddning",
@@ -75,17 +80,21 @@ laddning: {
 permanens: {
   name: "Permanens",
   nivå: "5",
-  krav: "SIGILL",
+  krav: "SIGILL eller valfri förtrollningsbesvärjelse på nivå 4",
   magiskola: "valfri",
   rekvisit: "Ord, gest",
   tidsåtgång: "Skift",
   räckvidd: "Beröring",
   varaktighet: "Permanent",
-  text: `Denna ritual läggs tillsammans med en annan besvärjelse, och ger besvärjelsen permanent varaktighet. Detta kostar magikern en poäng PSY permanent (och minskar maximala VP med ett). Effektgraden för PERMANENS måste vara samma som besvärjelsens. PERMANENS kan inte läggas på besvärjelser med omedelbar varaktighet. Om PERMANENS läggs tillsammans med SIGILL blir SIGILLET permanent och den bundna besvärjelsen kan aktiveras gång på gång.`,
-  källa: "dod",
+  text: `Denna ritual läggs tillsammans med en annan besvärjelse, och ger besvärjelsen permanent varaktighet. Samma magiker måste slå för båda besvärjelserna och effektgraden måste vara samma för båda. Att lägga PERMANENS kräver så mycket kraft att det sänker ditt maximala antal VP permanent 1 steg per effektgrad – och även om du misslyckas sänks ditt maximala VP 1 steg.
+  <br>
+  PERMANENS kan inte läggas på besvärjelser med omedelbar varaktighet. Om PERMANENS läggs tillsammans med SIGILL blir sigillet permanent och den bundna besvärjelsen kan aktiveras gång på gång (till normal kostnad av VP för användaren, alternativt via LADDNING eller NEXUS). Om både LADDNING och SIGILL läggs på samma föremål behöver PERMANENS bara läggas en gång för att göra båda permanenta.
+  <br>
+  Det går inte att SKINGRA en PERMANENS men den kan hävas med en MOTRITUAL.`,
+  källa: ["dod","magiboken"],
 },
   //GRUNDBOKEN - Animism
-fördriva: {
+fordriva: {
   name: "Fördriva",
   nivå: "1",
   krav: "Animism",
@@ -109,7 +118,7 @@ ljungeld: {
   text: `Du kallar ner ljungeld från himlen. Om du lyckas tar målet 2T6 i skada. Ljungelden hoppar sedan vidare till ytterligare en slumpmässigt vald varelse inom 2 meter från målet, som tar 2T4 i skada. Varje effektgrad utöver den första ökar antalet tärningar som slås för skadan med ett. Metallrustning ger inget skydd men ljungelden kan duckas eller pareras som en avståndsattack och om detta lyckas träffas inget ytterligare mål. Inomhus kostar besvärjelsen dubbelt så många VP som normalt att lägga.`,
   källa: "dod",
 },
- läka: {
+ laka: {
   name: "Läka",
   nivå: "1",
   krav: "Animism",
@@ -121,7 +130,7 @@ ljungeld: {
   text: `Besvärjelsen läker 2T6 KP på en levande varelse som inte är du själv. För varje effektgrad över den första läker besvärjelsen ytterligare T6 KP.`,
   källa: "dod",
 },
-snärja: {
+snarja: {
   name: "Snärja",
   nivå: "1",
   krav: "Animism",
@@ -157,7 +166,7 @@ blixt: {
   text: `Du sänder iväg en blixt som gör 2T8 i skada på målet. Blixten hoppar sedan vidare till en annan slumpmässigt vald varelse inom 2 meter från målet, som tar 2T6 i skada, och sedan vidare i en kedja till en tredje varelse inom 2 meter, som tar 2T4 i skada. Varje effektgrad utöver den första ökar antalet tärningar som slås för skadan med ett. Metallrustning ger inget skydd men blixten kan duckas eller pareras som en avståndsattack och om detta lyckas träffas inget ytterligare mål. Inomhus kostar besvärjelsen dubbelt så många VP som normalt att lägga.`,
   källa: "dod",
 },
-förinta: {
+forinta: {
   name: "Förinta",
   nivå: "2",
   krav: "FÖRDRIVA",
@@ -181,7 +190,7 @@ hela: {
   text: `Besvärjelsen läker 2T8 KP och en icke-permanent svår skada (frivillig regel, sid 51) på en levande varelse som inte är dig själv. För varje effektgrad över den första läker besvärjelsen ytterligare T8 KP.`,
   källa: "dod",
 },
-snårskog: {
+snarskog: {
   name: "Snårskog",
   nivå: "2",
   krav: "SNÄRJA",
@@ -193,7 +202,7 @@ snårskog: {
   text: `Du kallar på skogens andar, som snabbt får kraftiga törnesnår och rötter att växa upp ur marken i effektområdet. Området räknas som oländig terräng (sid 44) och alla personer (ej monster) utom du själv inom effektområdet när besvärjelsen läggs snärjs av rötter och grenar, oförmögna att röra sig. Att ta sig loss kräver ett slag mot UNDVIKA. Slaget sker med fördel på effektgrad 1, normalt på effektgrad 2, och med nackdel på effektgrad 3. Varje försök är en handling i strid, och ett försök får göras per runda.`,
   källa: "dod",
 },
-söva: {
+sova: {
   name: "Söva",
   nivå: "2",
   krav: "LÄKA",
@@ -201,9 +210,11 @@ söva: {
   rekvisit: "Ord",
   tidsåtgång: "Handling",
   räckvidd: "Beröring",
-  varaktighet: "Omedelbar",
-  text: `Målet för besvärjelsen måste slå ett slag mot PSY för att undvika att falla i djup sömn i en kvart. SLP slår mot maximala VP om detta anges, minskat med 2 för varje nivå i hjälteförmågan Fokuserad. SLP slår mot 10 om VP inte anges. Om PSY-slaget lyckas blir offret ändå Omtöcknad. Vid effektgrad 1 slår offret sitt PSY-slag med fördel, vid effektgrad 2 slås det normalt, och vid effektgrad 3 slås det med nackdel. En sövd person är mycket svårväckt, men vaknar om den tar skada. Besvärjelsen kan bara användas mot levande personer och har ingen effekt på monster.`,
-  källa: "dod",
+  varaktighet: "Kvart",
+  text: `Du kan få en levande person att falla i djup sömn. Du måste vinna ett motståndsslag mot offrets PSY. Effektgrad 1 ger dig nackdel på motståndsslaget, effektgrad 2 ger ett vanligt slag och effektgrad 3 ger dig fördel.
+  <br>
+  Den sovande kan inte väckas på normalt sätt men vaknar omedelbart om hen tar skada. Besvärjelsen kan bara användas mot levande personer och har ingen effekt på monster.`,
+  källa: ["dod","magiboken"],
 },
 kurera: {
   name: "Kurera",
@@ -217,7 +228,7 @@ kurera: {
   text: `Besvärjelsen läker 2T10 KP och en svår skada (även en permanent sådan, se frivillig regel på sid 51) på en levande varelse som inte är dig själv. För varje effektgrad över den första läker besvärjelsen ytterligare T10 KP.`,
   källa: "dod",
 },
-åskvigg: {
+askvigg: {
   name: "Åskvigg",
   nivå: "3",
   krav: "BLIXT",
@@ -229,17 +240,21 @@ kurera: {
   text: `Du kallar ner en förödande blixt som gör 2T10 i skada på målet. För varje effektgrad utöver den första ökar skadan med T10.`,
   källa: "dod",
 },
-återuppväcka: {
+ateruppväcka: {
   name: "Återuppväcka",
   nivå: "5",
-  krav: "KURERA",
+  krav: "HELANDE SKEN",
   magiskola: "animism",
-  rekvisit: "Ord",
+  rekvisit: "Ord, gest, ingrediens(den dödes kropp)",
   tidsåtgång: "Skift",
   räckvidd: "Beröring",
   varaktighet: "Omedelbar",
-  text: `Besvärjelsen återuppväcker en nyligen avliden person. Personen får tillbaka 1 KP men är Utmattad och Krasslig. Besvärjelsen kan endast användas om döden inträffade under det senaste skiftet.`,
-  källa: "dod",
+  text: `Du kan kanalisera naturens krafter till att väcka en död till liv igen – inte som odöd, utan som livs levande. Ju längre tid som gått sedan dödsfallet, desto svårare är det. Inom samma skift räcker effektgrad 1, inom ett dygn krävs effektgrad 2 och inom en vecka krävs effektgrad 3. Har längre tid än så passerat är kroppen alltför fördärvad för att kunna bringas tillbaka till livet. Bara ett försök får göras – misslyckas det är offret oåterkalleligen död.
+  <br>
+  Att lägga ÅTERUPPVÄCKA kräver så mycket kraft att det sänker ditt maximala antal viljepoäng (VP) med 1 permanent – även om ritualen misslyckas. Ditt maximala antal VP kan dock höjas igen med hjälteförmågan Fokuserad (notera att detta är en ändring från grundreglerna).
+  <br>
+  Den som blir återuppväckt förlorar T3 nivåer i alla KAR-baserade färdigheter (som lägst till 3). Effekten av ÅTERUPPVÄCKA kan inte hävas med en MOTRITUAL.`,
+  källa: ["dod","magiboken"],
 },
   //GRUNDBOKEN - Elementalism
 flamma: {
